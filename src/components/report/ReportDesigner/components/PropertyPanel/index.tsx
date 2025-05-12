@@ -1,52 +1,53 @@
-import { Divider, Typography } from "antd";
-
-import type { CanvasComponent } from "./index";
+import type { CanvasComponent } from "../../types/index";
+import { Form } from "@rjsf/antd";
 import React from "react";
-
-const { Title } = Typography;
+import { textComponentSchema } from "../../schemas/textComponentSchema";
+import validator from "@rjsf/validator-ajv8";
 
 interface PropertyPanelProps {
   selectedComponent: CanvasComponent | undefined;
-  onChange: (key: string, value: string) => void;
+  onChange: (formData: Partial<CanvasComponent>) => void;
 }
 
 const PropertyPanel: React.FC<PropertyPanelProps> = ({
   selectedComponent,
   onChange,
-}) => (
-  <div
-    style={{
-      width: 320,
-      background: "#fafafa",
-      borderLeft: "1px solid #f0f0f0",
-      padding: 0,
-    }}
-  >
-    <div style={{ padding: 20 }}>
-      <Title level={5} style={{ marginTop: 0 }}>
-        属性面板
-      </Title>
-      <Divider style={{ margin: "8px 0" }} />
-      {selectedComponent ? (
-        <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <label style={{ color: "#666", fontSize: 14 }}>组件名称：</label>
-          <input
-            type="text"
-            value={selectedComponent.name}
-            onChange={(e) => onChange("name", e.target.value)}
-            style={{
-              padding: "6px 10px",
-              borderRadius: 4,
-              border: "1px solid #d9d9d9",
-              fontSize: 15,
-            }}
-          />
-        </form>
-      ) : (
-        <div style={{ color: "#aaa" }}>请选择画布中的组件进行属性编辑</div>
-      )}
+}) => {
+  if (!selectedComponent) {
+    return (
+      <div style={{ color: "#aaa", padding: 20 }}>
+        请选择画布中的组件进行属性编辑
+      </div>
+    );
+  }
+
+  // 这里只处理 text 类型，后续可根据 type 动态切换 schema
+  const schema = textComponentSchema;
+
+  return (
+    <div
+      style={{
+        width: 320,
+        background: "#fafafa",
+        borderLeft: "1px solid #f0f0f0",
+        padding: 0,
+      }}
+    >
+      <div style={{ padding: 20 }}>
+        <Form
+          schema={schema}
+          formData={selectedComponent}
+          onChange={(e) => onChange(e.formData as Partial<CanvasComponent>)}
+          validator={validator}
+          uiSchema={{
+            color: { "ui:widget": "color" },
+            fontSize: { "ui:widget": "updown" },
+            mockData: { "ui:widget": "textarea" },
+          }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default PropertyPanel;

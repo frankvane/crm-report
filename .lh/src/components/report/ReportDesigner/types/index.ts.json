@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1747042820800,
@@ -16,6 +16,14 @@
                 {
                     "date": 1747056482378,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,8 +6,10 @@\n   name: string;\r\n   icon: string;\r\n   x: number;\r\n   y: number;\r\n+  locked?: boolean;\r\n+  visible?: boolean;\r\n }\r\n \r\n export interface ComponentLibraryItem {\r\n   type: string;\r\n"
+                },
+                {
+                    "date": 1747089685332,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,19 @@\n   x: number;\r\n   y: number;\r\n   locked?: boolean;\r\n   visible?: boolean;\r\n+  text?: string;\r\n+  fontSize?: number;\r\n+  color?: string;\r\n+  fontWeight?: \"normal\" | \"bold\" | \"bolder\" | \"lighter\";\r\n+  textAlign?: \"left\" | \"center\" | \"right\";\r\n+  dataBinding?: {\r\n+    source?: string;\r\n+    field?: string;\r\n+    format?: \"none\" | \"currency\" | \"date\" | \"percent\";\r\n+    expression?: string;\r\n+  };\r\n }\r\n \r\n export interface ComponentLibraryItem {\r\n   type: string;\r\n"
+                },
+                {
+                    "date": 1747091401149,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,9 @@\n     field?: string;\r\n     format?: \"none\" | \"currency\" | \"date\" | \"percent\";\r\n     expression?: string;\r\n   };\r\n+  mockData?: string;\r\n }\r\n \r\n export interface ComponentLibraryItem {\r\n   type: string;\r\n"
                 }
             ],
             "date": 1747042820800,

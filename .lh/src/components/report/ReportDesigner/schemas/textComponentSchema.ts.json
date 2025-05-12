@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/textComponentSchema.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747090574033,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747091234641,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,15 +10,15 @@\n     fontWeight: {\r\n       type: \"string\",\r\n       title: \"字体粗细\",\r\n       enum: [\"normal\", \"bold\", \"bolder\", \"lighter\"],\r\n-      default: \"normal\"\r\n+      default: \"normal\",\r\n     },\r\n     textAlign: {\r\n       type: \"string\",\r\n       title: \"对齐方式\",\r\n       enum: [\"left\", \"center\", \"right\"],\r\n-      default: \"left\"\r\n+      default: \"left\",\r\n     },\r\n     dataBinding: {\r\n       type: \"object\",\r\n       title: \"数据绑定\",\r\n@@ -28,11 +28,11 @@\n         format: {\r\n           type: \"string\",\r\n           title: \"格式化\",\r\n           enum: [\"none\", \"currency\", \"date\", \"percent\"],\r\n-          default: \"none\"\r\n+          default: \"none\",\r\n         },\r\n-        expression: { type: \"string\", title: \"表达式\" }\r\n-      }\r\n-    }\r\n-  }\r\n\\ No newline at end of file\n-}; \n+        expression: { type: \"string\", title: \"表达式\" },\r\n+      },\r\n+    },\r\n+  },\r\n+};\r\n"
+                },
+                {
+                    "date": 1747091321140,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -33,6 +33,7 @@\n         },\r\n         expression: { type: \"string\", title: \"表达式\" },\r\n       },\r\n     },\r\n+    mockData: { type: \"string\", title: \"Mock数据（JSON）\" },\r\n   },\r\n };\r\n"
+                }
+            ],
+            "date": 1747090574033,
+            "name": "Commit-0",
+            "content": "import { JSONSchema7 } from \"json-schema\";\r\n\r\nexport const textComponentSchema: JSONSchema7 = {\r\n  type: \"object\",\r\n  properties: {\r\n    name: { type: \"string\", title: \"组件名称\" },\r\n    text: { type: \"string\", title: \"文本内容\" },\r\n    fontSize: { type: \"number\", title: \"字体大小\", default: 14 },\r\n    color: { type: \"string\", title: \"字体颜色\", default: \"#222222\" },\r\n    fontWeight: {\r\n      type: \"string\",\r\n      title: \"字体粗细\",\r\n      enum: [\"normal\", \"bold\", \"bolder\", \"lighter\"],\r\n      default: \"normal\"\r\n    },\r\n    textAlign: {\r\n      type: \"string\",\r\n      title: \"对齐方式\",\r\n      enum: [\"left\", \"center\", \"right\"],\r\n      default: \"left\"\r\n    },\r\n    dataBinding: {\r\n      type: \"object\",\r\n      title: \"数据绑定\",\r\n      properties: {\r\n        source: { type: \"string\", title: \"数据源\" },\r\n        field: { type: \"string\", title: \"字段\" },\r\n        format: {\r\n          type: \"string\",\r\n          title: \"格式化\",\r\n          enum: [\"none\", \"currency\", \"date\", \"percent\"],\r\n          default: \"none\"\r\n        },\r\n        expression: { type: \"string\", title: \"表达式\" }\r\n      }\r\n    }\r\n  }\r\n}; "
+        }
+    ]
+}

@@ -2,7 +2,7 @@ import type { CanvasComponent } from "../../types";
 import ChartComponent from "../../../components/ChartComponent";
 import React from "react";
 import TableComponent from "../../../components/TableComponent";
-import TextComponent from "../../../components/ChartComponent";
+import TextComponent from "../../../components/TextComponent";
 
 interface ComponentRendererProps {
   components: CanvasComponent[];
@@ -19,7 +19,7 @@ interface ComponentRendererProps {
   COMPONENT_HEIGHT: number;
 }
 
-const componentMap: Record<string, React.FC> = {
+const componentMap: Record<string, React.FC<any>> = {
   text: TextComponent,
   table: TableComponent,
   chart: ChartComponent,
@@ -96,7 +96,27 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             }}
             onContextMenu={(e) => handleContextMenu(e, comp.id)}
           >
-            <Comp />
+            {comp.type === "text" ? (
+              <TextComponent
+                text={comp.text || ""}
+                fontSize={comp.fontSize}
+                color={comp.color}
+                fontWeight={comp.fontWeight}
+                textAlign={comp.textAlign}
+                dataBinding={comp.dataBinding}
+                mockData={(() => {
+                  try {
+                    return comp.mockData
+                      ? JSON.parse(comp.mockData)
+                      : undefined;
+                  } catch {
+                    return undefined;
+                  }
+                })()}
+              />
+            ) : (
+              <Comp />
+            )}
           </div>
         );
       })}

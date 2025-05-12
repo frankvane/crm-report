@@ -14,9 +14,33 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     const comp = componentList.find((c) => c.type === type);
     if (!comp) return;
     const newId = generateId();
+    let schemaProps = {};
+    if (type === "text") {
+      schemaProps = {
+        text: "文本内容",
+        fontSize: 14,
+        color: "#222222",
+        fontWeight: "normal",
+        textAlign: "left",
+        dataBinding: {
+          source: "",
+          field: "",
+          format: "none",
+          expression: "",
+        },
+      };
+    }
     setCanvasComponents((prev) => [
       ...prev,
-      { ...comp, id: newId, x, y, locked: false, visible: true },
+      {
+        ...comp,
+        id: newId,
+        x,
+        y,
+        locked: false,
+        visible: true,
+        ...schemaProps,
+      },
     ]);
     setSelectedId(newId);
   };
@@ -30,10 +54,10 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     });
   };
   // 属性面板变更
-  const handlePropertyChange = (key: string, value: string) => {
+  const handlePropertyChange = (formData: Partial<CanvasComponent>) => {
     setCanvasComponents((prev) =>
       prev.map((comp) =>
-        comp.id === selectedId ? { ...comp, [key]: value } : comp
+        comp.id === selectedId ? { ...comp, ...formData } : comp
       )
     );
   };
