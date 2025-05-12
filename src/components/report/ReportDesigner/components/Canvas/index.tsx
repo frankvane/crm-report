@@ -294,6 +294,94 @@ const Canvas: React.FC<CanvasProps> = ({
     closeContextMenu();
   };
 
+  // 批量对齐操作
+  const handleAlign = (
+    type: "left" | "right" | "top" | "bottom" | "hcenter" | "vcenter"
+  ) => {
+    if (selectedIds.length < 2) return;
+    const selectedComps = components.filter((c) => selectedIds.includes(c.id));
+    if (selectedComps.length < 2) return;
+    if (type === "left") {
+      const minX = Math.min(...selectedComps.map((c) => c.x));
+      selectedComps.forEach((c) => onComponentMove(c.id, minX, c.y));
+    } else if (type === "right") {
+      const maxX = Math.max(...selectedComps.map((c) => c.x + COMPONENT_WIDTH));
+      selectedComps.forEach((c) =>
+        onComponentMove(c.id, maxX - COMPONENT_WIDTH, c.y)
+      );
+    } else if (type === "top") {
+      const minY = Math.min(...selectedComps.map((c) => c.y));
+      selectedComps.forEach((c) => onComponentMove(c.id, c.x, minY));
+    } else if (type === "bottom") {
+      const maxY = Math.max(
+        ...selectedComps.map((c) => c.y + COMPONENT_HEIGHT)
+      );
+      selectedComps.forEach((c) =>
+        onComponentMove(c.id, c.x, maxY - COMPONENT_HEIGHT)
+      );
+    } else if (type === "hcenter") {
+      const center = Math.round(
+        selectedComps.reduce((sum, c) => sum + c.x + COMPONENT_WIDTH / 2, 0) /
+          selectedComps.length
+      );
+      selectedComps.forEach((c) =>
+        onComponentMove(c.id, center - COMPONENT_WIDTH / 2, c.y)
+      );
+    } else if (type === "vcenter") {
+      const center = Math.round(
+        selectedComps.reduce((sum, c) => sum + c.y + COMPONENT_HEIGHT / 2, 0) /
+          selectedComps.length
+      );
+      selectedComps.forEach((c) =>
+        onComponentMove(c.id, c.x, center - COMPONENT_HEIGHT / 2)
+      );
+    }
+  };
+
+  // 批量分布操作
+  const handleDistribute = (type: "horizontal" | "vertical") => {
+    if (selectedIds.length < 3) return;
+    const selectedComps = components
+      .filter((c) => selectedIds.includes(c.id))
+      .sort((a, b) => (type === "horizontal" ? a.x - b.x : a.y - b.y));
+    if (selectedComps.length < 3) return;
+    if (type === "horizontal") {
+      const left = selectedComps[0].x;
+      const right = selectedComps[selectedComps.length - 1].x;
+      const gap = (right - left) / (selectedComps.length - 1);
+      selectedComps.forEach((c, i) =>
+        onComponentMove(c.id, Math.round(left + i * gap), c.y)
+      );
+    } else {
+      const top = selectedComps[0].y;
+      const bottom = selectedComps[selectedComps.length - 1].y;
+      const gap = (bottom - top) / (selectedComps.length - 1);
+      selectedComps.forEach((c, i) =>
+        onComponentMove(c.id, c.x, Math.round(top + i * gap))
+      );
+    }
+  };
+
+  // 批量锁定/解锁
+  const handleBatchLock = (locked: boolean) => {
+    selectedIds.forEach((id) => {
+      const comp = components.find((c) => c.id === id);
+      if (comp && !!comp.locked !== locked) {
+        handleToggleLock(id);
+      }
+    });
+  };
+
+  // 批量显示/隐藏
+  const handleBatchVisible = (visible: boolean) => {
+    selectedIds.forEach((id) => {
+      const comp = components.find((c) => c.id === id);
+      if (comp && !!comp.visible !== visible) {
+        handleToggleVisible(id);
+      }
+    });
+  };
+
   return (
     <div
       style={{
@@ -349,7 +437,93 @@ const Canvas: React.FC<CanvasProps> = ({
             ? `删除选中(${selectedIds.length})`
             : "删除选中"}
         </button>
-        {/* 预留：后续可添加更多批量操作按钮 */}
+        {/* 批量操作按钮组 */}
+        <span style={{ marginLeft: 16, display: "flex", gap: 4 }}>
+          <button
+            title="左对齐"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("left")}
+          >
+            左对齐
+          </button>
+          <button
+            title="右对齐"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("right")}
+          >
+            右对齐
+          </button>
+          <button
+            title="顶部对齐"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("top")}
+          >
+            顶部对齐
+          </button>
+          <button
+            title="底部对齐"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("bottom")}
+          >
+            底部对齐
+          </button>
+          <button
+            title="水平居中"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("hcenter")}
+          >
+            水平居中
+          </button>
+          <button
+            title="垂直居中"
+            disabled={selectedIds.length < 2}
+            onClick={() => handleAlign("vcenter")}
+          >
+            垂直居中
+          </button>
+          <button
+            title="水平分布"
+            disabled={selectedIds.length < 3}
+            onClick={() => handleDistribute("horizontal")}
+          >
+            水平分布
+          </button>
+          <button
+            title="垂直分布"
+            disabled={selectedIds.length < 3}
+            onClick={() => handleDistribute("vertical")}
+          >
+            垂直分布
+          </button>
+          <button
+            title="批量锁定"
+            disabled={selectedIds.length === 0}
+            onClick={() => handleBatchLock(true)}
+          >
+            锁定
+          </button>
+          <button
+            title="批量解锁"
+            disabled={selectedIds.length === 0}
+            onClick={() => handleBatchLock(false)}
+          >
+            解锁
+          </button>
+          <button
+            title="批量隐藏"
+            disabled={selectedIds.length === 0}
+            onClick={() => handleBatchVisible(false)}
+          >
+            隐藏
+          </button>
+          <button
+            title="批量显示"
+            disabled={selectedIds.length === 0}
+            onClick={() => handleBatchVisible(true)}
+          >
+            显示
+          </button>
+        </span>
       </div>
       <div
         ref={canvasRef}
