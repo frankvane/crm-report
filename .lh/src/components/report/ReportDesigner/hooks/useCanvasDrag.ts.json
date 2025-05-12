@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 19,
+            "activePatchIndex": 20,
             "patches": [
                 {
                     "date": 1747043014528,
@@ -84,6 +84,10 @@
                 {
                     "date": 1747052223063,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -77,9 +77,8 @@\n       const compY = compRect.top - contentRect.top;\n       const offsetX = mouseX - compX;\n       const offsetY = mouseY - compY;\n       setDragOffset({ x: offsetX, y: offsetY });\n-      console.log(\"[drag] offset (contentRef):\", offsetX, offsetY);\n       return;\n     }\n     // fallback\n     const target = e.target as HTMLElement;\n"
+                },
+                {
+                    "date": 1747052381948,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -96,12 +96,19 @@\n     // 鼠标在内容区的绝对坐标\n     const mouseX = e.clientX - contentRect.left;\n     const mouseY = e.clientY - contentRect.top;\n     // 组件左上角 = 鼠标绝对坐标 - offset\n-    const rawX = mouseX - dragOffset.x;\n-    const rawY = mouseY - dragOffset.y;\n+    let rawX = mouseX - dragOffset.x;\n+    let rawY = mouseY - dragOffset.y;\n+    // 边界裁剪\n+    const contentWidth = contentRef.current.offsetWidth;\n+    const contentHeight = contentRef.current.offsetHeight;\n+    const maxX = contentWidth - COMPONENT_WIDTH;\n+    const maxY = contentHeight - COMPONENT_HEIGHT;\n+    const clampedX = Math.max(0, Math.min(rawX, maxX));\n+    const clampedY = Math.max(0, Math.min(rawY, maxY));\n     setGuideLines(null);\n-    onComponentMove(draggingId, rawX, rawY);\n+    onComponentMove(draggingId, clampedX, clampedY);\n   };\n   const handleMouseUp = () => {\n     setDraggingId(null);\n     setGuideLines(null);\n"
                 }
             ],
             "date": 1747043014528,

@@ -97,10 +97,17 @@ export function useCanvasDrag({
     const mouseX = e.clientX - contentRect.left;
     const mouseY = e.clientY - contentRect.top;
     // 组件左上角 = 鼠标绝对坐标 - offset
-    const rawX = mouseX - dragOffset.x;
-    const rawY = mouseY - dragOffset.y;
+    let rawX = mouseX - dragOffset.x;
+    let rawY = mouseY - dragOffset.y;
+    // 边界裁剪
+    const contentWidth = contentRef.current.offsetWidth;
+    const contentHeight = contentRef.current.offsetHeight;
+    const maxX = contentWidth - COMPONENT_WIDTH;
+    const maxY = contentHeight - COMPONENT_HEIGHT;
+    const clampedX = Math.max(0, Math.min(rawX, maxX));
+    const clampedY = Math.max(0, Math.min(rawY, maxY));
     setGuideLines(null);
-    onComponentMove(draggingId, rawX, rawY);
+    onComponentMove(draggingId, clampedX, clampedY);
   };
   const handleMouseUp = () => {
     setDraggingId(null);
