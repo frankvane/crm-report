@@ -71,6 +71,7 @@ const Canvas: React.FC<CanvasProps> = ({
     handleMouseUp,
   } = useCanvasDrag({
     components,
+    selectedIds,
     onDrop,
     onComponentMove,
     COMPONENT_WIDTH,

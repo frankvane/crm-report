@@ -5,6 +5,7 @@ import { getSnapAndGuides } from "../utils";
 
 export interface UseCanvasDragProps {
   components: CanvasComponent[];
+  selectedIds: string[];
   onDrop: (id: string, x: number, y: number) => void;
   onComponentMove: (id: string, x: number, y: number) => void;
   COMPONENT_WIDTH: number;
@@ -16,6 +17,7 @@ export interface UseCanvasDragProps {
 
 export function useCanvasDrag({
   components,
+  selectedIds,
   onDrop,
   onComponentMove,
   COMPONENT_WIDTH,
@@ -34,6 +36,12 @@ export function useCanvasDrag({
     y?: number;
   } | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+
+  // 多选拖动：记录所有选中组件的初始坐标
+  const multiDragInitPos = useRef<{ [id: string]: { x: number; y: number } }>(
+    {}
+  );
+  const dragStartMouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // 拖拽新组件到画布
   const handleDrop = (e: React.DragEvent) => {
@@ -86,13 +94,24 @@ export function useCanvasDrag({
       const compY = compRect.top - contentRect.top;
       let offsetX = mouseX - compX;
       let offsetY = mouseY - compY;
-      // 如果刚添加，鼠标点和组件左上角重合，强制offset为0，防止首次拖动跳动
       if (Math.abs(offsetX) < 1 && Math.abs(offsetY) < 1) {
         offsetX = 0;
         offsetY = 0;
       }
       setDragOffset({ x: offsetX, y: offsetY });
 
+      // 多选拖动：记录所有选中组件的初始坐标和鼠标起点
+      if (selectedIds.includes(id)) {
+        const initPos: { [id: string]: { x: number; y: number } } = {};
+        selectedIds.forEach((sid) => {
+          const comp = components.find((c) => c.id === sid);
+          if (comp) initPos[sid] = { x: comp.x, y: comp.y };
+        });
+        multiDragInitPos.current = initPos;
+        dragStartMouse.current = { x: mouseX, y: mouseY };
+      } else {
+        multiDragInitPos.current = {};
+      }
       return;
     }
     // fallback
@@ -103,14 +122,58 @@ export function useCanvasDrag({
     const offsetX = mouseX - compRect.left;
     const offsetY = mouseY - compRect.top;
     setDragOffset({ x: offsetX, y: offsetY });
+    multiDragInitPos.current = {};
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!draggingId) return;
     if (!contentRef.current) return;
     const contentRect = contentRef.current.getBoundingClientRect();
-    // 鼠标在内容区的绝对坐标
     const mouseX = e.clientX - contentRect.left;
     const mouseY = e.clientY - contentRect.top;
+
+    // 多选拖动
+    if (
+      selectedIds.includes(draggingId) &&
+      Object.keys(multiDragInitPos.current).length > 0
+    ) {
+      const dxRaw = mouseX - dragStartMouse.current.x;
+      const dyRaw = mouseY - dragStartMouse.current.y;
+      const contentWidth = contentRef.current!.offsetWidth;
+      const contentHeight = contentRef.current!.offsetHeight;
+      // 计算所有组件理论新坐标
+      let minLeft = Infinity,
+        maxRight = -Infinity,
+        minTop = Infinity,
+        maxBottom = -Infinity;
+      selectedIds.forEach((sid) => {
+        const init = multiDragInitPos.current[sid];
+        if (!init) return;
+        const nx = init.x + dxRaw;
+        const ny = init.y + dyRaw;
+        minLeft = Math.min(minLeft, nx);
+        maxRight = Math.max(maxRight, nx + COMPONENT_WIDTH);
+        minTop = Math.min(minTop, ny);
+        maxBottom = Math.max(maxBottom, ny + COMPONENT_HEIGHT);
+      });
+      // 计算允许的 dx/dy 修正量
+      let dx = dxRaw,
+        dy = dyRaw;
+      if (minLeft < 0) dx -= minLeft;
+      if (maxRight > contentWidth) dx -= maxRight - contentWidth;
+      if (minTop < 0) dy -= minTop;
+      if (maxBottom > contentHeight) dy -= maxBottom - contentHeight;
+      selectedIds.forEach((sid) => {
+        const init = multiDragInitPos.current[sid];
+        if (!init) return;
+        const nx = init.x + dx;
+        const ny = init.y + dy;
+        onComponentMove(sid, nx, ny);
+      });
+      setGuideLines(null);
+      return;
+    }
+
+    // 单选拖动
     // 组件左上角 = 鼠标绝对坐标 - offset
     const rawX = mouseX - dragOffset.x;
     const rawY = mouseY - dragOffset.y;
