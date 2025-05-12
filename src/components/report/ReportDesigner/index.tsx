@@ -22,8 +22,6 @@ const componentList: ComponentLibraryItem[] = [
 const ReportDesigner: React.FC = () => {
   const {
     canvasComponents,
-    selectedId,
-    setSelectedId,
     handleDrop,
     handleComponentMove,
     handlePropertyChange,
@@ -36,6 +34,9 @@ const ReportDesigner: React.FC = () => {
     handleToggleVisible,
   } = useCanvasComponents(componentList);
   const [canvasSize, setCanvasSize] = useState(CANVAS_TEMPLATES[0]);
+
+  // 新增多选状态
+  const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
 
   // 组件库拖拽
   const handleDragStart = (
@@ -110,8 +111,8 @@ const ReportDesigner: React.FC = () => {
           components={canvasComponents}
           onDrop={handleDrop}
           onComponentMove={handleComponentMove}
-          selectedId={selectedId}
-          setSelectedId={setSelectedId}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
           width={canvasSize.width}
           height={canvasSize.height}
           handleDelete={handleDelete}
