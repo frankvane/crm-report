@@ -1,0 +1,9 @@
+---
+description: 更新UPDATE
+globs: 
+alwaysApply: false
+---
+
+# 更新UPDATE
+
+- 每次修改完代码，收集修改信息，在UPDATE.md文件是记录更新日志，需要注意顺序，更新的内容是在文档最上面。千万注意更新日期为当前时间，需要使用time-mcp进行时间获取，确认是当前今天时间。

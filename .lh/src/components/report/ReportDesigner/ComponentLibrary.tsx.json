@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/ComponentLibrary.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747039206791,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747039450795,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,17 +14,20 @@\n   components: ComponentLibraryItem[];\r\n   onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;\r\n }\r\n \r\n-const ComponentLibrary: React.FC<ComponentLibraryProps> = ({ components, onDragStart }) => (\r\n+const ComponentLibrary: React.FC<ComponentLibraryProps> = ({\r\n+  components,\r\n+  onDragStart,\r\n+}) => (\r\n   <div\r\n     style={{\r\n       width: 220,\r\n       background: \"#fff\",\r\n       borderRight: \"1px solid #f0f0f0\",\r\n       padding: 0,\r\n       color: \"#222\",\r\n-      fontFamily: 'inherit',\r\n+      fontFamily: \"inherit\",\r\n     }}\r\n   >\r\n     <div style={{ padding: 20 }}>\r\n       <Title level={5} style={{ marginTop: 0, color: \"#222\" }}>\r\n@@ -49,10 +52,10 @@\n               color: \"#222\",\r\n               transition: \"background 0.2s, box-shadow 0.2s\",\r\n               userSelect: \"none\",\r\n             }}\r\n-            onMouseOver={e => (e.currentTarget.style.background = '#f0f5ff')}\r\n-            onMouseOut={e => (e.currentTarget.style.background = '#fafafa')}\r\n+            onMouseOver={(e) => (e.currentTarget.style.background = \"#f0f5ff\")}\r\n+            onMouseOut={(e) => (e.currentTarget.style.background = \"#fafafa\")}\r\n           >\r\n             <span style={{ marginRight: 8 }}>{item.icon}</span>\r\n             {item.name}\r\n           </div>\r\n@@ -61,5 +64,5 @@\n     </div>\r\n   </div>\r\n );\r\n \r\n-export default ComponentLibrary;\n\\ No newline at end of file\n+export default ComponentLibrary;\r\n"
+                }
+            ],
+            "date": 1747039206791,
+            "name": "Commit-0",
+            "content": "import { Divider, Typography } from \"antd\";\r\n\r\nimport React from \"react\";\r\n\r\nconst { Title } = Typography;\r\n\r\nexport interface ComponentLibraryItem {\r\n  type: string;\r\n  name: string;\r\n  icon: string;\r\n}\r\n\r\ninterface ComponentLibraryProps {\r\n  components: ComponentLibraryItem[];\r\n  onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;\r\n}\r\n\r\nconst ComponentLibrary: React.FC<ComponentLibraryProps> = ({ components, onDragStart }) => (\r\n  <div\r\n    style={{\r\n      width: 220,\r\n      background: \"#fff\",\r\n      borderRight: \"1px solid #f0f0f0\",\r\n      padding: 0,\r\n      color: \"#222\",\r\n      fontFamily: 'inherit',\r\n    }}\r\n  >\r\n    <div style={{ padding: 20 }}>\r\n      <Title level={5} style={{ marginTop: 0, color: \"#222\" }}>\r\n        组件库\r\n      </Title>\r\n      <Divider style={{ margin: \"8px 0\" }} />\r\n      <div style={{ display: \"flex\", flexDirection: \"column\", gap: 12 }}>\r\n        {components.map((item) => (\r\n          <div\r\n            key={item.type}\r\n            draggable\r\n            onDragStart={(e) => onDragStart(e, item.type)}\r\n            style={{\r\n              display: \"flex\",\r\n              alignItems: \"center\",\r\n              padding: \"8px 12px\",\r\n              border: \"1px solid #e5e5e5\",\r\n              borderRadius: 6,\r\n              background: \"#fafafa\",\r\n              cursor: \"grab\",\r\n              fontSize: 16,\r\n              color: \"#222\",\r\n              transition: \"background 0.2s, box-shadow 0.2s\",\r\n              userSelect: \"none\",\r\n            }}\r\n            onMouseOver={e => (e.currentTarget.style.background = '#f0f5ff')}\r\n            onMouseOut={e => (e.currentTarget.style.background = '#fafafa')}\r\n          >\r\n            <span style={{ marginRight: 8 }}>{item.icon}</span>\r\n            {item.name}\r\n          </div>\r\n        ))}\r\n      </div>\r\n    </div>\r\n  </div>\r\n);\r\n\r\nexport default ComponentLibrary;"
+        }
+    ]
+}
