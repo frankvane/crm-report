@@ -7,6 +7,8 @@ export interface CanvasComponent {
   icon: string;
   x: number;
   y: number;
+  locked?: boolean;
+  visible?: boolean;
 }
 
 export interface ComponentLibraryItem {

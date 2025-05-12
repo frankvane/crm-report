@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/ContextMenu.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747056748511,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747056748511,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nexport interface MenuItem {\r\n  label: string;\r\n  onClick: () => void;\r\n}\r\n\r\ninterface ContextMenuProps {\r\n  visible: boolean;\r\n  x: number;\r\n  y: number;\r\n  onClose: () => void;\r\n  menuItems: MenuItem[];\r\n}\r\n\r\nconst ContextMenu: React.FC<ContextMenuProps> = ({ visible, x, y, onClose, menuItems }) => {\r\n  React.useEffect(() => {\r\n    if (!visible) return;\r\n    const onClick = () => onClose();\r\n    window.addEventListener(\"click\", onClick);\r\n    return () => window.removeEventListener(\"click\", onClick);\r\n  }, [visible, onClose]);\r\n\r\n  if (!visible) return null;\r\n  return (\r\n    <ul\r\n      style={{\r\n        position: \"fixed\",\r\n        left: x,\r\n        top: y,\r\n        background: \"#fff\",\r\n        border: \"1px solid #ccc\",\r\n        borderRadius: 4,\r\n        boxShadow: \"0 2px 8px #0001\",\r\n        padding: 0,\r\n        margin: 0,\r\n        zIndex: 99999,\r\n        minWidth: 120,\r\n        listStyle: \"none\",\r\n      }}\r\n    >\r\n      {menuItems.map((item) => (\r\n        <li\r\n          key={item.label}\r\n          style={{ padding: \"8px 16px\", cursor: \"pointer\" }}\r\n          onClick={() => { item.onClick(); onClose(); }}\r\n        >\r\n          {item.label}\r\n        </li>\r\n      ))}\r\n    </ul>\r\n  );\r\n};\r\n\r\nexport default ContextMenu; "
+        }
+    ]
+}

@@ -29,6 +29,11 @@ const ReportDesigner: React.FC = () => {
     handlePropertyChange,
     selectedComponent,
     handleDelete,
+    handleCopy,
+    handleMoveToTop,
+    handleMoveToBottom,
+    handleToggleLock,
+    handleToggleVisible,
   } = useCanvasComponents(componentList);
   const [canvasSize, setCanvasSize] = useState(CANVAS_TEMPLATES[0]);
 
@@ -110,6 +115,11 @@ const ReportDesigner: React.FC = () => {
           width={canvasSize.width}
           height={canvasSize.height}
           handleDelete={handleDelete}
+          handleCopy={handleCopy}
+          handleMoveToTop={handleMoveToTop}
+          handleMoveToBottom={handleMoveToBottom}
+          handleToggleLock={handleToggleLock}
+          handleToggleVisible={handleToggleVisible}
         />
         <PropertyPanel
           selectedComponent={selectedComponent}
