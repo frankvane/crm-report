@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/useCanvasDrag.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747041642483,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041701369,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,10 +26,16 @@\n   SNAP_THRESHOLD,\r\n   RULER_SIZE,\r\n }: UseCanvasDragProps) {\r\n   const [draggingId, setDraggingId] = useState<string | null>(null);\r\n-  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });\r\n-  const [guideLines, setGuideLines] = useState<{ x?: number; y?: number } | null>(null);\r\n+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({\r\n+    x: 0,\r\n+    y: 0,\r\n+  });\r\n+  const [guideLines, setGuideLines] = useState<{\r\n+    x?: number;\r\n+    y?: number;\r\n+  } | null>(null);\r\n   const canvasRef = useRef<HTMLDivElement>(null);\r\n \r\n   // 拖拽新组件到画布\r\n   const handleDrop = (e: React.DragEvent) => {\r\n@@ -83,5 +89,5 @@\n     handleMouseDown,\r\n     handleMouseMove,\r\n     handleMouseUp,\r\n   };\r\n-} \n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747041642483,
+            "name": "Commit-0",
+            "content": "import { useRef, useState } from \"react\";\r\n\r\nimport type { CanvasComponent } from \"./types\";\r\nimport { getSnapAndGuides } from \"./utils\";\r\n\r\ninterface UseCanvasDragProps {\r\n  components: CanvasComponent[];\r\n  width: number;\r\n  height: number;\r\n  onDrop: (type: string, x: number, y: number) => void;\r\n  onComponentMove: (id: string, x: number, y: number) => void;\r\n  COMPONENT_WIDTH: number;\r\n  COMPONENT_HEIGHT: number;\r\n  SNAP_THRESHOLD: number;\r\n  RULER_SIZE: number;\r\n}\r\n\r\nexport function useCanvasDrag({\r\n  components,\r\n  width,\r\n  height,\r\n  onDrop,\r\n  onComponentMove,\r\n  COMPONENT_WIDTH,\r\n  COMPONENT_HEIGHT,\r\n  SNAP_THRESHOLD,\r\n  RULER_SIZE,\r\n}: UseCanvasDragProps) {\r\n  const [draggingId, setDraggingId] = useState<string | null>(null);\r\n  const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });\r\n  const [guideLines, setGuideLines] = useState<{ x?: number; y?: number } | null>(null);\r\n  const canvasRef = useRef<HTMLDivElement>(null);\r\n\r\n  // 拖拽新组件到画布\r\n  const handleDrop = (e: React.DragEvent) => {\r\n    e.preventDefault();\r\n    const type = e.dataTransfer.getData(\"type\");\r\n    if (!type) return;\r\n    const rect = canvasRef.current?.getBoundingClientRect();\r\n    if (!rect) return;\r\n    const x = e.clientX - rect.left - RULER_SIZE - COMPONENT_WIDTH / 2;\r\n    const y = e.clientY - rect.top - RULER_SIZE - COMPONENT_HEIGHT / 2;\r\n    onDrop(type, x, y);\r\n  };\r\n\r\n  // 画布内组件拖拽\r\n  const handleMouseDown = (id: string, e: React.MouseEvent) => {\r\n    setDraggingId(id);\r\n    setDragOffset({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });\r\n  };\r\n  const handleMouseMove = (e: React.MouseEvent) => {\r\n    if (!draggingId) return;\r\n    const rect = canvasRef.current?.getBoundingClientRect();\r\n    if (!rect) return;\r\n    const comp = components.find((c) => c.id === draggingId);\r\n    if (!comp) return;\r\n    const rawX = e.clientX - rect.left - RULER_SIZE - dragOffset.x;\r\n    const rawY = e.clientY - rect.top - RULER_SIZE - dragOffset.y;\r\n    const { snapX, snapY, guide } = getSnapAndGuides(\r\n      rawX,\r\n      rawY,\r\n      draggingId,\r\n      components,\r\n      width,\r\n      height,\r\n      SNAP_THRESHOLD,\r\n      COMPONENT_WIDTH,\r\n      COMPONENT_HEIGHT,\r\n      RULER_SIZE\r\n    );\r\n    setGuideLines(guide);\r\n    onComponentMove(draggingId, snapX, snapY);\r\n  };\r\n  const handleMouseUp = () => {\r\n    setDraggingId(null);\r\n    setGuideLines(null);\r\n  };\r\n\r\n  return {\r\n    canvasRef,\r\n    guideLines,\r\n    handleDrop,\r\n    handleMouseDown,\r\n    handleMouseMove,\r\n    handleMouseUp,\r\n  };\r\n} "
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/constants.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747041262147,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041384202,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,5 +4,5 @@\n   { label: \"16:9\", width: 1280, height: 720 },\r\n ];\r\n \r\n export const RULER_STEP = 40;\r\n-export const RULER_SIZE = 24;\n\\ No newline at end of file\n+export const RULER_SIZE = 24;\r\n"
+                }
+            ],
+            "date": 1747041262147,
+            "name": "Commit-0",
+            "content": "export const CANVAS_TEMPLATES = [\r\n  { label: \"A4 (纵向)\", width: 794, height: 1123 },\r\n  { label: \"A4 (横向)\", width: 1123, height: 794 },\r\n  { label: \"16:9\", width: 1280, height: 720 },\r\n];\r\n\r\nexport const RULER_STEP = 40;\r\nexport const RULER_SIZE = 24;"
+        }
+    ]
+}

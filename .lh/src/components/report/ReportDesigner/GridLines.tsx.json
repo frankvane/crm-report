@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/GridLines.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747041096324,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041159066,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,14 @@\n   step?: number;\r\n   offset?: number;\r\n }\r\n \r\n-const GridLines: React.FC<GridLinesProps> = ({ width, height, step = 40, offset = 0 }) => {\r\n+const GridLines: React.FC<GridLinesProps> = ({\r\n+  width,\r\n+  height,\r\n+  step = 40,\r\n+  offset = 0,\r\n+}) => {\r\n   const vCount = Math.floor((width - offset) / step) - 1;\r\n   const hCount = Math.floor((height - offset) / step) - 1;\r\n   return (\r\n     <>\r\n@@ -47,5 +52,5 @@\n     </>\r\n   );\r\n };\r\n \r\n-export default GridLines;\n\\ No newline at end of file\n+export default GridLines;\r\n"
+                }
+            ],
+            "date": 1747041096323,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\ninterface GridLinesProps {\r\n  width: number;\r\n  height: number;\r\n  step?: number;\r\n  offset?: number;\r\n}\r\n\r\nconst GridLines: React.FC<GridLinesProps> = ({ width, height, step = 40, offset = 0 }) => {\r\n  const vCount = Math.floor((width - offset) / step) - 1;\r\n  const hCount = Math.floor((height - offset) / step) - 1;\r\n  return (\r\n    <>\r\n      {/* 纵向虚线 */}\r\n      {Array.from({ length: vCount }).map((_, i) => (\r\n        <div\r\n          key={\"v-\" + i}\r\n          style={{\r\n            position: \"absolute\",\r\n            left: (i + 1) * step,\r\n            top: 0,\r\n            width: 1,\r\n            height: \"100%\",\r\n            borderLeft: \"1px dashed #1890ff33\",\r\n            zIndex: 1,\r\n            pointerEvents: \"none\",\r\n          }}\r\n        />\r\n      ))}\r\n      {/* 横向虚线 */}\r\n      {Array.from({ length: hCount }).map((_, i) => (\r\n        <div\r\n          key={\"h-\" + i}\r\n          style={{\r\n            position: \"absolute\",\r\n            top: (i + 1) * step,\r\n            left: 0,\r\n            height: 1,\r\n            width: \"100%\",\r\n            borderTop: \"1px dashed #1890ff33\",\r\n            zIndex: 1,\r\n            pointerEvents: \"none\",\r\n          }}\r\n        />\r\n      ))}\r\n    </>\r\n  );\r\n};\r\n\r\nexport default GridLines;"
+        }
+    ]
+}

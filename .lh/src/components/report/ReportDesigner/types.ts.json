@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/types.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747041196162,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041384203,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,5 +10,5 @@\n export interface ComponentLibraryItem {\r\n   type: string;\r\n   name: string;\r\n   icon: string;\r\n-} \n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747041196162,
+            "name": "Commit-0",
+            "content": "export interface CanvasComponent {\r\n  id: string;\r\n  type: string;\r\n  name: string;\r\n  icon: string;\r\n  x: number;\r\n  y: number;\r\n}\r\n\r\nexport interface ComponentLibraryItem {\r\n  type: string;\r\n  name: string;\r\n  icon: string;\r\n} "
+        }
+    ]
+}

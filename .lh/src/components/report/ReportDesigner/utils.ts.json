@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/utils.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747041530786,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041554866,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -42,23 +42,35 @@\n     if (Math.abs(y - comp.y) < SNAP_THRESHOLD) {\r\n       snapY = comp.y;\r\n       guide.y = comp.y;\r\n     }\r\n-    if (Math.abs(x + COMPONENT_WIDTH - (comp.x + COMPONENT_WIDTH)) < SNAP_THRESHOLD) {\r\n+    if (\r\n+      Math.abs(x + COMPONENT_WIDTH - (comp.x + COMPONENT_WIDTH)) <\r\n+      SNAP_THRESHOLD\r\n+    ) {\r\n       snapX = comp.x + COMPONENT_WIDTH - COMPONENT_WIDTH;\r\n       guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n     }\r\n-    if (Math.abs(y + COMPONENT_HEIGHT - (comp.y + COMPONENT_HEIGHT)) < SNAP_THRESHOLD) {\r\n+    if (\r\n+      Math.abs(y + COMPONENT_HEIGHT - (comp.y + COMPONENT_HEIGHT)) <\r\n+      SNAP_THRESHOLD\r\n+    ) {\r\n       snapY = comp.y + COMPONENT_HEIGHT - COMPONENT_HEIGHT;\r\n       guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n     }\r\n-    if (Math.abs(x + COMPONENT_WIDTH / 2 - (comp.x + COMPONENT_WIDTH / 2)) < SNAP_THRESHOLD) {\r\n+    if (\r\n+      Math.abs(x + COMPONENT_WIDTH / 2 - (comp.x + COMPONENT_WIDTH / 2)) <\r\n\\ No newline at end of file\n+      SNAP_THRESHOLD\r\n+    ) {\r\n       snapX = comp.x;\r\n       guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n     }\r\n-    if (Math.abs(y + COMPONENT_HEIGHT / 2 - (comp.y + COMPONENT_HEIGHT / 2)) < SNAP_THRESHOLD) {\r\n+    if (\r\n+      Math.abs(y + COMPONENT_HEIGHT / 2 - (comp.y + COMPONENT_HEIGHT / 2)) <\r\n+      SNAP_THRESHOLD\r\n+    ) {\r\n       snapY = comp.y;\r\n       guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n     }\r\n   }\r\n   return { snapX, snapY, guide };\r\n-} \n+}\r\n"
+                },
+                {
+                    "date": 1747041701069,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -72,5 +72,5 @@\n       guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n     }\r\n   }\r\n   return { snapX, snapY, guide };\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747041530786,
+            "name": "Commit-0",
+            "content": "import { CanvasComponent } from \"./types\";\r\n\r\nexport function getSnapAndGuides(\r\n  x: number,\r\n  y: number,\r\n  movingId: string,\r\n  components: CanvasComponent[],\r\n  width: number,\r\n  height: number,\r\n  SNAP_THRESHOLD: number,\r\n  COMPONENT_WIDTH: number,\r\n  COMPONENT_HEIGHT: number,\r\n  RULER_SIZE: number\r\n) {\r\n  let snapX = x;\r\n  let snapY = y;\r\n  const guide: { x?: number; y?: number } = {};\r\n  // 画布边缘吸附\r\n  if (Math.abs(x) < SNAP_THRESHOLD) {\r\n    snapX = 0;\r\n    guide.x = 0;\r\n  }\r\n  if (Math.abs(y) < SNAP_THRESHOLD) {\r\n    snapY = 0;\r\n    guide.y = 0;\r\n  }\r\n  if (Math.abs(x + COMPONENT_WIDTH - (width - RULER_SIZE)) < SNAP_THRESHOLD) {\r\n    snapX = width - RULER_SIZE - COMPONENT_WIDTH;\r\n    guide.x = width - RULER_SIZE - COMPONENT_WIDTH + COMPONENT_WIDTH / 2;\r\n  }\r\n  if (Math.abs(y + COMPONENT_HEIGHT - (height - RULER_SIZE)) < SNAP_THRESHOLD) {\r\n    snapY = height - RULER_SIZE - COMPONENT_HEIGHT;\r\n    guide.y = height - RULER_SIZE - COMPONENT_HEIGHT + COMPONENT_HEIGHT / 2;\r\n  }\r\n  // 与其他组件吸附\r\n  for (const comp of components) {\r\n    if (comp.id === movingId) continue;\r\n    if (Math.abs(x - comp.x) < SNAP_THRESHOLD) {\r\n      snapX = comp.x;\r\n      guide.x = comp.x;\r\n    }\r\n    if (Math.abs(y - comp.y) < SNAP_THRESHOLD) {\r\n      snapY = comp.y;\r\n      guide.y = comp.y;\r\n    }\r\n    if (Math.abs(x + COMPONENT_WIDTH - (comp.x + COMPONENT_WIDTH)) < SNAP_THRESHOLD) {\r\n      snapX = comp.x + COMPONENT_WIDTH - COMPONENT_WIDTH;\r\n      guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n    }\r\n    if (Math.abs(y + COMPONENT_HEIGHT - (comp.y + COMPONENT_HEIGHT)) < SNAP_THRESHOLD) {\r\n      snapY = comp.y + COMPONENT_HEIGHT - COMPONENT_HEIGHT;\r\n      guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n    }\r\n    if (Math.abs(x + COMPONENT_WIDTH / 2 - (comp.x + COMPONENT_WIDTH / 2)) < SNAP_THRESHOLD) {\r\n      snapX = comp.x;\r\n      guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n    }\r\n    if (Math.abs(y + COMPONENT_HEIGHT / 2 - (comp.y + COMPONENT_HEIGHT / 2)) < SNAP_THRESHOLD) {\r\n      snapY = comp.y;\r\n      guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n    }\r\n  }\r\n  return { snapX, snapY, guide };\r\n} "
+        }
+    ]
+}

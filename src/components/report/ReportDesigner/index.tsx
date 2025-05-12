@@ -2,10 +2,11 @@ import ComponentLibrary, { ComponentLibraryItem } from "./ComponentLibrary";
 import { Layout, Typography } from "antd";
 import React, { useState } from "react";
 
+import { CANVAS_TEMPLATES } from "./constants";
 import Canvas from "./Canvas";
 import PropertyPanel from "./PropertyPanel";
 import Toolbar from "./Toolbar";
-import { generateId } from "../../../utils/reportUtils";
+import { useCanvasComponents } from "./useCanvasComponents";
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -16,52 +17,17 @@ const componentList: ComponentLibraryItem[] = [
   { type: "text", name: "文本", icon: "🔤" },
 ];
 
-export interface CanvasComponent {
-  id: string;
-  type: string;
-  name: string;
-  icon: string;
-  x: number;
-  y: number;
-}
-
-// 画布尺寸模板
-const CANVAS_TEMPLATES = [
-  { label: "A4 (纵向)", width: 794, height: 1123 },
-  { label: "A4 (横向)", width: 1123, height: 794 },
-  { label: "16:9", width: 1280, height: 720 },
-];
-
 const ReportDesigner: React.FC = () => {
-  const [canvasComponents, setCanvasComponents] = useState<CanvasComponent[]>(
-    []
-  );
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const {
+    canvasComponents,
+    selectedId,
+    setSelectedId,
+    handleDrop,
+    handleComponentMove,
+    handlePropertyChange,
+    selectedComponent,
+  } = useCanvasComponents(componentList);
   const [canvasSize, setCanvasSize] = useState(CANVAS_TEMPLATES[0]);
-
-  // 拖拽新组件到画布
-  const handleDrop = (type: string, x: number, y: number) => {
-    const comp = componentList.find((c) => c.type === type);
-    if (!comp) return;
-    const newId = generateId();
-    setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);
-    setSelectedId(newId);
-  };
-  // 画布内组件拖动
-  const handleComponentMove = (id: string, x: number, y: number) => {
-    setCanvasComponents((prev) =>
-      prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp))
-    );
-  };
-  // 属性面板变更
-  const handlePropertyChange = (key: string, value: string) => {
-    setCanvasComponents((prev) =>
-      prev.map((comp) =>
-        comp.id === selectedId ? { ...comp, [key]: value } : comp
-      )
-    );
-  };
-  const selectedComponent = canvasComponents.find((c) => c.id === selectedId);
 
   // 组件库拖拽
   const handleDragStart = (

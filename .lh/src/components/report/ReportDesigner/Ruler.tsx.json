@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/Ruler.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747040959978,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747041017986,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,15 @@\n   offset?: number; // 起始偏移\r\n   style?: React.CSSProperties;\r\n }\r\n \r\n-const Ruler: React.FC<RulerProps> = ({ length, step = 40, direction = \"horizontal\", offset = 0, style }) => {\r\n+const Ruler: React.FC<RulerProps> = ({\r\n+  length,\r\n+  step = 40,\r\n+  direction = \"horizontal\",\r\n+  offset = 0,\r\n+  style,\r\n+}) => {\r\n   const count = Math.floor(length / step);\r\n   return (\r\n     <div\r\n       style={{\r\n@@ -55,5 +61,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default Ruler;\n\\ No newline at end of file\n+export default Ruler;\r\n"
+                }
+            ],
+            "date": 1747040959978,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\ninterface RulerProps {\r\n  length: number; // 刻度总长度（px）\r\n  step?: number; // 步长（px）\r\n  direction?: \"horizontal\" | \"vertical\";\r\n  offset?: number; // 起始偏移\r\n  style?: React.CSSProperties;\r\n}\r\n\r\nconst Ruler: React.FC<RulerProps> = ({ length, step = 40, direction = \"horizontal\", offset = 0, style }) => {\r\n  const count = Math.floor(length / step);\r\n  return (\r\n    <div\r\n      style={{\r\n        display: \"flex\",\r\n        flexDirection: direction === \"horizontal\" ? \"row\" : \"column\",\r\n        ...style,\r\n      }}\r\n    >\r\n      {Array.from({ length: count }).map((_, i) => (\r\n        <div\r\n          key={i}\r\n          style={\r\n            direction === \"horizontal\"\r\n              ? {\r\n                  width: step,\r\n                  height: \"100%\",\r\n                  borderRight: \"1px solid #eee\",\r\n                  color: \"#1890ff\",\r\n                  fontSize: 12,\r\n                  textAlign: \"center\",\r\n                  lineHeight: \"24px\",\r\n                  background: i % 2 === 0 ? \"#e6f7ff\" : \"#bae7ff\",\r\n                  zIndex: 1000,\r\n                  userSelect: \"none\",\r\n                }\r\n              : {\r\n                  height: step,\r\n                  width: \"100%\",\r\n                  borderBottom: \"1px solid #eee\",\r\n                  color: \"#1890ff\",\r\n                  fontSize: 12,\r\n                  textAlign: \"center\",\r\n                  lineHeight: `${step}px`,\r\n                  background: i % 2 === 0 ? \"#e6f7ff\" : \"#bae7ff\",\r\n                  zIndex: 1000,\r\n                  userSelect: \"none\",\r\n                }\r\n          }\r\n        >\r\n          {i * step + offset}\r\n        </div>\r\n      ))}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Ruler;"
+        }
+    ]
+}

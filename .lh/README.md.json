@@ -1,0 +1,18 @@
+{
+    "sourceFile": "README.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747041895041,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747041895041,
+            "name": "Commit-0",
+            "content": "# UPDATE\n\n- 2025-05-12 17:24 Canvas 拖拽重构，使用 useCanvasDrag hook 优化拖拽逻辑，提升代码可维护性与交互体验。\n\n# React + TypeScript + Vite\n\nThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n\nCurrently, two official plugins are available:\n\n- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh\n- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh\n\n## Expanding the ESLint configuration\n\nIf you are developing a production application, we recommend updating the configuration to enable type aware lint rules:\n\n- Configure the top-level `parserOptions` property like this:\n\n```js\nexport default tseslint.config({\n  languageOptions: {\n    // other options...\n    parserOptions: {\n      project: ['./tsconfig.node.json', './tsconfig.app.json'],\n      tsconfigRootDir: import.meta.dirname,\n    },\n  },\n})\n```\n\n- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`\n- Optionally add `...tseslint.configs.stylisticTypeChecked`\n- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:\n\n```js\n// eslint.config.js\nimport react from 'eslint-plugin-react'\n\nexport default tseslint.config({\n  // Set the react version\n  settings: { react: { version: '18.3' } },\n  plugins: {\n    // Add the react plugin\n    react,\n  },\n  rules: {\n    // other rules...\n    // Enable its recommended rules\n    ...react.configs.recommended.rules,\n    ...react.configs['jsx-runtime'].rules,\n  },\n})\n```\n"
+        }
+    ]
+}
