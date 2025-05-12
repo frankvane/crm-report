@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1747041895041,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747043114922,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,34 +21,34 @@\n export default tseslint.config({\n   languageOptions: {\n     // other options...\n     parserOptions: {\n-      project: ['./tsconfig.node.json', './tsconfig.app.json'],\n+      project: [\"./tsconfig.node.json\", \"./tsconfig.app.json\"],\n       tsconfigRootDir: import.meta.dirname,\n     },\n   },\n-})\n+});\n ```\n \n - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`\n - Optionally add `...tseslint.configs.stylisticTypeChecked`\n - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:\n \n ```js\n // eslint.config.js\n-import react from 'eslint-plugin-react'\n+import react from \"eslint-plugin-react\";\n \n export default tseslint.config({\n   // Set the react version\n-  settings: { react: { version: '18.3' } },\n+  settings: { react: { version: \"18.3\" } },\n   plugins: {\n     // Add the react plugin\n     react,\n   },\n   rules: {\n     // other rules...\n     // Enable its recommended rules\n     ...react.configs.recommended.rules,\n-    ...react.configs['jsx-runtime'].rules,\n+    ...react.configs[\"jsx-runtime\"].rules,\n   },\n-})\n+});\n ```\n"
+                },
+                {
+                    "date": 1747052270043,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n # UPDATE\n \n - 2025-05-12 17:24 Canvas 拖拽重构，使用 useCanvasDrag hook 优化拖拽逻辑，提升代码可维护性与交互体验。\n+- 2025-05-12 20:17 修复拖拽偏移，offset 计算与内容区参考系完全一致，拖拽体验100%准确。\n \n # React + TypeScript + Vite\n \n This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n"
                 }
             ],
             "date": 1747041895041,

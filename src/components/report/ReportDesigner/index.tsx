@@ -1,12 +1,14 @@
-import ComponentLibrary, { ComponentLibraryItem } from "./ComponentLibrary";
+import ComponentLibrary, {
+  ComponentLibraryItem,
+} from "./components/ComponentLibrary";
 import { Layout, Typography } from "antd";
 import React, { useState } from "react";
 
 import { CANVAS_TEMPLATES } from "./constants";
-import Canvas from "./Canvas";
-import PropertyPanel from "./PropertyPanel";
-import Toolbar from "./Toolbar";
-import { useCanvasComponents } from "./useCanvasComponents";
+import Canvas from "./components/Canvas";
+import PropertyPanel from "./components/PropertyPanel";
+import Toolbar from "./components/Toolbar";
+import { useCanvasComponents } from "./hooks/useCanvasComponents";
 
 const { Header } = Layout;
 const { Title } = Typography;

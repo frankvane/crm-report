@@ -27,7 +27,7 @@ const GridLines: React.FC<GridLinesProps> = ({
             top: 0,
             width: 1,
             height: "100%",
-            borderLeft: "1px dashed #1890ff33",
+            borderLeft: "1px dashed #ccc",
             zIndex: 1,
             pointerEvents: "none",
           }}
@@ -43,7 +43,7 @@ const GridLines: React.FC<GridLinesProps> = ({
             left: 0,
             height: 1,
             width: "100%",
-            borderTop: "1px dashed #1890ff33",
+            borderTop: "1px dashed #ccc",
             zIndex: 1,
             pointerEvents: "none",
           }}

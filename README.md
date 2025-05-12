@@ -1,6 +1,7 @@
 # UPDATE
 
 - 2025-05-12 17:24 Canvas 拖拽重构，使用 useCanvasDrag hook 优化拖拽逻辑，提升代码可维护性与交互体验。
+- 2025-05-12 20:17 修复拖拽偏移，offset 计算与内容区参考系完全一致，拖拽体验 100%准确。
 
 # React + TypeScript + Vite
 

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/hooks/useCanvasComponents.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747043023327,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747043167723,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import { CanvasComponent, ComponentLibraryItem } from \"./types\";\r\n+import { CanvasComponent, ComponentLibraryItem } from \"../types/index\";\r\n \r\n-import { generateId } from \"../../../utils/reportUtils\";\r\n+import { generateId } from \"../../../../utils/reportUtils\";\r\n import { useState } from \"react\";\r\n \r\n export function useCanvasComponents(componentList: ComponentLibraryItem[]) {\r\n   const [canvasComponents, setCanvasComponents] = useState<CanvasComponent[]>(\r\n"
+                }
+            ],
+            "date": 1747043023327,
+            "name": "Commit-0",
+            "content": "import { CanvasComponent, ComponentLibraryItem } from \"./types\";\r\n\r\nimport { generateId } from \"../../../utils/reportUtils\";\r\nimport { useState } from \"react\";\r\n\r\nexport function useCanvasComponents(componentList: ComponentLibraryItem[]) {\r\n  const [canvasComponents, setCanvasComponents] = useState<CanvasComponent[]>(\r\n    []\r\n  );\r\n  const [selectedId, setSelectedId] = useState<string | null>(null);\r\n\r\n  // 拖拽新组件到画布\r\n  const handleDrop = (type: string, x: number, y: number) => {\r\n    const comp = componentList.find((c) => c.type === type);\r\n    if (!comp) return;\r\n    const newId = generateId();\r\n    setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);\r\n    setSelectedId(newId);\r\n  };\r\n  // 画布内组件拖动\r\n  const handleComponentMove = (id: string, x: number, y: number) => {\r\n    setCanvasComponents((prev) =>\r\n      prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp))\r\n    );\r\n  };\r\n  // 属性面板变更\r\n  const handlePropertyChange = (key: string, value: string) => {\r\n    setCanvasComponents((prev) =>\r\n      prev.map((comp) =>\r\n        comp.id === selectedId ? { ...comp, [key]: value } : comp\r\n      )\r\n    );\r\n  };\r\n  const selectedComponent = canvasComponents.find((c) => c.id === selectedId);\r\n\r\n  return {\r\n    canvasComponents,\r\n    setCanvasComponents,\r\n    selectedId,\r\n    setSelectedId,\r\n    handleDrop,\r\n    handleComponentMove,\r\n    handlePropertyChange,\r\n    selectedComponent,\r\n  };\r\n}\r\n"
+        }
+    ]
+}

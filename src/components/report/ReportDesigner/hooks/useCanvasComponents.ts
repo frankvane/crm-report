@@ -1,6 +1,6 @@
-import { CanvasComponent, ComponentLibraryItem } from "./types";
+import { CanvasComponent, ComponentLibraryItem } from "../types/index";
 
-import { generateId } from "../../../utils/reportUtils";
+import { generateId } from "../../../../utils/reportUtils";
 import { useState } from "react";
 
 export function useCanvasComponents(componentList: ComponentLibraryItem[]) {

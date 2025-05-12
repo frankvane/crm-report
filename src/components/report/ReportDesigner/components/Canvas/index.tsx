@@ -1,8 +1,8 @@
-import type { CanvasComponent } from "./types";
+import type { CanvasComponent } from "../../types";
 import GridLines from "./GridLines";
 import React from "react";
 import Ruler from "./Ruler";
-import { useCanvasDrag } from "./useCanvasDrag";
+import { useCanvasDrag } from "../../hooks";
 
 interface CanvasProps {
   components: CanvasComponent[];
@@ -29,6 +29,7 @@ const Canvas: React.FC<CanvasProps> = ({
   width,
   height,
 }) => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
   const {
     canvasRef,
     guideLines,
@@ -46,7 +47,11 @@ const Canvas: React.FC<CanvasProps> = ({
     COMPONENT_HEIGHT,
     SNAP_THRESHOLD,
     RULER_SIZE,
+    contentRef,
   });
+
+  // 组件 refs 映射
+  const compRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
 
   return (
     <div
@@ -113,6 +118,7 @@ const Canvas: React.FC<CanvasProps> = ({
         </div>
         {/* 内容区整体偏移，预留刻度尺空间 */}
         <div
+          ref={contentRef}
           style={{
             position: "absolute",
             left: RULER_SIZE,
@@ -136,7 +142,7 @@ const Canvas: React.FC<CanvasProps> = ({
                 top: 0,
                 width: 1,
                 height: "100%",
-                borderLeft: "2px solid #1890ff",
+                borderLeft: "2px solid #001529",
                 zIndex: 9999,
                 pointerEvents: "none",
               }}
@@ -150,42 +156,50 @@ const Canvas: React.FC<CanvasProps> = ({
                 left: 0,
                 height: 1,
                 width: "100%",
-                borderTop: "2px solid #1890ff",
+                borderTop: "2px solid #001529",
                 zIndex: 9999,
                 pointerEvents: "none",
               }}
             />
           )}
-          {components.map((comp) => (
-            <div
-              key={comp.id}
-              style={{
-                position: "absolute",
-                left: comp.x,
-                top: comp.y,
-                width: COMPONENT_WIDTH,
-                height: COMPONENT_HEIGHT,
-                border:
-                  comp.id === selectedId
-                    ? "2px solid #1890ff"
-                    : "1px solid #e5e5e5",
-                borderRadius: 6,
-                background: "#fafafa",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                fontSize: 16,
-                color: "#333",
-                cursor: "move",
-                zIndex: comp.id === selectedId ? 10 : 1,
-              }}
-              onMouseDown={(e) => handleMouseDown(comp.id, e)}
-              onClick={() => setSelectedId(comp.id)}
-            >
-              <span style={{ marginLeft: 8 }}>{comp.icon}</span>
-              {comp.name}
-            </div>
-          ))}
+          {components.map((comp) => {
+            // 绑定 ref 到 compRefs
+            return (
+              <div
+                ref={(el) => {
+                  compRefs.current[comp.id] = el;
+                }}
+                key={comp.id}
+                style={{
+                  position: "absolute",
+                  left: comp.x,
+                  top: comp.y,
+                  width: COMPONENT_WIDTH,
+                  height: COMPONENT_HEIGHT,
+                  border:
+                    comp.id === selectedId
+                      ? "2px solid #1890ff"
+                      : "1px solid #e5e5e5",
+                  borderRadius: 6,
+                  background: "#fafafa",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 16,
+                  color: "#333",
+                  cursor: "move",
+                  zIndex: comp.id === selectedId ? 10 : 1,
+                }}
+                onMouseDown={(e) =>
+                  handleMouseDown(comp.id, e, compRefs.current[comp.id])
+                }
+                onClick={() => setSelectedId(comp.id)}
+              >
+                <span style={{ marginLeft: 8 }}>{comp.icon}</span>
+                {comp.name}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

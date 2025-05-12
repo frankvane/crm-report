@@ -1,3 +1,5 @@
+export * from "./index";
+
 export interface CanvasComponent {
   id: string;
   type: string;
