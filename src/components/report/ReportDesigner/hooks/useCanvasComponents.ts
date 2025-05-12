@@ -14,10 +14,6 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     const comp = componentList.find((c) => c.type === type);
     if (!comp) return;
     const newId = generateId();
-    console.log("[handleDrop-canvasComponents] type:", type, "target:", {
-      x,
-      y,
-    });
     setCanvasComponents((prev) => [
       ...prev,
       { ...comp, id: newId, x, y, locked: false, visible: true },
@@ -30,13 +26,6 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
       const next = prev.map((comp) =>
         comp.id === id ? { ...comp, x, y } : comp
       );
-      const moved = next.find((comp) => comp.id === id);
-      if (moved) {
-        console.log("[handleComponentMove] id:", id, "final:", {
-          x: moved.x,
-          y: moved.y,
-        });
-      }
       return next;
     });
   };

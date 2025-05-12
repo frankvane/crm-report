@@ -2,8 +2,11 @@ import ContextMenu, { MenuItem } from "../ContextMenu";
 import React, { useEffect, useState } from "react";
 
 import type { CanvasComponent } from "../../types";
+import ChartComponent from "../../../components/ChartComponent";
 import GridLines from "./GridLines";
 import Ruler from "./Ruler";
+import TableComponent from "../../../components/TableComponent";
+import TextComponent from "../../../components/TextComponent";
 import { useCanvasDrag } from "../../hooks";
 
 interface CanvasProps {
@@ -35,6 +38,13 @@ interface GuideLines {
   xHighlight?: boolean;
   yHighlight?: boolean;
 }
+
+// 组件类型到实际组件的映射
+const componentMap: Record<string, React.FC> = {
+  text: TextComponent,
+  table: TableComponent,
+  chart: ChartComponent,
+};
 
 const Canvas: React.FC<CanvasProps> = ({
   components,
@@ -308,7 +318,11 @@ const Canvas: React.FC<CanvasProps> = ({
           )}
           {components.map((comp, idx) => {
             if (comp.visible === false) return null;
-            // 绑定 ref 到 compRefs
+            const Comp =
+              componentMap[comp.type] ||
+              (() => (
+                <div style={{ color: "red" }}>未知组件类型: {comp.type}</div>
+              ));
             return (
               <div
                 ref={(el) => {
@@ -353,8 +367,7 @@ const Canvas: React.FC<CanvasProps> = ({
                 onClick={() => setSelectedId(comp.id)}
                 onContextMenu={(e) => handleContextMenu(e, comp.id)}
               >
-                <span style={{ marginLeft: 8 }}>{comp.icon}</span>
-                {comp.name}
+                <Comp />
               </div>
             );
           })}
