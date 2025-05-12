@@ -14,14 +14,19 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     const comp = componentList.find((c) => c.type === type);
     if (!comp) return;
     const newId = generateId();
+
     setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);
     setSelectedId(newId);
   };
   // 画布内组件拖动
   const handleComponentMove = (id: string, x: number, y: number) => {
-    setCanvasComponents((prev) =>
-      prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp))
-    );
+    setCanvasComponents((prev) => {
+      const next = prev.map((comp) =>
+        comp.id === id ? { ...comp, x, y } : comp
+      );
+      const moved = next.find((comp) => comp.id === id);
+      return next;
+    });
   };
   // 属性面板变更
   const handlePropertyChange = (key: string, value: string) => {
@@ -30,6 +35,11 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
         comp.id === selectedId ? { ...comp, [key]: value } : comp
       )
     );
+  };
+  // 删除组件
+  const handleDelete = (id: string) => {
+    setCanvasComponents((prev) => prev.filter((comp) => comp.id !== id));
+    setSelectedId(null);
   };
   const selectedComponent = canvasComponents.find((c) => c.id === selectedId);
 
@@ -41,6 +51,7 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     handleDrop,
     handleComponentMove,
     handlePropertyChange,
+    handleDelete,
     selectedComponent,
   };
 }

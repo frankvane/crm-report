@@ -28,6 +28,7 @@ const ReportDesigner: React.FC = () => {
     handleComponentMove,
     handlePropertyChange,
     selectedComponent,
+    handleDelete,
   } = useCanvasComponents(componentList);
   const [canvasSize, setCanvasSize] = useState(CANVAS_TEMPLATES[0]);
 
@@ -42,11 +43,12 @@ const ReportDesigner: React.FC = () => {
   return (
     <div
       style={{
-        height: "100vh",
-        width: "100vw",
+        height: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         background: "#f5f6fa",
+        overflow: "hidden",
       }}
     >
       <Header
@@ -86,7 +88,15 @@ const ReportDesigner: React.FC = () => {
         </select>
         <Toolbar />
       </Header>
-      <div style={{ flex: 1, display: "flex", minHeight: 0, height: 0 }}>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          minHeight: 0,
+          minWidth: 0,
+          height: 0,
+        }}
+      >
         <ComponentLibrary
           components={componentList}
           onDragStart={handleDragStart}
@@ -99,6 +109,7 @@ const ReportDesigner: React.FC = () => {
           setSelectedId={setSelectedId}
           width={canvasSize.width}
           height={canvasSize.height}
+          handleDelete={handleDelete}
         />
         <PropertyPanel
           selectedComponent={selectedComponent}

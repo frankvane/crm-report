@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/utils/index.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747052831767,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747052908644,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,14 @@\n   gridStep: number = 40 // 新增参数，默认40\r\n ) {\r\n   let snapX = x;\r\n   let snapY = y;\r\n-  const guide: { x?: number; y?: number; xHighlight?: boolean; yHighlight?: boolean } = {};\r\n+  const guide: {\r\n+    x?: number;\r\n+    y?: number;\r\n+    xHighlight?: boolean;\r\n+    yHighlight?: boolean;\r\n+  } = {};\r\n   // 画布边缘吸附\r\n   if (Math.abs(x) < SNAP_THRESHOLD) {\r\n     snapX = 0;\r\n     guide.x = 0;\r\n"
+                }
+            ],
+            "date": 1747052831767,
+            "name": "Commit-0",
+            "content": "import { CanvasComponent } from \"./types\";\r\n\r\nexport function getSnapAndGuides(\r\n  x: number,\r\n  y: number,\r\n  movingId: string,\r\n  components: CanvasComponent[],\r\n  width: number,\r\n  height: number,\r\n  SNAP_THRESHOLD: number,\r\n  COMPONENT_WIDTH: number,\r\n  COMPONENT_HEIGHT: number,\r\n  RULER_SIZE: number,\r\n  gridStep: number = 40 // 新增参数，默认40\r\n) {\r\n  let snapX = x;\r\n  let snapY = y;\r\n  const guide: { x?: number; y?: number; xHighlight?: boolean; yHighlight?: boolean } = {};\r\n  // 画布边缘吸附\r\n  if (Math.abs(x) < SNAP_THRESHOLD) {\r\n    snapX = 0;\r\n    guide.x = 0;\r\n    guide.xHighlight = true;\r\n  }\r\n  if (Math.abs(y) < SNAP_THRESHOLD) {\r\n    snapY = 0;\r\n    guide.y = 0;\r\n    guide.yHighlight = true;\r\n  }\r\n  if (Math.abs(x + COMPONENT_WIDTH - (width - RULER_SIZE)) < SNAP_THRESHOLD) {\r\n    snapX = width - RULER_SIZE - COMPONENT_WIDTH;\r\n    guide.x = width - RULER_SIZE - COMPONENT_WIDTH + COMPONENT_WIDTH / 2;\r\n    guide.xHighlight = true;\r\n  }\r\n  if (Math.abs(y + COMPONENT_HEIGHT - (height - RULER_SIZE)) < SNAP_THRESHOLD) {\r\n    snapY = height - RULER_SIZE - COMPONENT_HEIGHT;\r\n    guide.y = height - RULER_SIZE - COMPONENT_HEIGHT + COMPONENT_HEIGHT / 2;\r\n    guide.yHighlight = true;\r\n  }\r\n  // 网格线吸附\r\n  const vCount = Math.floor((width - RULER_SIZE) / gridStep) - 1;\r\n  const hCount = Math.floor((height - RULER_SIZE) / gridStep) - 1;\r\n  for (let i = 1; i <= vCount; i++) {\r\n    const gridX = i * gridStep;\r\n    if (Math.abs(x - gridX) < SNAP_THRESHOLD) {\r\n      snapX = gridX;\r\n      guide.x = gridX;\r\n      guide.xHighlight = true;\r\n    }\r\n  }\r\n  for (let i = 1; i <= hCount; i++) {\r\n    const gridY = i * gridStep;\r\n    if (Math.abs(y - gridY) < SNAP_THRESHOLD) {\r\n      snapY = gridY;\r\n      guide.y = gridY;\r\n      guide.yHighlight = true;\r\n    }\r\n  }\r\n  // 与其他组件吸附\r\n  for (const comp of components) {\r\n    if (comp.id === movingId) continue;\r\n    if (Math.abs(x - comp.x) < SNAP_THRESHOLD) {\r\n      snapX = comp.x;\r\n      guide.x = comp.x;\r\n      guide.xHighlight = true;\r\n    }\r\n    if (Math.abs(y - comp.y) < SNAP_THRESHOLD) {\r\n      snapY = comp.y;\r\n      guide.y = comp.y;\r\n      guide.yHighlight = true;\r\n    }\r\n    if (\r\n      Math.abs(x + COMPONENT_WIDTH - (comp.x + COMPONENT_WIDTH)) <\r\n      SNAP_THRESHOLD\r\n    ) {\r\n      snapX = comp.x + COMPONENT_WIDTH - COMPONENT_WIDTH;\r\n      guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n      guide.xHighlight = true;\r\n    }\r\n    if (\r\n      Math.abs(y + COMPONENT_HEIGHT - (comp.y + COMPONENT_HEIGHT)) <\r\n      SNAP_THRESHOLD\r\n    ) {\r\n      snapY = comp.y + COMPONENT_HEIGHT - COMPONENT_HEIGHT;\r\n      guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n      guide.yHighlight = true;\r\n    }\r\n    if (\r\n      Math.abs(x + COMPONENT_WIDTH / 2 - (comp.x + COMPONENT_WIDTH / 2)) <\r\n      SNAP_THRESHOLD\r\n    ) {\r\n      snapX = comp.x;\r\n      guide.x = comp.x + COMPONENT_WIDTH / 2;\r\n      guide.xHighlight = true;\r\n    }\r\n    if (\r\n      Math.abs(y + COMPONENT_HEIGHT / 2 - (comp.y + COMPONENT_HEIGHT / 2)) <\r\n      SNAP_THRESHOLD\r\n    ) {\r\n      snapY = comp.y;\r\n      guide.y = comp.y + COMPONENT_HEIGHT / 2;\r\n      guide.yHighlight = true;\r\n    }\r\n  }\r\n  return { snapX, snapY, guide };\r\n}\r\n"
+        }
+    ]
+}

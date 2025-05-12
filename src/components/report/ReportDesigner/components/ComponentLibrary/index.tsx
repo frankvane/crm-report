@@ -15,6 +15,10 @@ interface ComponentLibraryProps {
   onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
 }
 
+const transparentImg =
+  "data:image/svg+xml;base64," +
+  btoa('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>');
+
 const ComponentLibrary: React.FC<ComponentLibraryProps> = ({
   components,
   onDragStart,
@@ -39,7 +43,12 @@ const ComponentLibrary: React.FC<ComponentLibraryProps> = ({
           <div
             key={item.type}
             draggable
-            onDragStart={(e) => onDragStart(e, item.type)}
+            onDragStart={(e) => {
+              const img = new window.Image();
+              img.src = transparentImg;
+              e.dataTransfer.setDragImage(img, 0, 0);
+              onDragStart(e, item.type);
+            }}
             style={{
               display: "flex",
               alignItems: "center",

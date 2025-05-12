@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1747043023327,
@@ -12,6 +12,38 @@
                 {
                     "date": 1747043167723,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import { CanvasComponent, ComponentLibraryItem } from \"./types\";\r\n+import { CanvasComponent, ComponentLibraryItem } from \"../types/index\";\r\n \r\n-import { generateId } from \"../../../utils/reportUtils\";\r\n+import { generateId } from \"../../../../utils/reportUtils\";\r\n import { useState } from \"react\";\r\n \r\n export function useCanvasComponents(componentList: ComponentLibraryItem[]) {\r\n   const [canvasComponents, setCanvasComponents] = useState<CanvasComponent[]>(\r\n"
+                },
+                {
+                    "date": 1747054569331,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,13 @@\n         comp.id === selectedId ? { ...comp, [key]: value } : comp\r\n       )\r\n     );\r\n   };\r\n+  // 删除组件\r\n+  const handleDelete = (id: string) => {\r\n+    setCanvasComponents((prev) => prev.filter((comp) => comp.id !== id));\r\n+    setSelectedId(null);\r\n+  };\r\n   const selectedComponent = canvasComponents.find((c) => c.id === selectedId);\r\n \r\n   return {\r\n     canvasComponents,\r\n@@ -40,7 +45,8 @@\n     setSelectedId,\r\n     handleDrop,\r\n     handleComponentMove,\r\n     handlePropertyChange,\r\n+    handleDelete,\r\n     selectedComponent,\r\n   };\r\n }\r\n"
+                },
+                {
+                    "date": 1747055402652,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,16 +13,22 @@\n   const handleDrop = (type: string, x: number, y: number) => {\r\n     const comp = componentList.find((c) => c.type === type);\r\n     if (!comp) return;\r\n     const newId = generateId();\r\n+    console.log('[handleDrop-canvasComponents] type:', type, 'target:', { x, y });\r\n     setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);\r\n     setSelectedId(newId);\r\n   };\r\n   // 画布内组件拖动\r\n   const handleComponentMove = (id: string, x: number, y: number) => {\r\n-    setCanvasComponents((prev) =>\r\n-      prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp))\r\n-    );\r\n+    setCanvasComponents((prev) => {\r\n+      const next = prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp));\r\n+      const moved = next.find((comp) => comp.id === id);\r\n+      if (moved) {\r\n+        console.log('[handleComponentMove] id:', id, 'final:', { x: moved.x, y: moved.y });\r\n+      }\r\n+      return next;\r\n+    });\r\n   };\r\n   // 属性面板变更\r\n   const handlePropertyChange = (key: string, value: string) => {\r\n     setCanvasComponents((prev) =>\r\n"
+                },
+                {
+                    "date": 1747056075492,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,19 +13,27 @@\n   const handleDrop = (type: string, x: number, y: number) => {\r\n     const comp = componentList.find((c) => c.type === type);\r\n     if (!comp) return;\r\n     const newId = generateId();\r\n-    console.log('[handleDrop-canvasComponents] type:', type, 'target:', { x, y });\r\n+    console.log(\"[handleDrop-canvasComponents] type:\", type, \"target:\", {\r\n+      x,\r\n+      y,\r\n+    });\r\n     setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);\r\n     setSelectedId(newId);\r\n   };\r\n   // 画布内组件拖动\r\n   const handleComponentMove = (id: string, x: number, y: number) => {\r\n     setCanvasComponents((prev) => {\r\n-      const next = prev.map((comp) => (comp.id === id ? { ...comp, x, y } : comp));\r\n+      const next = prev.map((comp) =>\r\n+        comp.id === id ? { ...comp, x, y } : comp\r\n+      );\r\n       const moved = next.find((comp) => comp.id === id);\r\n       if (moved) {\r\n-        console.log('[handleComponentMove] id:', id, 'final:', { x: moved.x, y: moved.y });\r\n+        console.log(\"[handleComponentMove] id:\", id, \"final:\", {\r\n+          x: moved.x,\r\n+          y: moved.y,\r\n+        });\r\n       }\r\n       return next;\r\n     });\r\n   };\r\n"
+                },
+                {
+                    "date": 1747056113088,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,12 +13,9 @@\n   const handleDrop = (type: string, x: number, y: number) => {\r\n     const comp = componentList.find((c) => c.type === type);\r\n     if (!comp) return;\r\n     const newId = generateId();\r\n-    console.log(\"[handleDrop-canvasComponents] type:\", type, \"target:\", {\r\n-      x,\r\n-      y,\r\n-    });\r\n+\r\n     setCanvasComponents((prev) => [...prev, { ...comp, id: newId, x, y }]);\r\n     setSelectedId(newId);\r\n   };\r\n   // 画布内组件拖动\r\n"
+                },
+                {
+                    "date": 1747056136162,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,12 +25,8 @@\n         comp.id === id ? { ...comp, x, y } : comp\r\n       );\r\n       const moved = next.find((comp) => comp.id === id);\r\n       if (moved) {\r\n-        console.log(\"[handleComponentMove] id:\", id, \"final:\", {\r\n-          x: moved.x,\r\n-          y: moved.y,\r\n-        });\r\n       }\r\n       return next;\r\n     });\r\n   };\r\n"
+                },
+                {
+                    "date": 1747056143317,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,8 +25,12 @@\n         comp.id === id ? { ...comp, x, y } : comp\r\n       );\r\n       const moved = next.find((comp) => comp.id === id);\r\n       if (moved) {\r\n+        console.log(\"[handleComponentMove] id:\", id, \"final:\", {\r\n+          x: moved.x,\r\n+          y: moved.y,\r\n+        });\r\n       }\r\n       return next;\r\n     });\r\n   };\r\n"
+                },
+                {
+                    "date": 1747056154989,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -25,12 +25,9 @@\n         comp.id === id ? { ...comp, x, y } : comp\r\n       );\r\n       const moved = next.find((comp) => comp.id === id);\r\n       if (moved) {\r\n-        console.log(\"[handleComponentMove] id:\", id, \"final:\", {\r\n-          x: moved.x,\r\n-          y: moved.y,\r\n-        });\r\n+\r\n       }\r\n       return next;\r\n     });\r\n   };\r\n"
+                },
+                {
+                    "date": 1747056165272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,11 +24,9 @@\n       const next = prev.map((comp) =>\r\n         comp.id === id ? { ...comp, x, y } : comp\r\n       );\r\n       const moved = next.find((comp) => comp.id === id);\r\n-      if (moved) {\r\n \r\n-      }\r\n       return next;\r\n     });\r\n   };\r\n   // 属性面板变更\r\n"
                 }
             ],
             "date": 1747043023327,

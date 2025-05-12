@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 20,
+            "activePatchIndex": 21,
             "patches": [
                 {
                     "date": 1747043014528,
@@ -88,6 +88,10 @@
                 {
                     "date": 1747052381948,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -96,12 +96,19 @@\n     // 鼠标在内容区的绝对坐标\n     const mouseX = e.clientX - contentRect.left;\n     const mouseY = e.clientY - contentRect.top;\n     // 组件左上角 = 鼠标绝对坐标 - offset\n-    const rawX = mouseX - dragOffset.x;\n-    const rawY = mouseY - dragOffset.y;\n+    let rawX = mouseX - dragOffset.x;\n+    let rawY = mouseY - dragOffset.y;\n+    // 边界裁剪\n+    const contentWidth = contentRef.current.offsetWidth;\n+    const contentHeight = contentRef.current.offsetHeight;\n+    const maxX = contentWidth - COMPONENT_WIDTH;\n+    const maxY = contentHeight - COMPONENT_HEIGHT;\n+    const clampedX = Math.max(0, Math.min(rawX, maxX));\n+    const clampedY = Math.max(0, Math.min(rawY, maxY));\n     setGuideLines(null);\n-    onComponentMove(draggingId, rawX, rawY);\n+    onComponentMove(draggingId, clampedX, clampedY);\n   };\n   const handleMouseUp = () => {\n     setDraggingId(null);\n     setGuideLines(null);\n"
+                },
+                {
+                    "date": 1747052708551,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -96,18 +96,31 @@\n     // 鼠标在内容区的绝对坐标\n     const mouseX = e.clientX - contentRect.left;\n     const mouseY = e.clientY - contentRect.top;\n     // 组件左上角 = 鼠标绝对坐标 - offset\n-    let rawX = mouseX - dragOffset.x;\n-    let rawY = mouseY - dragOffset.y;\n-    // 边界裁剪\n+    const rawX = mouseX - dragOffset.x;\n+    const rawY = mouseY - dragOffset.y;\n+    // 吸附逻辑\n     const contentWidth = contentRef.current.offsetWidth;\n     const contentHeight = contentRef.current.offsetHeight;\n+    const { snapX, snapY, guide } = getSnapAndGuides(\n+      rawX,\n+      rawY,\n+      draggingId,\n+      components,\n+      contentWidth,\n+      contentHeight,\n+      SNAP_THRESHOLD,\n+      COMPONENT_WIDTH,\n+      COMPONENT_HEIGHT,\n+      0 // 内容区内坐标，RULER_SIZE=0\n+    );\n+    setGuideLines(guide);\n+    // 边界裁剪\n     const maxX = contentWidth - COMPONENT_WIDTH;\n     const maxY = contentHeight - COMPONENT_HEIGHT;\n-    const clampedX = Math.max(0, Math.min(rawX, maxX));\n-    const clampedY = Math.max(0, Math.min(rawY, maxY));\n-    setGuideLines(null);\n+    const clampedX = Math.max(0, Math.min(snapX, maxX));\n+    const clampedY = Math.max(0, Math.min(snapY, maxY));\n     onComponentMove(draggingId, clampedX, clampedY);\n   };\n   const handleMouseUp = () => {\n     setDraggingId(null);\n"
                 }
             ],
             "date": 1747043014528,

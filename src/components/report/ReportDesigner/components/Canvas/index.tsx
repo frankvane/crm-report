@@ -1,6 +1,7 @@
+import React, { useEffect } from "react";
+
 import type { CanvasComponent } from "../../types";
 import GridLines from "./GridLines";
-import React from "react";
 import Ruler from "./Ruler";
 import { useCanvasDrag } from "../../hooks";
 
@@ -12,6 +13,7 @@ interface CanvasProps {
   setSelectedId: (id: string) => void;
   width: number;
   height: number;
+  handleDelete: (id: string) => void;
 }
 
 const SNAP_THRESHOLD = 8; // px 吸附阈值
@@ -19,6 +21,14 @@ const COMPONENT_WIDTH = 120;
 const COMPONENT_HEIGHT = 40;
 const RULER_STEP = 40;
 const RULER_SIZE = 24;
+
+// 定义辅助线类型
+interface GuideLines {
+  x?: number;
+  y?: number;
+  xHighlight?: boolean;
+  yHighlight?: boolean;
+}
 
 const Canvas: React.FC<CanvasProps> = ({
   components,
@@ -28,6 +38,7 @@ const Canvas: React.FC<CanvasProps> = ({
   setSelectedId,
   width,
   height,
+  handleDelete,
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const {
@@ -39,8 +50,6 @@ const Canvas: React.FC<CanvasProps> = ({
     handleMouseUp,
   } = useCanvasDrag({
     components,
-    width,
-    height,
     onDrop,
     onComponentMove,
     COMPONENT_WIDTH,
@@ -50,8 +59,21 @@ const Canvas: React.FC<CanvasProps> = ({
     contentRef,
   });
 
+  const typedGuideLines = guideLines as GuideLines | null;
+
   // 组件 refs 映射
   const compRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
+
+  // 键盘Delete删除选中组件
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (selectedId && (e.key === "Delete" || e.key === "Backspace")) {
+        handleDelete(selectedId);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedId, handleDelete]);
 
   return (
     <div
@@ -64,7 +86,6 @@ const Canvas: React.FC<CanvasProps> = ({
         alignItems: "flex-start",
         minWidth: 0,
         minHeight: 0,
-        overflow: "auto",
         background: "#f5f6fa",
       }}
       onDragOver={(e) => e.preventDefault()}
@@ -134,29 +155,33 @@ const Canvas: React.FC<CanvasProps> = ({
             step={RULER_STEP}
           />
           {/* 辅助线渲染 */}
-          {guideLines?.x !== undefined && (
+          {typedGuideLines?.x !== undefined && (
             <div
               style={{
                 position: "absolute",
-                left: guideLines.x,
+                left: typedGuideLines.x,
                 top: 0,
                 width: 1,
                 height: "100%",
-                borderLeft: "2px solid #001529",
+                borderLeft: typedGuideLines.xHighlight
+                  ? "2px solid #0050b3"
+                  : "2px solid #ccc",
                 zIndex: 9999,
                 pointerEvents: "none",
               }}
             />
           )}
-          {guideLines?.y !== undefined && (
+          {typedGuideLines?.y !== undefined && (
             <div
               style={{
                 position: "absolute",
-                top: guideLines.y,
+                top: typedGuideLines.y,
                 left: 0,
                 height: 1,
                 width: "100%",
-                borderTop: "2px solid #001529",
+                borderTop: typedGuideLines.yHighlight
+                  ? "2px solid #0050b3"
+                  : "2px solid #ccc",
                 zIndex: 9999,
                 pointerEvents: "none",
               }}
@@ -191,7 +216,14 @@ const Canvas: React.FC<CanvasProps> = ({
                   zIndex: comp.id === selectedId ? 10 : 1,
                 }}
                 onMouseDown={(e) =>
-                  handleMouseDown(comp.id, e, compRefs.current[comp.id])
+                  compRefs.current[comp.id] !== null &&
+                  compRefs.current[comp.id] !== undefined
+                    ? handleMouseDown(
+                        comp.id,
+                        e,
+                        compRefs.current[comp.id] as HTMLDivElement
+                      )
+                    : handleMouseDown(comp.id, e)
                 }
                 onClick={() => setSelectedId(comp.id)}
               >
