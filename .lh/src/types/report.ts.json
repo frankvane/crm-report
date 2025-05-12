@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/types/report.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747021108931,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747021142414,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,47 +0,0 @@\n-// 报表模板类型定义\r\n-export interface ReportTemplate {\r\n-  id: string;\r\n-  name: string;\r\n-  layout: ReportLayout[];\r\n-  config: ReportConfig;\r\n-  createTime: string;\r\n-  updateTime: string;\r\n-}\r\n-\r\n-// 布局项类型定义\r\n-export interface ReportLayout {\r\n-  id: string;\r\n-  type: \"table\" | \"chart\" | \"text\";\r\n-  position: { x: number; y: number };\r\n-  size: { width: number; height: number };\r\n-  config: any;\r\n-  data?: any;\r\n-}\r\n-\r\n-// 报表配置类型定义\r\n-export interface ReportConfig {\r\n-  pageSize: \"A4\" | \"A3\" | \"custom\";\r\n-  orientation: \"portrait\" | \"landscape\";\r\n-  margins: {\r\n-    top: number;\r\n-    right: number;\r\n-    bottom: number;\r\n-    left: number;\r\n-  };\r\n-}\r\n-\r\n-// 组件类型定义\r\n-export interface ReportComponent {\r\n-  id: string;\r\n-  type: string;\r\n-  name: string;\r\n-  icon: string;\r\n-  defaultConfig: any;\r\n-}\r\n-\r\n-// 响应类型定义\r\n-export interface ApiResponse<T> {\r\n-  code: number;\r\n-  message: string;\r\n-  data: T;\r\n-}\r\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747022292944,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,61 @@\n- \n\\ No newline at end of file\n+// 报表模板类型定义\r\n+export interface ReportTemplate {\r\n+  id: string;\r\n+  name: string;\r\n+  layout: ReportLayout[];\r\n+  config: ReportConfig;\r\n+  createTime: string;\r\n+  updateTime: string;\r\n+}\r\n+\r\n+// 布局项类型定义\r\n+export interface ReportLayout {\r\n+  id: string;\r\n+  type: 'table' | 'chart' | 'text';\r\n+  position: { x: number; y: number };\r\n+  size: { width: number; height: number };\r\n+  config: ComponentConfig;\r\n+  data?: any;\r\n+}\r\n+\r\n+// 组件配置类型定义\r\n+export interface ComponentConfig {\r\n+  style?: React.CSSProperties;\r\n+  dataSource?: DataSource;\r\n+  [key: string]: any;\r\n+}\r\n+\r\n+// 数据源类型定义\r\n+export interface DataSource {\r\n+  type: 'static' | 'api' | 'variable';\r\n+  value: any;\r\n+  mapping?: Record<string, string>;\r\n+}\r\n+\r\n+// 报表配置类型定义\r\n+export interface ReportConfig {\r\n+  pageSize: 'A4' | 'A3' | 'custom';\r\n+  orientation: 'portrait' | 'landscape';\r\n+  margins: {\r\n+    top: number;\r\n+    right: number;\r\n+    bottom: number;\r\n+    left: number;\r\n+  };\r\n+}\r\n+\r\n+// 组件类型定义\r\n+export interface ReportComponent {\r\n+  id: string;\r\n+  type: string;\r\n+  name: string;\r\n+  icon: string;\r\n+  defaultConfig: ComponentConfig;\r\n+}\r\n+\r\n+// 历史记录项类型定义\r\n+export interface HistoryItem {\r\n+  type: 'add' | 'update' | 'delete' | 'move';\r\n+  component: ReportLayout;\r\n+  timestamp: number;\r\n+}\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747021108930,
+            "name": "Commit-0",
+            "content": "// 报表模板类型定义\r\nexport interface ReportTemplate {\r\n  id: string;\r\n  name: string;\r\n  layout: ReportLayout[];\r\n  config: ReportConfig;\r\n  createTime: string;\r\n  updateTime: string;\r\n}\r\n\r\n// 布局项类型定义\r\nexport interface ReportLayout {\r\n  id: string;\r\n  type: 'table' | 'chart' | 'text';\r\n  position: { x: number; y: number };\r\n  size: { width: number; height: number };\r\n  config: any;\r\n  data?: any;\r\n}\r\n\r\n// 报表配置类型定义\r\nexport interface ReportConfig {\r\n  pageSize: 'A4' | 'A3' | 'custom';\r\n  orientation: 'portrait' | 'landscape';\r\n  margins: {\r\n    top: number;\r\n    right: number;\r\n    bottom: number;\r\n    left: number;\r\n  };\r\n}\r\n\r\n// 组件类型定义\r\nexport interface ReportComponent {\r\n  id: string;\r\n  type: string;\r\n  name: string;\r\n  icon: string;\r\n  defaultConfig: any;\r\n}\r\n\r\n// 响应类型定义\r\nexport interface ApiResponse<T> {\r\n  code: number;\r\n  message: string;\r\n  data: T;\r\n}"
+        }
+    ]
+}

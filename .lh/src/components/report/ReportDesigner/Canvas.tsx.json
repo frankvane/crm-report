@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/Canvas.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747022364736,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402536,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,13 @@\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const Canvas: React.FC = () => {\r\n-  return <div style={{ minHeight: 400, border: '1px dashed #ccc', background: '#fff' }}>设计画布区域</div>;\r\n+  return (\r\n+    <div\r\n\\ No newline at end of file\n+      style={{ minHeight: 400, border: \"1px dashed #ccc\", background: \"#fff\" }}\r\n+    >\r\n+      设计画布区域\r\n+    </div>\r\n+  );\r\n };\r\n \r\n-export default Canvas;\n+export default Canvas;\r\n"
+                },
+                {
+                    "date": 1747022408711,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,5 +9,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default Canvas;\n\\ No newline at end of file\n+export default Canvas;\r\n"
+                }
+            ],
+            "date": 1747022364736,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\n\r\nconst Canvas: React.FC = () => {\r\n  return <div style={{ minHeight: 400, border: '1px dashed #ccc', background: '#fff' }}>设计画布区域</div>;\r\n};\r\n\r\nexport default Canvas;"
+        }
+    ]
+}

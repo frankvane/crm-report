@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/components/ChartComponent/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747022342640,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402533,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const ChartComponent: React.FC = () => {\r\n   return <div>图表组件</div>;\r\n };\r\n \r\n\\ No newline at end of file\n-export default ChartComponent;\n+export default ChartComponent;\r\n"
+                },
+                {
+                    "date": 1747022408718,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,5 +3,5 @@\n const ChartComponent: React.FC = () => {\r\n   return <div>图表组件</div>;\r\n };\r\n \r\n-export default ChartComponent;\n\\ No newline at end of file\n+export default ChartComponent;\r\n"
+                }
+            ],
+            "date": 1747022342640,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\n\r\nconst ChartComponent: React.FC = () => {\r\n  return <div>图表组件</div>;\r\n};\r\n\r\nexport default ChartComponent;"
+        }
+    ]
+}

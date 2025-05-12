@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/PropertyPanel.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747022371412,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402537,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const PropertyPanel: React.FC = () => {\r\n   return <div>属性面板区域</div>;\r\n };\r\n \r\n\\ No newline at end of file\n-export default PropertyPanel;\n+export default PropertyPanel;\r\n"
+                },
+                {
+                    "date": 1747022408709,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,5 +3,5 @@\n const PropertyPanel: React.FC = () => {\r\n   return <div>属性面板区域</div>;\r\n };\r\n \r\n-export default PropertyPanel;\n\\ No newline at end of file\n+export default PropertyPanel;\r\n"
+                }
+            ],
+            "date": 1747022371412,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\n\r\nconst PropertyPanel: React.FC = () => {\r\n  return <div>属性面板区域</div>;\r\n};\r\n\r\nexport default PropertyPanel;"
+        }
+    ]
+}

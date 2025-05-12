@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/utils/reportUtils.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747022315834,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022379702,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,23 +1,21 @@\n-import { ComponentConfig, ReportLayout } from \"../types/report\";\r\n+import { ComponentConfig, ReportLayout } from '../types/report';\r\n \r\n // 生成唯一ID\r\n export const generateId = () => {\r\n   return Math.random().toString(36).substr(2, 9);\r\n };\r\n \r\n-// 计算组件位置\r\n+// 计算组件位置（暂未实现，保留参数以便后续扩展）\r\n export const calculatePosition = (\r\n-  layout: ReportLayout[],\r\n-  newComponent: ReportLayout\r\n+  _layout: ReportLayout[],\r\n+  _newComponent: ReportLayout\r\n ): { x: number; y: number } => {\r\n-  // 实现位置计算逻辑\r\n   return { x: 0, y: 0 };\r\n };\r\n \r\n-// 验证组件配置\r\n-export const validateConfig = (config: ComponentConfig): boolean => {\r\n-  // 实现配置验证逻辑\r\n+// 验证组件配置（暂未实现，保留参数以便后续扩展）\r\n+export const validateConfig = (_config: ComponentConfig): boolean => {\r\n   return true;\r\n };\r\n \r\n // 格式化日期\r\n"
+                }
+            ],
+            "date": 1747022315834,
+            "name": "Commit-0",
+            "content": "import { ComponentConfig, ReportLayout } from '../types/report';\r\n\r\n// 生成唯一ID\r\nexport const generateId = () => {\r\n  return Math.random().toString(36).substr(2, 9);\r\n};\r\n\r\n// 计算组件位置\r\nexport const calculatePosition = (\r\n  layout: ReportLayout[],\r\n  newComponent: ReportLayout\r\n): { x: number; y: number } => {\r\n  // 实现位置计算逻辑\r\n  return { x: 0, y: 0 };\r\n};\r\n\r\n// 验证组件配置\r\nexport const validateConfig = (config: ComponentConfig): boolean => {\r\n  // 实现配置验证逻辑\r\n  return true;\r\n};\r\n\r\n// 格式化日期\r\nexport const formatDate = (date: Date): string => {\r\n  return date.toISOString();\r\n};"
+        }
+    ]
+}

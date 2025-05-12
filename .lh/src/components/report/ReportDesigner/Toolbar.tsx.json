@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/Toolbar.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747022357751,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402535,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import { Button, Space } from 'antd';\r\n+import { Button, Space } from \"antd\";\r\n \r\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const Toolbar: React.FC = () => {\r\n   return (\r\n     <Space>\r\n@@ -14,5 +14,5 @@\n     </Space>\r\n   );\r\n };\r\n \r\n-export default Toolbar;\n\\ No newline at end of file\n+export default Toolbar;\r\n"
+                }
+            ],
+            "date": 1747022357751,
+            "name": "Commit-0",
+            "content": "import { Button, Space } from 'antd';\r\n\r\nimport React from 'react';\r\n\r\nconst Toolbar: React.FC = () => {\r\n  return (\r\n    <Space>\r\n      <Button type=\"primary\">新建</Button>\r\n      <Button>保存</Button>\r\n      <Button>预览</Button>\r\n      <Button>打印</Button>\r\n      <Button>撤销</Button>\r\n      <Button>重做</Button>\r\n    </Space>\r\n  );\r\n};\r\n\r\nexport default Toolbar;"
+        }
+    ]
+}

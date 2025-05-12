@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportPreview/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747022330222,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const ReportPreview: React.FC = () => {\r\n   return <div>报表预览区</div>;\r\n };\r\n \r\n\\ No newline at end of file\n-export default ReportPreview;\n+export default ReportPreview;\r\n"
+                },
+                {
+                    "date": 1747022408724,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,5 +3,5 @@\n const ReportPreview: React.FC = () => {\r\n   return <div>报表预览区</div>;\r\n };\r\n \r\n-export default ReportPreview;\n\\ No newline at end of file\n+export default ReportPreview;\r\n"
+                }
+            ],
+            "date": 1747022330222,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\n\r\nconst ReportPreview: React.FC = () => {\r\n  return <div>报表预览区</div>;\r\n};\r\n\r\nexport default ReportPreview;"
+        }
+    ]
+}

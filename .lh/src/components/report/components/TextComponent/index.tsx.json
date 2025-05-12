@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/components/TextComponent/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747022350265,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747022402534,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n-import React from 'react';\r\n+import React from \"react\";\r\n \r\n const TextComponent: React.FC = () => {\r\n   return <div>文本组件</div>;\r\n };\r\n \r\n\\ No newline at end of file\n-export default TextComponent; \n+export default TextComponent;\r\n"
+                },
+                {
+                    "date": 1747022408717,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,5 +3,5 @@\n const TextComponent: React.FC = () => {\r\n   return <div>文本组件</div>;\r\n };\r\n \r\n-export default TextComponent;\n\\ No newline at end of file\n+export default TextComponent;\r\n"
+                }
+            ],
+            "date": 1747022350265,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\n\r\nconst TextComponent: React.FC = () => {\r\n  return <div>文本组件</div>;\r\n};\r\n\r\nexport default TextComponent; "
+        }
+    ]
+}

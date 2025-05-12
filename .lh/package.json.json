@@ -1,0 +1,22 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747021126105,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747021142365,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,17 +10,9 @@\n     \"preview\": \"vite preview\"\n   },\n   \"dependencies\": {\n     \"react\": \"^18.3.1\",\n-    \"react-dom\": \"^18.3.1\",\n-    \"react-to-print\": \"^2.14.15\",\n-    \"react-dnd\": \"^16.0.1\",\n-    \"react-dnd-html5-backend\": \"^16.0.1\",\n-    \"@reduxjs/toolkit\": \"^2.2.1\",\n-    \"react-redux\": \"^9.1.0\",\n-    \"tailwindcss\": \"^3.4.1\",\n-    \"postcss\": \"^8.4.35\",\n-    \"autoprefixer\": \"^10.4.17\"\n+    \"react-dom\": \"^18.3.1\"\n   },\n   \"devDependencies\": {\n     \"@eslint/js\": \"^9.9.0\",\n     \"@types/react\": \"^18.3.3\",\n"
+                }
+            ],
+            "date": 1747021126105,
+            "name": "Commit-0",
+            "content": "{\n  \"name\": \"crm-report\",\n  \"private\": true,\n  \"version\": \"0.0.0\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"tsc -b && vite build\",\n    \"lint\": \"eslint .\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"react\": \"^18.3.1\",\n    \"react-dom\": \"^18.3.1\",\n    \"react-to-print\": \"^2.14.15\",\n    \"react-dnd\": \"^16.0.1\",\n    \"react-dnd-html5-backend\": \"^16.0.1\",\n    \"@reduxjs/toolkit\": \"^2.2.1\",\n    \"react-redux\": \"^9.1.0\",\n    \"tailwindcss\": \"^3.4.1\",\n    \"postcss\": \"^8.4.35\",\n    \"autoprefixer\": \"^10.4.17\"\n  },\n  \"devDependencies\": {\n    \"@eslint/js\": \"^9.9.0\",\n    \"@types/react\": \"^18.3.3\",\n    \"@types/react-dom\": \"^18.3.0\",\n    \"@vitejs/plugin-react-swc\": \"^3.5.0\",\n    \"eslint\": \"^9.9.0\",\n    \"eslint-plugin-react-hooks\": \"^5.1.0-rc.0\",\n    \"eslint-plugin-react-refresh\": \"^0.4.9\",\n    \"globals\": \"^15.9.0\",\n    \"typescript\": \"^5.5.3\",\n    \"typescript-eslint\": \"^8.0.1\",\n    \"vite\": \"^5.4.1\"\n  }\n}\n"
+        }
+    ]
+}
