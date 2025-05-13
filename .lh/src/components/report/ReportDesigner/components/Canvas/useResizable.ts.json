@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747099069565,
@@ -16,6 +16,10 @@
                 {
                     "date": 1747099440370,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,6 @@\n+import type { CanvasComponent } from \"../../types\";\r\n+import { getSnapAndGuides } from \"../../utils\";\r\n import { useRef } from \"react\";\r\n \r\n export interface UseResizableProps {\r\n   width: number;\r\n@@ -12,8 +14,14 @@\n     height: number;\r\n     x: number;\r\n     y: number;\r\n   }) => void;\r\n+  allComponents?: CanvasComponent[];\r\n+  selfId?: string;\r\n+  canvasWidth?: number;\r\n+  canvasHeight?: number;\r\n+  snapThreshold?: number;\r\n+  onGuideChange?: (guide: { x?: number; y?: number; xHighlight?: boolean; yHighlight?: boolean } | null) => void;\r\n }\r\n \r\n export function useResizable({\r\n   width,\r\n@@ -22,8 +30,14 @@\n   y,\r\n   minWidth = 20,\r\n   minHeight = 20,\r\n   onResize,\r\n+  allComponents,\r\n+  selfId,\r\n+  canvasWidth,\r\n+  canvasHeight,\r\n+  snapThreshold = 8,\r\n+  onGuideChange,\r\n }: UseResizableProps) {\r\n   const start = useRef({\r\n     x: 0,\r\n     y: 0,\r\n@@ -68,15 +82,43 @@\n     if (anchor.includes(\"n\")) {\r\n       newHeight = Math.max(start.current.height - deltaY, minHeight);\r\n       newY = start.current.top + deltaY;\r\n     }\r\n-    // TODO: 吸附逻辑可在此插入\r\n+    // 吸附逻辑\r\n+    let snapResult = null;\r\n+    if (\r\n+      allComponents &&\r\n+      typeof selfId === \"string\" &&\r\n+      typeof canvasWidth === \"number\" &&\r\n+      typeof canvasHeight === \"number\"\r\n+    ) {\r\n+      snapResult = getSnapAndGuides(\r\n+        newX,\r\n+        newY,\r\n+        selfId,\r\n+        allComponents,\r\n+        canvasWidth,\r\n+        canvasHeight,\r\n+        snapThreshold,\r\n+        newWidth,\r\n+        newHeight,\r\n+        0 // RULER_SIZE\r\n+      );\r\n+      if (snapResult) {\r\n+        if (snapResult.snapX !== undefined) newX = snapResult.snapX;\r\n+        if (snapResult.snapY !== undefined) newY = snapResult.snapY;\r\n+        if (onGuideChange) onGuideChange(snapResult.guide);\r\n+      }\r\n+    } else {\r\n+      if (onGuideChange) onGuideChange(null);\r\n+    }\r\n     onResize({ width: newWidth, height: newHeight, x: newX, y: newY });\r\n   }\r\n \r\n   function handleMouseUp() {\r\n     window.removeEventListener(\"mousemove\", handleMouseMove);\r\n     window.removeEventListener(\"mouseup\", handleMouseUp);\r\n+    if (onGuideChange) onGuideChange(null);\r\n   }\r\n \r\n   return { handleMouseDown };\r\n }\r\n"
+                },
+                {
+                    "date": 1747111765748,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -89,8 +89,15 @@\n     if (anchor.includes(\"n\")) {\r\n       newHeight = Math.max(start.current.height - deltaY, minHeight);\r\n       newY = start.current.top + deltaY;\r\n     }\r\n+    // 限制最大宽高，防止拉伸出画布\r\n+    if (typeof canvasWidth === \"number\") {\r\n+      newWidth = Math.min(newWidth, canvasWidth - newX);\r\n+    }\r\n+    if (typeof canvasHeight === \"number\") {\r\n+      newHeight = Math.min(newHeight, canvasHeight - newY);\r\n+    }\r\n     // 吸附逻辑\r\n     let snapResult = null;\r\n     if (\r\n       allComponents &&\r\n"
                 }
             ],
             "date": 1747099069565,

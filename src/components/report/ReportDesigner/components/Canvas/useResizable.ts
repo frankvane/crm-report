@@ -90,6 +90,13 @@ export function useResizable({
       newHeight = Math.max(start.current.height - deltaY, minHeight);
       newY = start.current.top + deltaY;
     }
+    // 限制最大宽高，防止拉伸出画布
+    if (typeof canvasWidth === "number") {
+      newWidth = Math.min(newWidth, canvasWidth - newX);
+    }
+    if (typeof canvasHeight === "number") {
+      newHeight = Math.min(newHeight, canvasHeight - newY);
+    }
     // 吸附逻辑
     let snapResult = null;
     if (

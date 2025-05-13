@@ -170,6 +170,17 @@ const Canvas: React.FC<CanvasProps> = ({
     handlePropertyChange({ id, ...formData });
   };
 
+  // 全局Delete键监听，支持快捷删除
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Delete" && selectedIds.length > 0) {
+        handleDeleteSelected();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIds]);
+
   return (
     <div
       style={{
@@ -181,35 +192,37 @@ const Canvas: React.FC<CanvasProps> = ({
         background: "#f5f6fa",
       }}
     >
-      {/* 工具条 */}
-      <BatchToolbar
-        selectedCount={selectedIds.length}
-        canDistribute={selectedIds.length >= 3}
-        onShowAll={handleShowAll}
-        onDeleteSelected={handleDeleteSelected}
-        onAlign={handleAlign}
-        onDistribute={handleDistribute}
-        onBatchLock={handleBatchLock}
-        onBatchVisible={handleBatchVisible}
-      />
       <div
-        ref={canvasRef}
         style={{
-          flex: 1,
-          padding: "32px 0",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          minWidth: 0,
-          minHeight: 0,
-          background: "#f5f6fa",
+          position: "relative",
+          width: width,
+          margin: "0 auto",
         }}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDrop}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
       >
+        {/* 批量工具栏 居中在画布上方 */}
         <div
+          style={{
+            position: "absolute",
+            top: -60,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 10001,
+          }}
+        >
+          <BatchToolbar
+            selectedCount={selectedIds.length}
+            canDistribute={selectedIds.length >= 3}
+            onShowAll={handleShowAll}
+            onDeleteSelected={handleDeleteSelected}
+            onAlign={handleAlign}
+            onDistribute={handleDistribute}
+            onBatchLock={handleBatchLock}
+            onBatchVisible={handleBatchVisible}
+          />
+        </div>
+        {/* 画布内容区整体偏移，预留刻度尺空间 */}
+        <div
+          ref={canvasRef}
           style={{
             position: "relative",
             width: width,
@@ -218,6 +231,10 @@ const Canvas: React.FC<CanvasProps> = ({
             border: "2px solid #bfbfbf",
             borderRadius: 12,
           }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
         >
           {/* 顶部刻度尺 */}
           <div

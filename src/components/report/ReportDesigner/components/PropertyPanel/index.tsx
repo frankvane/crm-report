@@ -1,9 +1,12 @@
 import type { CanvasComponent } from "../../types/index";
-import { Form } from "@rjsf/antd";
 import React from "react";
+import { Tabs } from "antd";
 import TextComponent from "../../../components/TextComponent";
-import { textComponentSchema } from "../../schemas/textComponentSchema";
-import validator from "@rjsf/validator-ajv8";
+
+interface PropertyPanelProps {
+  selectedComponent: CanvasComponent | undefined;
+  onChange: (formData: Partial<CanvasComponent>) => void;
+}
 
 // JSONPlaceholder 数据源列表
 const API_SOURCES = [
@@ -15,96 +18,27 @@ const API_SOURCES = [
   { label: "Users", value: "users" },
 ];
 
-// 数据源下拉 Widget
-const DataSourceWidget = (props: any) => (
-  <select
-    value={props.value || ""}
-    onChange={(e) => props.onChange(e.target.value)}
-    style={{
-      width: "100%",
-      padding: 6,
-      borderRadius: 4,
-      border: "1px solid #d9d9d9",
-    }}
-  >
-    <option value="">请选择数据源</option>
-    {API_SOURCES.map((ds) => (
-      <option key={ds.value} value={ds.value}>
-        {ds.label}
-      </option>
-    ))}
-  </select>
-);
-
-// 字段下拉 Widget（自动请求接口获取字段）
-const FieldWidget = (props: any) => {
-  const dataSource = props.formContext?.currentDataSource;
+const PropertyPanel: React.FC<PropertyPanelProps> = ({
+  selectedComponent,
+  onChange,
+}) => {
+  // 数据源状态
+  const [currentDataSource, setCurrentDataSource] = React.useState<
+    string | undefined
+  >(selectedComponent?.dataBinding?.source);
+  // 字段列表状态
   const [fields, setFields] = React.useState<string[]>([]);
 
+  // 监听数据源变化，动态获取字段列表
   React.useEffect(() => {
-    if (dataSource) {
-      fetch(`https://jsonplaceholder.typicode.com/${dataSource}/1`)
+    if (currentDataSource) {
+      fetch(`https://jsonplaceholder.typicode.com/${currentDataSource}/1`)
         .then((res) => res.json())
         .then((data) => setFields(Object.keys(data || {})));
     } else {
       setFields([]);
     }
-  }, [dataSource]);
-
-  return (
-    <select
-      value={props.value || ""}
-      onChange={(e) => props.onChange(e.target.value)}
-      style={{
-        width: "100%",
-        padding: 6,
-        borderRadius: 4,
-        border: "1px solid #d9d9d9",
-      }}
-    >
-      <option value="">请选择字段</option>
-      {fields.map((f) => (
-        <option key={f} value={f}>
-          {f}
-        </option>
-      ))}
-    </select>
-  );
-};
-
-// 表达式字段 Widget（带实时预览）
-const ExpressionWidget = (props: any) => {
-  return (
-    <>
-      <input
-        type="text"
-        value={props.value || ""}
-        onChange={(e) => props.onChange(e.target.value)}
-        style={{
-          width: "100%",
-          padding: 6,
-          borderRadius: 4,
-          border: "1px solid #d9d9d9",
-        }}
-      />
-      {/* 只在表达式字段下方渲染预览 */}
-      {props.options && props.options.preview}
-    </>
-  );
-};
-
-interface PropertyPanelProps {
-  selectedComponent: CanvasComponent | undefined;
-  onChange: (formData: Partial<CanvasComponent>) => void;
-}
-
-const PropertyPanel: React.FC<PropertyPanelProps> = ({
-  selectedComponent,
-  onChange,
-}) => {
-  const [currentDataSource, setCurrentDataSource] = React.useState<
-    string | undefined
-  >(selectedComponent?.dataBinding?.source);
+  }, [currentDataSource]);
 
   // 自动填充 mockData，随数据源和字段变化自动更新
   React.useEffect(() => {
@@ -131,18 +65,6 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
     );
   }
 
-  const schema = textComponentSchema;
-
-  // 解析 mockData 字符串为对象
-  let mockDataObj: Record<string, unknown> | undefined = undefined;
-  if (selectedComponent.mockData) {
-    try {
-      mockDataObj = JSON.parse(selectedComponent.mockData);
-    } catch {
-      mockDataObj = undefined;
-    }
-  }
-
   // 实时预览区块
   const preview = (
     <div
@@ -161,17 +83,255 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         fontWeight={selectedComponent.fontWeight}
         textAlign={selectedComponent.textAlign}
         dataBinding={selectedComponent.dataBinding}
-        mockData={mockDataObj}
+        mockData={
+          selectedComponent.mockData
+            ? JSON.parse(selectedComponent.mockData)
+            : undefined
+        }
       />
     </div>
   );
 
-  // 处理表单变更，联动数据源和字段
-  const handleFormChange = (formData: Partial<CanvasComponent>) => {
-    if (formData.dataBinding?.source !== currentDataSource) {
-      setCurrentDataSource(formData.dataBinding?.source);
-    }
-    onChange(formData);
+  // input样式复用
+  const inputStyle = {
+    padding: "6px 10px",
+    borderRadius: 4,
+    border: "1px solid #d9d9d9",
+    fontSize: 15,
+  };
+
+  // 基础属性表单内容
+  const baseTab = {
+    key: "base",
+    label: "基础属性",
+    children: (
+      <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <label style={{ color: "#666", fontSize: 14 }}>组件名称：</label>
+        <input
+          type="text"
+          value={selectedComponent.name}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, name: e.target.value })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>X 坐标：</label>
+        <input
+          type="number"
+          value={selectedComponent.x}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, x: Number(e.target.value) })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>Y 坐标：</label>
+        <input
+          type="number"
+          value={selectedComponent.y}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, y: Number(e.target.value) })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>宽度：</label>
+        <input
+          type="number"
+          value={selectedComponent.width ?? 120}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              width: Number(e.target.value),
+            })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>高度：</label>
+        <input
+          type="number"
+          value={selectedComponent.height ?? 40}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              height: Number(e.target.value),
+            })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>字体大小：</label>
+        <input
+          type="number"
+          value={selectedComponent.fontSize || 14}
+          min={10}
+          max={100}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              fontSize: Number(e.target.value),
+            })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>字体颜色：</label>
+        <input
+          type="color"
+          value={selectedComponent.color || "#222222"}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, color: e.target.value })
+          }
+          style={{
+            width: 40,
+            height: 32,
+            border: "none",
+            background: "none",
+            padding: 0,
+          }}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>字体粗细：</label>
+        <select
+          value={selectedComponent.fontWeight || "normal"}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              fontWeight: e.target.value as
+                | "normal"
+                | "bold"
+                | "bolder"
+                | "lighter",
+            })
+          }
+          style={inputStyle}
+        >
+          <option value="normal">正常</option>
+          <option value="bold">加粗</option>
+          <option value="bolder">更粗</option>
+          <option value="lighter">更细</option>
+        </select>
+        <label style={{ color: "#666", fontSize: 14 }}>对齐方式：</label>
+        <select
+          value={selectedComponent.textAlign || "left"}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              textAlign: e.target.value as "left" | "center" | "right",
+            })
+          }
+          style={inputStyle}
+        >
+          <option value="left">左对齐</option>
+          <option value="center">居中</option>
+          <option value="right">右对齐</option>
+        </select>
+      </form>
+    ),
+  };
+
+  // 数据属性表单内容
+  const dataTab = {
+    key: "data",
+    label: "数据属性",
+    children: (
+      <form style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <label style={{ color: "#666", fontSize: 14 }}>数据源：</label>
+        <select
+          value={selectedComponent.dataBinding?.source || ""}
+          onChange={(e) => {
+            setCurrentDataSource(e.target.value);
+            onChange({
+              ...selectedComponent,
+              dataBinding: {
+                ...selectedComponent.dataBinding,
+                source: e.target.value,
+                field: "", // 切换数据源时清空字段
+              },
+            });
+          }}
+          style={inputStyle}
+        >
+          <option value="">请选择数据源</option>
+          {API_SOURCES.map((ds) => (
+            <option key={ds.value} value={ds.value}>
+              {ds.label}
+            </option>
+          ))}
+        </select>
+        <label style={{ color: "#666", fontSize: 14 }}>字段：</label>
+        <select
+          value={selectedComponent.dataBinding?.field || ""}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              dataBinding: {
+                ...selectedComponent.dataBinding,
+                field: e.target.value,
+              },
+            })
+          }
+          style={inputStyle}
+        >
+          <option value="">请选择字段</option>
+          {fields.map((f) => (
+            <option key={f} value={f}>
+              {f}
+            </option>
+          ))}
+        </select>
+        <label style={{ color: "#666", fontSize: 14 }}>格式化：</label>
+        <select
+          value={selectedComponent.dataBinding?.format || "none"}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              dataBinding: {
+                ...selectedComponent.dataBinding,
+                format: e.target.value as
+                  | "none"
+                  | "currency"
+                  | "date"
+                  | "percent",
+              },
+            })
+          }
+          style={inputStyle}
+        >
+          <option value="none">无</option>
+          <option value="currency">金额</option>
+          <option value="date">日期</option>
+          <option value="percent">百分比</option>
+        </select>
+        <label style={{ color: "#666", fontSize: 14 }}>表达式：</label>
+        <input
+          type="text"
+          value={selectedComponent.dataBinding?.expression || ""}
+          onChange={(e) =>
+            onChange({
+              ...selectedComponent,
+              dataBinding: {
+                ...selectedComponent.dataBinding,
+                expression: e.target.value,
+              },
+            })
+          }
+          style={inputStyle}
+        />
+        <label style={{ color: "#666", fontSize: 14 }}>Mock数据：</label>
+        <textarea
+          value={selectedComponent.mockData || ""}
+          onChange={(e) =>
+            onChange({ ...selectedComponent, mockData: e.target.value })
+          }
+          style={{
+            width: "100%",
+            minHeight: 60,
+            borderRadius: 4,
+            border: "1px solid #d9d9d9",
+            fontSize: 15,
+            padding: 8,
+          }}
+        />
+        {/* 实时预览区块 */}
+        {preview}
+      </form>
+    ),
   };
 
   return (
@@ -184,30 +344,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
       }}
     >
       <div style={{ padding: 20 }}>
-        <Form
-          schema={schema}
-          formData={selectedComponent}
-          onChange={(e) =>
-            handleFormChange(e.formData as Partial<CanvasComponent>)
-          }
-          validator={validator}
-          formContext={{ preview, currentDataSource }}
-          uiSchema={{
-            color: { "ui:widget": "color" },
-            fontSize: { "ui:widget": "updown" },
-            mockData: { "ui:widget": "textarea" },
-            dataBinding: {
-              source: { "ui:widget": DataSourceWidget },
-              field: { "ui:widget": FieldWidget },
-              expression: {
-                "ui:widget": ExpressionWidget,
-                "ui:options": { preview },
-              },
-            },
-            "ui:options": { submitButtonOptions: { norender: true } },
-          }}
-          showErrorList={false}
-        />
+        <Tabs defaultActiveKey="base" items={[baseTab, dataTab]} />
       </div>
     </div>
   );

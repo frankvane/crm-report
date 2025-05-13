@@ -71,8 +71,8 @@ export function useSelectionBox({
         if (comp.visible === false) return false;
         const compLeft = comp.x;
         const compTop = comp.y;
-        const compRight = comp.x + COMPONENT_WIDTH;
-        const compBottom = comp.y + COMPONENT_HEIGHT;
+        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
+        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
         return (
           compRight > minX &&
           compLeft < maxX &&
@@ -89,12 +89,12 @@ export function useSelectionBox({
   };
 
   // 框选结束
-  const handleSelectionMouseUp = (e?: React.MouseEvent) => {
+  const handleSelectionMouseUp = () => {
     if (!selectionBox.active) return;
     const rect = contentRef.current!.getBoundingClientRect();
     // 用鼠标松开时的点作为 endX/endY
-    const x = e ? e.clientX - rect.left : selectionBox.endX;
-    const y = e ? e.clientY - rect.top : selectionBox.endY;
+    const x = selectionBox.endX;
+    const y = selectionBox.endY;
 
     const minX = Math.min(selectionBox.startX, x);
     const maxX = Math.max(selectionBox.startX, x);
@@ -105,8 +105,8 @@ export function useSelectionBox({
         if (comp.visible === false) return false;
         const compLeft = comp.x;
         const compTop = comp.y;
-        const compRight = comp.x + COMPONENT_WIDTH;
-        const compBottom = comp.y + COMPONENT_HEIGHT;
+        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
+        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
         return (
           compRight > minX &&
           compLeft < maxX &&
@@ -116,10 +116,9 @@ export function useSelectionBox({
       })
       .map((comp) => comp.id);
     if (
-      (e && (e.shiftKey || e.ctrlKey)) ||
-      (window.event &&
-        ((window.event as MouseEvent).shiftKey ||
-          (window.event as MouseEvent).ctrlKey))
+      window.event &&
+      ((window.event as MouseEvent).shiftKey ||
+        (window.event as MouseEvent).ctrlKey)
     ) {
       setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));
     } else {

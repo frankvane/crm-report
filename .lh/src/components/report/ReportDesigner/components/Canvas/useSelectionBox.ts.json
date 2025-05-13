@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1747106264006,
@@ -16,6 +16,18 @@
                 {
                     "date": 1747106693272,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n+import { useEffect, useState } from \"react\";\r\n+\r\n import type { CanvasComponent } from \"../../types\";\r\n-import { useState } from \"react\";\r\n \r\n interface SelectionBoxState {\r\n   startX: number;\r\n   startY: number;\r\n@@ -31,8 +32,18 @@\n     endY: 0,\r\n     active: false,\r\n   });\r\n \r\n+  // 全局 mouseup 监听，保证鼠标释放时能正确结束框选\r\n+  useEffect(() => {\r\n+    if (!selectionBox.active) return;\r\n+    const handleUp = (e: MouseEvent) => {\r\n+      handleSelectionMouseUp();\r\n+    };\r\n+    window.addEventListener(\"mouseup\", handleUp);\r\n+    return () => window.removeEventListener(\"mouseup\", handleUp);\r\n+  }, [selectionBox.active]);\r\n+\r\n   // 框选开始\r\n   const handleSelectionMouseDown = (e: React.MouseEvent) => {\r\n     if (e.button !== 0 || e.target !== contentRef.current) return;\r\n     const rect = contentRef.current!.getBoundingClientRect();\r\n"
+                },
+                {
+                    "date": 1747108214108,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -70,10 +70,10 @@\n       .filter((comp) => {\r\n         if (comp.visible === false) return false;\r\n         const compLeft = comp.x;\r\n         const compTop = comp.y;\r\n-        const compRight = comp.x + COMPONENT_WIDTH;\r\n-        const compBottom = comp.y + COMPONENT_HEIGHT;\r\n+        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);\r\n+        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);\r\n         return (\r\n           compRight > minX &&\r\n           compLeft < maxX &&\r\n           compBottom > minY &&\r\n@@ -104,10 +104,10 @@\n       .filter((comp) => {\r\n         if (comp.visible === false) return false;\r\n         const compLeft = comp.x;\r\n         const compTop = comp.y;\r\n-        const compRight = comp.x + COMPONENT_WIDTH;\r\n-        const compBottom = comp.y + COMPONENT_HEIGHT;\r\n+        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);\r\n+        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);\r\n         return (\r\n           compRight > minX &&\r\n           compLeft < maxX &&\r\n           compBottom > minY &&\r\n"
+                },
+                {
+                    "date": 1747108220194,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -88,14 +88,14 @@\n     }\r\n   };\r\n \r\n   // 框选结束\r\n-  const handleSelectionMouseUp = (e?: React.MouseEvent) => {\r\n+  const handleSelectionMouseUp = () => {\r\n     if (!selectionBox.active) return;\r\n     const rect = contentRef.current!.getBoundingClientRect();\r\n     // 用鼠标松开时的点作为 endX/endY\r\n-    const x = e ? e.clientX - rect.left : selectionBox.endX;\r\n-    const y = e ? e.clientY - rect.top : selectionBox.endY;\r\n+    const x = selectionBox.endX;\r\n+    const y = selectionBox.endY;\r\n \r\n     const minX = Math.min(selectionBox.startX, x);\r\n     const maxX = Math.max(selectionBox.startX, x);\r\n     const minY = Math.min(selectionBox.startY, y);\r\n@@ -115,9 +115,8 @@\n         );\r\n       })\r\n       .map((comp) => comp.id);\r\n     if (\r\n-      (e && (e.shiftKey || e.ctrlKey)) ||\r\n       (window.event &&\r\n         ((window.event as MouseEvent).shiftKey ||\r\n           (window.event as MouseEvent).ctrlKey))\r\n     ) {\r\n"
+                },
+                {
+                    "date": 1747108228302,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -115,11 +115,11 @@\n         );\r\n       })\r\n       .map((comp) => comp.id);\r\n     if (\r\n-      (window.event &&\r\n-        ((window.event as MouseEvent).shiftKey ||\r\n-          (window.event as MouseEvent).ctrlKey))\r\n+      window.event &&\r\n+      ((window.event as MouseEvent).shiftKey ||\r\n+        (window.event as MouseEvent).ctrlKey)\r\n     ) {\r\n       setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));\r\n     } else {\r\n       setSelectedIds(selected);\r\n"
                 }
             ],
             "date": 1747106264006,

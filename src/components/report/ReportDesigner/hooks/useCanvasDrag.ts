@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 
 import type { CanvasComponent } from "../types";
-import { getSnapAndGuides } from "../utils";
 
 export interface UseCanvasDragProps {
   components: CanvasComponent[];
@@ -10,8 +9,6 @@ export interface UseCanvasDragProps {
   onComponentMove: (id: string, x: number, y: number) => void;
   COMPONENT_WIDTH: number;
   COMPONENT_HEIGHT: number;
-  SNAP_THRESHOLD: number;
-  RULER_SIZE: number;
   contentRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -22,8 +19,6 @@ export function useCanvasDrag({
   onComponentMove,
   COMPONENT_WIDTH,
   COMPONENT_HEIGHT,
-  SNAP_THRESHOLD,
-  RULER_SIZE,
   contentRef,
 }: UseCanvasDragProps) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -48,14 +43,14 @@ export function useCanvasDrag({
     e.preventDefault();
     const type = e.dataTransfer.getData("type");
     if (!type) return;
-    const contentRect = contentRef.current?.getBoundingClientRect();
+    const contentRect = contentRef.current!.getBoundingClientRect();
     if (!contentRect) return;
     // 鼠标相对内容区左上角的坐标
     const x = e.clientX - contentRect.left;
     const y = e.clientY - contentRect.top;
     // 用内容区宽高裁剪，防止超出
-    const contentWidth = contentRef.current.offsetWidth;
-    const contentHeight = contentRef.current.offsetHeight;
+    const contentWidth = contentRef.current!.offsetWidth;
+    const contentHeight = contentRef.current!.offsetHeight;
     const clampedX = Math.max(0, Math.min(x, contentWidth - COMPONENT_WIDTH));
     const clampedY = Math.max(0, Math.min(y, contentHeight - COMPONENT_HEIGHT));
     onDrop(type, clampedX, clampedY);
@@ -147,13 +142,16 @@ export function useCanvasDrag({
         maxBottom = -Infinity;
       selectedIds.forEach((sid) => {
         const init = multiDragInitPos.current[sid];
-        if (!init) return;
+        const comp = components.find((c) => c.id === sid);
+        if (!init || !comp) return;
+        const compWidth = comp.width ?? COMPONENT_WIDTH;
+        const compHeight = comp.height ?? COMPONENT_HEIGHT;
         const nx = init.x + dxRaw;
         const ny = init.y + dyRaw;
         minLeft = Math.min(minLeft, nx);
-        maxRight = Math.max(maxRight, nx + COMPONENT_WIDTH);
+        maxRight = Math.max(maxRight, nx + compWidth);
         minTop = Math.min(minTop, ny);
-        maxBottom = Math.max(maxBottom, ny + COMPONENT_HEIGHT);
+        maxBottom = Math.max(maxBottom, ny + compHeight);
       });
       // 计算允许的 dx/dy 修正量
       let dx = dxRaw,
@@ -164,9 +162,15 @@ export function useCanvasDrag({
       if (maxBottom > contentHeight) dy -= maxBottom - contentHeight;
       selectedIds.forEach((sid) => {
         const init = multiDragInitPos.current[sid];
-        if (!init) return;
-        const nx = init.x + dx;
-        const ny = init.y + dy;
+        const comp = components.find((c) => c.id === sid);
+        if (!init || !comp) return;
+        const compWidth = comp.width ?? COMPONENT_WIDTH;
+        const compHeight = comp.height ?? COMPONENT_HEIGHT;
+        let nx = init.x + dx;
+        let ny = init.y + dy;
+        // 单个组件也要限制边界
+        nx = Math.max(0, Math.min(nx, contentWidth - compWidth));
+        ny = Math.max(0, Math.min(ny, contentHeight - compHeight));
         onComponentMove(sid, nx, ny);
       });
       setGuideLines(null);
@@ -177,31 +181,13 @@ export function useCanvasDrag({
     // 组件左上角 = 鼠标绝对坐标 - offset
     const rawX = mouseX - dragOffset.x;
     const rawY = mouseY - dragOffset.y;
-    // 吸附逻辑
-    const contentWidth = contentRef.current.offsetWidth;
-    const contentHeight = contentRef.current.offsetHeight;
-    const { snapX, snapY, guide } = getSnapAndGuides(
-      rawX,
-      rawY,
-      draggingId,
-      components,
-      contentWidth,
-      contentHeight,
-      SNAP_THRESHOLD,
-      COMPONENT_WIDTH,
-      COMPONENT_HEIGHT,
-      0, // 内容区内坐标，RULER_SIZE=0
-      40 // gridStep
-    );
-    setGuideLines(guide);
-    // x/y 轴分别独立吸附
-    const finalX = guide.xHighlight ? snapX : rawX;
-    const finalY = guide.yHighlight ? snapY : rawY;
-    // 边界裁剪
-    const maxX = contentWidth - COMPONENT_WIDTH;
-    const maxY = contentHeight - COMPONENT_HEIGHT;
-    const clampedX = Math.max(0, Math.min(finalX, maxX));
-    const clampedY = Math.max(0, Math.min(finalY, maxY));
+    const contentWidth = contentRef.current!.offsetWidth;
+    const contentHeight = contentRef.current!.offsetHeight;
+    const comp = components.find((c) => c.id === draggingId);
+    const compWidth = comp?.width ?? COMPONENT_WIDTH;
+    const compHeight = comp?.height ?? COMPONENT_HEIGHT;
+    const clampedX = Math.max(0, Math.min(rawX, contentWidth - compWidth));
+    const clampedY = Math.max(0, Math.min(rawY, contentHeight - compHeight));
     onComponentMove(draggingId, clampedX, clampedY);
   };
   const handleMouseUp = () => {
