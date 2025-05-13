@@ -5,12 +5,74 @@ import TextComponent from "../../../components/TextComponent";
 import { textComponentSchema } from "../../schemas/textComponentSchema";
 import validator from "@rjsf/validator-ajv8";
 
-interface PropertyPanelProps {
-  selectedComponent: CanvasComponent | undefined;
-  onChange: (formData: Partial<CanvasComponent>) => void;
-}
+// JSONPlaceholder 数据源列表
+const API_SOURCES = [
+  { label: "Posts", value: "posts" },
+  { label: "Comments", value: "comments" },
+  { label: "Albums", value: "albums" },
+  { label: "Photos", value: "photos" },
+  { label: "Todos", value: "todos" },
+  { label: "Users", value: "users" },
+];
 
-// 自定义表达式字段 Widget，渲染实时预览区块
+// 数据源下拉 Widget
+const DataSourceWidget = (props: any) => (
+  <select
+    value={props.value || ""}
+    onChange={(e) => props.onChange(e.target.value)}
+    style={{
+      width: "100%",
+      padding: 6,
+      borderRadius: 4,
+      border: "1px solid #d9d9d9",
+    }}
+  >
+    <option value="">请选择数据源</option>
+    {API_SOURCES.map((ds) => (
+      <option key={ds.value} value={ds.value}>
+        {ds.label}
+      </option>
+    ))}
+  </select>
+);
+
+// 字段下拉 Widget（自动请求接口获取字段）
+const FieldWidget = (props: any) => {
+  const dataSource = props.formContext?.currentDataSource;
+  const [fields, setFields] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    if (dataSource) {
+      fetch(`https://jsonplaceholder.typicode.com/${dataSource}/1`)
+        .then((res) => res.json())
+        .then((data) => setFields(Object.keys(data || {})));
+    } else {
+      setFields([]);
+    }
+  }, [dataSource]);
+
+  return (
+    <select
+      value={props.value || ""}
+      onChange={(e) => props.onChange(e.target.value)}
+      style={{
+        width: "100%",
+        padding: 6,
+        borderRadius: 4,
+        border: "1px solid #d9d9d9",
+      }}
+    >
+      <option value="">请选择字段</option>
+      {fields.map((f) => (
+        <option key={f} value={f}>
+          {f}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+// 表达式字段 Widget（带实时预览）
 const ExpressionWidget = (props: any) => {
   return (
     <>
@@ -31,10 +93,36 @@ const ExpressionWidget = (props: any) => {
   );
 };
 
+interface PropertyPanelProps {
+  selectedComponent: CanvasComponent | undefined;
+  onChange: (formData: Partial<CanvasComponent>) => void;
+}
+
 const PropertyPanel: React.FC<PropertyPanelProps> = ({
   selectedComponent,
   onChange,
 }) => {
+  const [currentDataSource, setCurrentDataSource] = React.useState<
+    string | undefined
+  >(selectedComponent?.dataBinding?.source);
+
+  // 自动填充 mockData，随数据源和字段变化自动更新
+  React.useEffect(() => {
+    if (currentDataSource && selectedComponent) {
+      fetch(`https://jsonplaceholder.typicode.com/${currentDataSource}/1`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && typeof data === "object") {
+            onChange({
+              ...selectedComponent,
+              mockData: JSON.stringify(data, null, 2),
+            });
+          }
+        });
+    }
+    // eslint-disable-next-line
+  }, [currentDataSource, selectedComponent?.dataBinding?.field]);
+
   if (!selectedComponent) {
     return (
       <div style={{ color: "#aaa", padding: 20 }}>
@@ -65,9 +153,7 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         borderRadius: 6,
       }}
     >
-      <div style={{ color: "#888", fontSize: 13, marginBottom: 6 }}>
-        实时预览：
-      </div>
+      <div style={{ marginBottom: 6 }}>实时预览：</div>
       <TextComponent
         text={selectedComponent.text || ""}
         fontSize={selectedComponent.fontSize}
@@ -79,6 +165,14 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
       />
     </div>
   );
+
+  // 处理表单变更，联动数据源和字段
+  const handleFormChange = (formData: Partial<CanvasComponent>) => {
+    if (formData.dataBinding?.source !== currentDataSource) {
+      setCurrentDataSource(formData.dataBinding?.source);
+    }
+    onChange(formData);
+  };
 
   return (
     <div
@@ -93,14 +187,18 @@ const PropertyPanel: React.FC<PropertyPanelProps> = ({
         <Form
           schema={schema}
           formData={selectedComponent}
-          onChange={(e) => onChange(e.formData as Partial<CanvasComponent>)}
+          onChange={(e) =>
+            handleFormChange(e.formData as Partial<CanvasComponent>)
+          }
           validator={validator}
-          formContext={{ preview }}
+          formContext={{ preview, currentDataSource }}
           uiSchema={{
             color: { "ui:widget": "color" },
             fontSize: { "ui:widget": "updown" },
             mockData: { "ui:widget": "textarea" },
             dataBinding: {
+              source: { "ui:widget": DataSourceWidget },
+              field: { "ui:widget": FieldWidget },
               expression: {
                 "ui:widget": ExpressionWidget,
                 "ui:options": { preview },
