@@ -1,6 +1,6 @@
 import { CanvasComponent, ComponentLibraryItem } from "../types/index";
 
-import { generateId } from "../../../../utils/reportUtils";
+import { nanoid } from "nanoid";
 import { useState } from "react";
 
 export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
@@ -13,7 +13,7 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
   const handleDrop = (type: string, x: number, y: number) => {
     const comp = componentList.find((c) => c.type === type);
     if (!comp) return;
-    const newId = generateId();
+    const newId = nanoid();
     let schemaProps = {};
     if (type === "text") {
       schemaProps = {
@@ -30,16 +30,19 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
         },
       };
     }
+    // 丢弃 comp.id 字段，防止污染
+    const compWithoutId = { ...comp };
+    if ("id" in compWithoutId) void delete compWithoutId.id;
     setCanvasComponents((prev) => [
       ...prev,
       {
-        ...comp,
-        id: newId,
+        ...compWithoutId,
+        ...schemaProps,
         x,
         y,
         locked: false,
         visible: true,
-        ...schemaProps,
+        id: newId, // 一定要放最后，确保唯一id
       },
     ]);
     setSelectedId(newId);
@@ -55,10 +58,10 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
   };
   // 属性面板变更
   const handlePropertyChange = (formData: Partial<CanvasComponent>) => {
+    const { id, ...rest } = formData;
+    if (!id) return;
     setCanvasComponents((prev) =>
-      prev.map((comp) =>
-        comp.id === selectedId ? { ...comp, ...formData } : comp
-      )
+      prev.map((comp) => (comp.id === id ? { ...comp, ...rest } : comp))
     );
   };
   // 删除组件
@@ -71,17 +74,17 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
     setCanvasComponents((prev) => {
       const comp = prev.find((c) => c.id === id);
       if (!comp) return prev;
-      const newId = generateId();
+      const newId = nanoid();
       // 新组件偏移20像素，避免重叠
       return [
         ...prev,
         {
           ...comp,
-          id: newId,
           x: comp.x + 20,
           y: comp.y + 20,
           locked: false,
           visible: true,
+          id: newId,
         },
       ];
     });

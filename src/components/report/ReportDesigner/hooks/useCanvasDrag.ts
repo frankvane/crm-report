@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import type { CanvasComponent } from "../types";
+import { getSnapAndGuides } from "../utils";
 
 export interface UseCanvasDragProps {
   components: CanvasComponent[];
@@ -177,8 +178,7 @@ export function useCanvasDrag({
       return;
     }
 
-    // 单选拖动
-    // 组件左上角 = 鼠标绝对坐标 - offset
+    // 单选拖动，集成吸附和参考线
     const rawX = mouseX - dragOffset.x;
     const rawY = mouseY - dragOffset.y;
     const contentWidth = contentRef.current!.offsetWidth;
@@ -186,8 +186,22 @@ export function useCanvasDrag({
     const comp = components.find((c) => c.id === draggingId);
     const compWidth = comp?.width ?? COMPONENT_WIDTH;
     const compHeight = comp?.height ?? COMPONENT_HEIGHT;
-    const clampedX = Math.max(0, Math.min(rawX, contentWidth - compWidth));
-    const clampedY = Math.max(0, Math.min(rawY, contentHeight - compHeight));
+    // 吸附逻辑
+    const { snapX, snapY, guide } = getSnapAndGuides(
+      rawX,
+      rawY,
+      draggingId,
+      components,
+      contentWidth,
+      contentHeight,
+      8, // SNAP_THRESHOLD
+      compWidth,
+      compHeight,
+      0 // RULER_SIZE
+    );
+    setGuideLines(guide);
+    const clampedX = Math.max(0, Math.min(snapX, contentWidth - compWidth));
+    const clampedY = Math.max(0, Math.min(snapY, contentHeight - compHeight));
     onComponentMove(draggingId, clampedX, clampedY);
   };
   const handleMouseUp = () => {

@@ -1,9 +1,12 @@
+import TextComponent, {
+  TextComponentProps,
+} from "../../../components/TextComponent";
+
 import type { CanvasComponent } from "../../types";
 import ChartComponent from "../../../components/ChartComponent";
 import React from "react";
 import { ResizableWrapper } from "./ResizableWrapper";
 import TableComponent from "../../../components/TableComponent";
-import TextComponent from "../../../components/TextComponent";
 
 interface ComponentRendererProps {
   components: CanvasComponent[];
@@ -33,7 +36,14 @@ interface ComponentRendererProps {
   ) => void;
 }
 
-const componentMap: Record<string, React.FC<any>> = {
+// 定义各类型组件的 props
+type ComponentMapType = {
+  text: React.FC<TextComponentProps>;
+  table: React.FC<object>;
+  chart: React.FC<object>;
+};
+
+const componentMap: ComponentMapType = {
   text: TextComponent,
   table: TableComponent,
   chart: ChartComponent,
@@ -57,12 +67,22 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 }) => {
   return (
     <>
+      {(() => {
+        console.log(
+          "components:",
+          components.map((c) => ({ id: c.id, visible: c.visible }))
+        );
+        console.log("selectedIds:", selectedIds);
+        return null;
+      })()}
       {components.map((comp, idx) => {
         if (comp.visible === false) return null;
         const Comp =
-          componentMap[comp.type] ||
+          (componentMap as Record<string, React.FC<unknown>>)[comp.type] ||
           (() => <div style={{ color: "red" }}>未知组件类型: {comp.type}</div>);
-        if (comp.type === "text") {
+
+        // 只在单选时渲染可缩放
+        if (selectedIds.length === 1 && selectedIds[0] === comp.id) {
           return (
             <ResizableWrapper
               key={comp.id}
@@ -70,7 +90,7 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               height={comp.height ?? COMPONENT_HEIGHT}
               x={comp.x}
               y={comp.y}
-              selected={selectedIds.includes(comp.id)}
+              selected={true}
               locked={comp.locked}
               onResize={(rect) => handlePropertyChange({ ...rect })}
               allComponents={allComponents}
@@ -79,29 +99,41 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               canvasHeight={canvasHeight}
               snapThreshold={snapThreshold}
               onGuideChange={setResizeGuideLines}
-              handleDragStart={(e) => handleMouseDown(comp.id, e)}
+              handleDragStart={(e) =>
+                handleMouseDown(
+                  comp.id,
+                  e,
+                  compRefs.current[comp.id] as HTMLDivElement
+                )
+              }
               onContextMenu={(e) => handleContextMenu(e, comp.id)}
             >
-              <TextComponent
-                text={comp.text || ""}
-                fontSize={comp.fontSize}
-                color={comp.color}
-                fontWeight={comp.fontWeight}
-                textAlign={comp.textAlign}
-                dataBinding={comp.dataBinding}
-                mockData={(() => {
-                  try {
-                    return comp.mockData
-                      ? JSON.parse(comp.mockData)
-                      : undefined;
-                  } catch {
-                    return undefined;
-                  }
-                })()}
-              />
+              {comp.type === "text" ? (
+                <TextComponent
+                  text={comp.text || ""}
+                  fontSize={comp.fontSize}
+                  color={comp.color}
+                  fontWeight={comp.fontWeight}
+                  textAlign={comp.textAlign}
+                  dataBinding={comp.dataBinding}
+                  mockData={(() => {
+                    try {
+                      return comp.mockData
+                        ? JSON.parse(comp.mockData)
+                        : undefined;
+                    } catch {
+                      return undefined;
+                    }
+                  })()}
+                />
+              ) : (
+                <Comp />
+              )}
             </ResizableWrapper>
           );
         }
+
+        // 多选或未选中，普通渲染
         return (
           <div
             ref={(el) => {
@@ -146,17 +178,40 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               if (e.shiftKey || e.ctrlKey) {
                 // shift/ctrl 多选/反选
                 if (selectedIds.includes(comp.id)) {
-                  setSelectedIds(selectedIds.filter((id) => id !== comp.id));
+                  setSelectedIds((prev) => prev.filter((id) => id !== comp.id));
                 } else {
-                  setSelectedIds([...selectedIds, comp.id]);
+                  setSelectedIds((prev) => [...prev, comp.id]);
                 }
               } else {
-                setSelectedIds([comp.id]);
+                setSelectedIds(() => [comp.id]);
               }
+              setTimeout(() => {
+                console.log("after click, selectedIds:", selectedIds);
+              }, 0);
             }}
             onContextMenu={(e) => handleContextMenu(e, comp.id)}
           >
-            <Comp />
+            {comp.type === "text" ? (
+              <TextComponent
+                text={comp.text || ""}
+                fontSize={comp.fontSize}
+                color={comp.color}
+                fontWeight={comp.fontWeight}
+                textAlign={comp.textAlign}
+                dataBinding={comp.dataBinding}
+                mockData={(() => {
+                  try {
+                    return comp.mockData
+                      ? JSON.parse(comp.mockData)
+                      : undefined;
+                  } catch {
+                    return undefined;
+                  }
+                })()}
+              />
+            ) : (
+              <Comp />
+            )}
           </div>
         );
       })}

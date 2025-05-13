@@ -37,7 +37,12 @@ export function useSelectionBox({
   useEffect(() => {
     if (!selectionBox.active) return;
     const handleUp = (e: MouseEvent) => {
-      handleSelectionMouseUp();
+      if (!contentRef.current) return;
+      const rect = contentRef.current.getBoundingClientRect();
+      // 鼠标松开时的点，转为contentRef内坐标
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      handleSelectionMouseUp(x, y);
     };
     window.addEventListener("mouseup", handleUp);
     return () => window.removeEventListener("mouseup", handleUp);
@@ -73,12 +78,13 @@ export function useSelectionBox({
         const compTop = comp.y;
         const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
         const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
-        return (
-          compRight > minX &&
+        // 只要有部分区域在框选区内就算命中
+        const isIntersect =
           compLeft < maxX &&
-          compBottom > minY &&
-          compTop < maxY
-        );
+          compRight > minX &&
+          compTop < maxY &&
+          compBottom > minY;
+        return isIntersect;
       })
       .map((comp) => comp.id);
     if (e.shiftKey || e.ctrlKey) {
@@ -88,18 +94,16 @@ export function useSelectionBox({
     }
   };
 
-  // 框选结束
-  const handleSelectionMouseUp = () => {
+  // 框选结束，x/y为鼠标松开时相对于contentRef的坐标
+  const handleSelectionMouseUp = (x?: number, y?: number) => {
     if (!selectionBox.active) return;
-    const rect = contentRef.current!.getBoundingClientRect();
-    // 用鼠标松开时的点作为 endX/endY
-    const x = selectionBox.endX;
-    const y = selectionBox.endY;
-
-    const minX = Math.min(selectionBox.startX, x);
-    const maxX = Math.max(selectionBox.startX, x);
-    const minY = Math.min(selectionBox.startY, y);
-    const maxY = Math.max(selectionBox.startY, y);
+    // 如果没传x/y，默认用selectionBox.endX/endY
+    const endX = typeof x === "number" ? x : selectionBox.endX;
+    const endY = typeof y === "number" ? y : selectionBox.endY;
+    const minX = Math.min(selectionBox.startX, endX);
+    const maxX = Math.max(selectionBox.startX, endX);
+    const minY = Math.min(selectionBox.startY, endY);
+    const maxY = Math.max(selectionBox.startY, endY);
     const selected = components
       .filter((comp) => {
         if (comp.visible === false) return false;
@@ -107,12 +111,13 @@ export function useSelectionBox({
         const compTop = comp.y;
         const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
         const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
-        return (
-          compRight > minX &&
+        // 只要有部分区域在框选区内就算命中
+        const isIntersect =
           compLeft < maxX &&
-          compBottom > minY &&
-          compTop < maxY
-        );
+          compRight > minX &&
+          compTop < maxY &&
+          compBottom > minY;
+        return isIntersect;
       })
       .map((comp) => comp.id);
     if (
