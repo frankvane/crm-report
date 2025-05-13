@@ -42,6 +42,7 @@ interface ResizableWrapperProps {
     y: number;
   }) => void;
   selected: boolean;
+  locked?: boolean;
   children: React.ReactNode;
   allComponents?: CanvasComponent[];
   selfId?: string;
@@ -67,6 +68,7 @@ export const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
   y,
   onResize,
   selected,
+  locked,
   children,
   allComponents,
   selfId,
@@ -100,21 +102,24 @@ export const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
         width,
         height,
         boxSizing: "border-box",
-        cursor: "move",
+        cursor: locked ? "not-allowed" : "move",
         boxShadow: hover ? "0 2px 8px rgba(0, 0, 0, 0.2)" : undefined,
         transition: "box-shadow 0.18s",
+        pointerEvents: "auto",
+        opacity: locked ? 0.5 : 1,
       }}
       onMouseDown={(e) => {
         if ((e.target as HTMLElement).classList.contains("resize-anchor"))
           return;
-        handleDragStart?.(e);
+        if (!locked) handleDragStart?.(e);
       }}
       onContextMenu={onContextMenu}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
       {children}
-      {selected &&
+      {!locked &&
+        selected &&
         anchors.map((anchor) => (
           <div
             key={anchor}

@@ -71,6 +71,7 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               x={comp.x}
               y={comp.y}
               selected={selectedIds.includes(comp.id)}
+              locked={comp.locked}
               onResize={(rect) => handlePropertyChange({ ...rect })}
               allComponents={allComponents}
               selfId={comp.id}
