@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
+
 import type { CanvasComponent } from "../../types";
-import { useState } from "react";
 
 interface SelectionBoxState {
   startX: number;
@@ -32,6 +33,16 @@ export function useSelectionBox({
     active: false,
   });
 
+  // 全局 mouseup 监听，保证鼠标释放时能正确结束框选
+  useEffect(() => {
+    if (!selectionBox.active) return;
+    const handleUp = (e: MouseEvent) => {
+      handleSelectionMouseUp();
+    };
+    window.addEventListener("mouseup", handleUp);
+    return () => window.removeEventListener("mouseup", handleUp);
+  }, [selectionBox.active]);
+
   // 框选开始
   const handleSelectionMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0 || e.target !== contentRef.current) return;
@@ -47,9 +58,10 @@ export function useSelectionBox({
     const rect = contentRef.current!.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+    // 先更新选区
     setSelectionBox((prev) => ({ ...prev, endX: x, endY: y }));
 
-    // 实时计算选区内组件
+    // 用最新的 startX/startY 和当前 x/y 计算选区
     const minX = Math.min(selectionBox.startX, x);
     const maxX = Math.max(selectionBox.startX, x);
     const minY = Math.min(selectionBox.startY, y);
@@ -79,10 +91,15 @@ export function useSelectionBox({
   // 框选结束
   const handleSelectionMouseUp = (e?: React.MouseEvent) => {
     if (!selectionBox.active) return;
-    const minX = Math.min(selectionBox.startX, selectionBox.endX);
-    const maxX = Math.max(selectionBox.startX, selectionBox.endX);
-    const minY = Math.min(selectionBox.startY, selectionBox.endY);
-    const maxY = Math.max(selectionBox.startY, selectionBox.endY);
+    const rect = contentRef.current!.getBoundingClientRect();
+    // 用鼠标松开时的点作为 endX/endY
+    const x = e ? e.clientX - rect.left : selectionBox.endX;
+    const y = e ? e.clientY - rect.top : selectionBox.endY;
+
+    const minX = Math.min(selectionBox.startX, x);
+    const maxX = Math.max(selectionBox.startX, x);
+    const minY = Math.min(selectionBox.startY, y);
+    const maxY = Math.max(selectionBox.startY, y);
     const selected = components
       .filter((comp) => {
         if (comp.visible === false) return false;

@@ -21,6 +21,8 @@ export interface CanvasComponent {
     expression?: string;
   };
   mockData?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface ComponentLibraryItem {

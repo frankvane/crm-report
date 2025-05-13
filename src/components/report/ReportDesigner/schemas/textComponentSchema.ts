@@ -35,5 +35,7 @@ export const textComponentSchema: JSONSchema7 = {
       },
     },
     mockData: { type: "string", title: "Mock数据（JSON）" },
+    width: { type: "number", title: "宽度(px)", minimum: 20, default: 120 },
+    height: { type: "number", title: "高度(px)", minimum: 20, default: 32 },
   },
 };

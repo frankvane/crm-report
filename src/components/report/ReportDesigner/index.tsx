@@ -121,6 +121,7 @@ const ReportDesigner: React.FC = () => {
           handleMoveToBottom={handleMoveToBottom}
           handleToggleLock={handleToggleLock}
           handleToggleVisible={handleToggleVisible}
+          handlePropertyChange={handlePropertyChange}
         />
         <PropertyPanel
           selectedComponent={selectedComponent}

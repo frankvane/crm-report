@@ -31,6 +31,7 @@ interface CanvasProps {
   handleMoveToBottom: (id: string) => void;
   handleToggleLock: (id: string) => void;
   handleToggleVisible: (id: string) => void;
+  handlePropertyChange: (formData: Partial<CanvasComponent>) => void;
 }
 
 const SNAP_THRESHOLD = 8; // px 吸附阈值
@@ -61,6 +62,7 @@ const Canvas: React.FC<CanvasProps> = ({
   handleMoveToBottom,
   handleToggleLock,
   handleToggleVisible,
+  handlePropertyChange,
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const {
@@ -152,6 +154,20 @@ const Canvas: React.FC<CanvasProps> = ({
   };
   const handleBatchVisible = (visible: boolean) => {
     batchVisible(components, selectedIds, visible, handleToggleVisible);
+  };
+
+  // 吸附线状态（缩放专用）
+  const [resizeGuideLines, setResizeGuideLines] =
+    React.useState<GuideLines | null>(null);
+
+  // 属性变更：用于缩放、属性面板等
+  const handlePropertyChangeInternal = (formData: Partial<CanvasComponent>) => {
+    if (!selectedIds.length) return;
+    const id = selectedIds[0];
+    if (!id) return;
+
+    // 直接调用 props 传递下来的 handlePropertyChange，带上 id
+    handlePropertyChange({ id, ...formData });
   };
 
   return (
@@ -260,10 +276,14 @@ const Canvas: React.FC<CanvasProps> = ({
             />
             {/* 辅助线渲染 */}
             <GuideLines
-              x={typedGuideLines?.x}
-              y={typedGuideLines?.y}
-              xHighlight={typedGuideLines?.xHighlight}
-              yHighlight={typedGuideLines?.yHighlight}
+              x={resizeGuideLines?.x ?? typedGuideLines?.x}
+              y={resizeGuideLines?.y ?? typedGuideLines?.y}
+              xHighlight={
+                resizeGuideLines?.xHighlight ?? typedGuideLines?.xHighlight
+              }
+              yHighlight={
+                resizeGuideLines?.yHighlight ?? typedGuideLines?.yHighlight
+              }
             />
             <ComponentRenderer
               components={components}
@@ -274,6 +294,13 @@ const Canvas: React.FC<CanvasProps> = ({
               handleContextMenu={handleContextMenu}
               COMPONENT_WIDTH={COMPONENT_WIDTH}
               COMPONENT_HEIGHT={COMPONENT_HEIGHT}
+              handlePropertyChange={handlePropertyChangeInternal}
+              // 新增吸附相关参数
+              canvasWidth={width - RULER_SIZE}
+              canvasHeight={height - RULER_SIZE}
+              allComponents={components}
+              snapThreshold={SNAP_THRESHOLD}
+              setResizeGuideLines={setResizeGuideLines}
             />
             {/* 右键菜单渲染 */}
             <ContextMenu

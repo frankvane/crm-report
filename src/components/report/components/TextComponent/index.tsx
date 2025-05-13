@@ -13,6 +13,8 @@ export interface TextComponentProps {
     expression?: string;
   };
   mockData?: object;
+  width?: number;
+  height?: number;
 }
 
 function formatValue(value: unknown, format?: string) {
@@ -82,6 +84,8 @@ const TextComponent: React.FC<TextComponentProps> = ({
   textAlign = "left",
   dataBinding,
   mockData,
+  width,
+  height,
 }) => {
   return (
     <div
@@ -90,8 +94,8 @@ const TextComponent: React.FC<TextComponentProps> = ({
         color,
         fontWeight,
         textAlign,
-        width: "100%",
-        height: "100%",
+        width: width ? width : undefined,
+        height: height ? height : undefined,
         overflow: "hidden",
         whiteSpace: "pre-line",
       }}

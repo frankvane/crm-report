@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1747042820800,
@@ -24,6 +24,14 @@
                 {
                     "date": 1747091401149,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,8 +19,9 @@\n     field?: string;\r\n     format?: \"none\" | \"currency\" | \"date\" | \"percent\";\r\n     expression?: string;\r\n   };\r\n+  mockData?: string;\r\n }\r\n \r\n export interface ComponentLibraryItem {\r\n   type: string;\r\n"
+                },
+                {
+                    "date": 1747098340900,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,8 +20,10 @@\n     format?: \"none\" | \"currency\" | \"date\" | \"percent\";\r\n     expression?: string;\r\n   };\r\n   mockData?: string;\r\n+  width?: number;\r\n+  height?: number;\r\n }\r\n \r\n export interface ComponentLibraryItem {\r\n   type: string;\r\n"
+                },
+                {
+                    "date": 1747100489959,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,32 +1,32 @@\n-export * from \"./index\";\r\n-\r\n-export interface CanvasComponent {\r\n-  id: string;\r\n-  type: string;\r\n-  name: string;\r\n-  icon: string;\r\n-  x: number;\r\n-  y: number;\r\n-  locked?: boolean;\r\n-  visible?: boolean;\r\n-  text?: string;\r\n-  fontSize?: number;\r\n-  color?: string;\r\n-  fontWeight?: \"normal\" | \"bold\" | \"bolder\" | \"lighter\";\r\n-  textAlign?: \"left\" | \"center\" | \"right\";\r\n-  dataBinding?: {\r\n-    source?: string;\r\n-    field?: string;\r\n-    format?: \"none\" | \"currency\" | \"date\" | \"percent\";\r\n-    expression?: string;\r\n-  };\r\n-  mockData?: string;\r\n-  width?: number;\r\n-  height?: number;\r\n-}\r\n-\r\n-export interface ComponentLibraryItem {\r\n-  type: string;\r\n-  name: string;\r\n-  icon: string;\r\n-}\r\n+export * from \"./index\";\n+\n+export interface CanvasComponent {\n+  id: string;\n+  type: string;\n+  name: string;\n+  icon: string;\n+  x: number;\n+  y: number;\n+  locked?: boolean;\n+  visible?: boolean;\n+  text?: string;\n+  fontSize?: number;\n+  color?: string;\n+  fontWeight?: \"normal\" | \"bold\" | \"bolder\" | \"lighter\";\n+  textAlign?: \"left\" | \"center\" | \"right\";\n+  dataBinding?: {\n+    source?: string;\n+    field?: string;\n+    format?: \"none\" | \"currency\" | \"date\" | \"percent\";\n+    expression?: string;\n+  };\n+  mockData?: string;\n+  width?: number;\n+  height?: number;\n+}\n+\n+export interface ComponentLibraryItem {\n+  type: string;\n+  name: string;\n+  icon: string;\n+}\n"
                 }
             ],
             "date": 1747042820800,

@@ -1,6 +1,7 @@
 import type { CanvasComponent } from "../../types";
 import ChartComponent from "../../../components/ChartComponent";
 import React from "react";
+import { ResizableWrapper } from "./ResizableWrapper";
 import TableComponent from "../../../components/TableComponent";
 import TextComponent from "../../../components/TextComponent";
 
@@ -17,6 +18,19 @@ interface ComponentRendererProps {
   handleContextMenu: (e: React.MouseEvent, compId: string) => void;
   COMPONENT_WIDTH: number;
   COMPONENT_HEIGHT: number;
+  handlePropertyChange: (formData: Partial<CanvasComponent>) => void;
+  canvasWidth: number;
+  canvasHeight: number;
+  allComponents: CanvasComponent[];
+  snapThreshold: number;
+  setResizeGuideLines: (
+    guide: {
+      x?: number;
+      y?: number;
+      xHighlight?: boolean;
+      yHighlight?: boolean;
+    } | null
+  ) => void;
 }
 
 const componentMap: Record<string, React.FC<any>> = {
@@ -34,6 +48,12 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   handleContextMenu,
   COMPONENT_WIDTH,
   COMPONENT_HEIGHT,
+  handlePropertyChange,
+  canvasWidth,
+  canvasHeight,
+  allComponents,
+  snapThreshold,
+  setResizeGuideLines,
 }) => {
   return (
     <>
@@ -42,6 +62,45 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
         const Comp =
           componentMap[comp.type] ||
           (() => <div style={{ color: "red" }}>未知组件类型: {comp.type}</div>);
+        if (comp.type === "text") {
+          return (
+            <ResizableWrapper
+              key={comp.id}
+              width={comp.width ?? COMPONENT_WIDTH}
+              height={comp.height ?? COMPONENT_HEIGHT}
+              x={comp.x}
+              y={comp.y}
+              selected={selectedIds.includes(comp.id)}
+              onResize={(rect) => handlePropertyChange({ ...rect })}
+              allComponents={allComponents}
+              selfId={comp.id}
+              canvasWidth={canvasWidth}
+              canvasHeight={canvasHeight}
+              snapThreshold={snapThreshold}
+              onGuideChange={setResizeGuideLines}
+              handleDragStart={(e) => handleMouseDown(comp.id, e)}
+              onContextMenu={(e) => handleContextMenu(e, comp.id)}
+            >
+              <TextComponent
+                text={comp.text || ""}
+                fontSize={comp.fontSize}
+                color={comp.color}
+                fontWeight={comp.fontWeight}
+                textAlign={comp.textAlign}
+                dataBinding={comp.dataBinding}
+                mockData={(() => {
+                  try {
+                    return comp.mockData
+                      ? JSON.parse(comp.mockData)
+                      : undefined;
+                  } catch {
+                    return undefined;
+                  }
+                })()}
+              />
+            </ResizableWrapper>
+          );
+        }
         return (
           <div
             ref={(el) => {
@@ -52,8 +111,8 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               position: "absolute",
               left: comp.x,
               top: comp.y,
-              width: COMPONENT_WIDTH,
-              height: COMPONENT_HEIGHT,
+              width: comp.width ?? COMPONENT_WIDTH,
+              height: comp.height ?? COMPONENT_HEIGHT,
               border: selectedIds.includes(comp.id)
                 ? "2px solid #1890ff"
                 : "1px solid #e5e5e5",
@@ -96,27 +155,7 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             }}
             onContextMenu={(e) => handleContextMenu(e, comp.id)}
           >
-            {comp.type === "text" ? (
-              <TextComponent
-                text={comp.text || ""}
-                fontSize={comp.fontSize}
-                color={comp.color}
-                fontWeight={comp.fontWeight}
-                textAlign={comp.textAlign}
-                dataBinding={comp.dataBinding}
-                mockData={(() => {
-                  try {
-                    return comp.mockData
-                      ? JSON.parse(comp.mockData)
-                      : undefined;
-                  } catch {
-                    return undefined;
-                  }
-                })()}
-              />
-            ) : (
-              <Comp />
-            )}
+            <Comp />
           </div>
         );
       })}
