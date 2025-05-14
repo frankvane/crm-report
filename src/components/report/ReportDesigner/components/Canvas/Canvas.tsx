@@ -1,49 +1,10 @@
 // 画布主组件
 
-import { useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
+import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
+import ComponentItem from "./ComponentItem";
 import React from "react";
 import { useReportDesignerStore } from "@report/ReportDesigner/store";
-
-function DraggableCanvasItem({ comp, selected, onSelect }: any) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: comp.id });
-  const style: React.CSSProperties = {
-    position: "absolute",
-    left: comp.x + (transform?.x || 0),
-    top: comp.y + (transform?.y || 0),
-    width: comp.width,
-    height: comp.height,
-    background: "#fff",
-    border: selected ? "2.5px solid #ff9800" : "1px solid #1976d2",
-    borderRadius: 4,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 500,
-    color: "#1976d2",
-    boxShadow: selected ? "0 0 0 3px #ffe0b2" : "0 2px 8px #1976d233",
-    cursor: isDragging ? "grabbing" : "move",
-    userSelect: "none",
-    zIndex: selected ? 10 : 1,
-    transition: "box-shadow 0.2s, border 0.2s",
-    opacity: isDragging ? 0.7 : 1,
-  };
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={style}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect();
-      }}
-    >
-      {comp.props.text}
-    </div>
-  );
-}
 
 export default function Canvas() {
   const { setNodeRef, isOver } = useDroppable({ id: "canvas" });
@@ -106,15 +67,28 @@ export default function Canvas() {
         borderRadius: 6,
         transition: "all 0.2s",
         position: "relative",
+        overflow: "visible",
       }}
+      onClick={() => setSelectedIds([])}
     >
       {components.length === 0 && <div>拖拽左侧组件到此处</div>}
       {components.map((comp) => (
-        <DraggableCanvasItem
+        <ComponentItem
           key={comp.id}
           comp={comp}
-          selected={selectedIds.includes(comp.id)}
-          onSelect={() => setSelectedIds([comp.id])}
+          isSelected={selectedIds.length === 1 && selectedIds[0] === comp.id}
+          onSelect={() => {
+            console.log(
+              "[Canvas] onSelect 组件id:",
+              comp.id,
+              "当前selectedIds:",
+              selectedIds
+            );
+            setSelectedIds([comp.id]);
+          }}
+          onResize={(w: number, h: number) =>
+            updateComponent(comp.id, { width: w, height: h })
+          }
         />
       ))}
     </div>
