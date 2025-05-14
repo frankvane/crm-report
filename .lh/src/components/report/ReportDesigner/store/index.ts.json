@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/store/index.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747228066107,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228071943,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,34 +1,32 @@\n import { ReportComponent } from \"../types/component\";\r\n import { ReportDesignerState } from \"../types/store\";\r\n import { create } from \"zustand\";\r\n \r\n-export const useReportDesignerStore = create<ReportDesignerState>(\r\n-  (set, get) => ({\r\n-    components: [],\r\n-    selectedIds: [],\r\n-    canvasConfig: {\r\n-      gridSize: 20,\r\n-      showGrid: true,\r\n-      snapToGrid: true,\r\n-    },\r\n-    setComponents: (components: ReportComponent[]) => set({ components }),\r\n-    addComponent: (component: ReportComponent) =>\r\n-      set((state) => ({ components: [...state.components, component] })),\r\n-    updateComponent: (id: string, data: Partial<ReportComponent>) =>\r\n-      set((state) => ({\r\n-        components: state.components.map((c) =>\r\n-          c.id === id ? { ...c, ...data } : c\r\n-        ),\r\n-      })),\r\n-    removeComponent: (id: string) =>\r\n-      set((state) => ({\r\n-        components: state.components.filter((c) => c.id !== id),\r\n-        selectedIds: state.selectedIds.filter((sid) => sid !== id),\r\n-      })),\r\n-    setSelectedIds: (ids: string[]) => set({ selectedIds: ids }),\r\n-    setCanvasConfig: (config) =>\r\n-      set((state) => ({\r\n-        canvasConfig: { ...state.canvasConfig, ...config },\r\n-      })),\r\n-  })\r\n-);\r\n+export const useReportDesignerStore = create<ReportDesignerState>((set) => ({\r\n+  components: [],\r\n+  selectedIds: [],\r\n+  canvasConfig: {\r\n+    gridSize: 20,\r\n+    showGrid: true,\r\n+    snapToGrid: true,\r\n+  },\r\n+  setComponents: (components: ReportComponent[]) => set({ components }),\r\n+  addComponent: (component: ReportComponent) =>\r\n+    set((state) => ({ components: [...state.components, component] })),\r\n+  updateComponent: (id: string, data: Partial<ReportComponent>) =>\r\n+    set((state) => ({\r\n+      components: state.components.map((c) =>\r\n+        c.id === id ? { ...c, ...data } : c\r\n+      ),\r\n+    })),\r\n+  removeComponent: (id: string) =>\r\n+    set((state) => ({\r\n+      components: state.components.filter((c) => c.id !== id),\r\n+      selectedIds: state.selectedIds.filter((sid) => sid !== id),\r\n+    })),\r\n+  setSelectedIds: (ids: string[]) => set({ selectedIds: ids }),\r\n+  setCanvasConfig: (config) =>\r\n+    set((state) => ({\r\n+      canvasConfig: { ...state.canvasConfig, ...config },\r\n+    })),\r\n+}));\r\n"
+                },
+                {
+                    "date": 1747228388548,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n-import { ReportComponent } from \"../types/component\";\r\n-import { ReportDesignerState } from \"../types/store\";\r\n+import { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\n+import { ReportDesignerState } from \"@report/ReportDesigner/types/store\";\r\n import { create } from \"zustand\";\r\n \r\n export const useReportDesignerStore = create<ReportDesignerState>((set) => ({\r\n   components: [],\r\n"
+                }
+            ],
+            "date": 1747228066107,
+            "name": "Commit-0",
+            "content": "import { ReportComponent } from \"../types/component\";\r\nimport { ReportDesignerState } from \"../types/store\";\r\nimport { create } from \"zustand\";\r\n\r\nexport const useReportDesignerStore = create<ReportDesignerState>(\r\n  (set, get) => ({\r\n    components: [],\r\n    selectedIds: [],\r\n    canvasConfig: {\r\n      gridSize: 20,\r\n      showGrid: true,\r\n      snapToGrid: true,\r\n    },\r\n    setComponents: (components: ReportComponent[]) => set({ components }),\r\n    addComponent: (component: ReportComponent) =>\r\n      set((state) => ({ components: [...state.components, component] })),\r\n    updateComponent: (id: string, data: Partial<ReportComponent>) =>\r\n      set((state) => ({\r\n        components: state.components.map((c) =>\r\n          c.id === id ? { ...c, ...data } : c\r\n        ),\r\n      })),\r\n    removeComponent: (id: string) =>\r\n      set((state) => ({\r\n        components: state.components.filter((c) => c.id !== id),\r\n        selectedIds: state.selectedIds.filter((sid) => sid !== id),\r\n      })),\r\n    setSelectedIds: (ids: string[]) => set({ selectedIds: ids }),\r\n    setCanvasConfig: (config) =>\r\n      set((state) => ({\r\n        canvasConfig: { ...state.canvasConfig, ...config },\r\n      })),\r\n  })\r\n);\r\n"
+        }
+    ]
+}

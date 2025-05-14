@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1747122755394,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228308308,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,9 @@\n   // alias\n   resolve: {\n     alias: {\n       \"@\": path.resolve(__dirname, \"./src\"),\n+      \"@report\": path.resolve(__dirname, \"./src/components/report\"),\n     },\n-    extensions: [\".js\", \".jsx\", \".ts\", \".tsx\", \".json\"],\n+    extensions: [\".js\", \".ts\", \".jsx\", \".tsx\", \".json\"],\n   },\n });\n"
+                },
+                {
+                    "date": 1747228313681,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,10 +7,10 @@\n   plugins: [react()],\n   // alias\n   resolve: {\n     alias: {\n-      \"@\": path.resolve(__dirname, \"./src\"),\n-      \"@report\": path.resolve(__dirname, \"./src/components/report\"),\n+      \"@\": path.resolve(new URL('src', import.meta.url).pathname),\n+      \"@report\": path.resolve(new URL('src/components/report', import.meta.url).pathname),\n     },\n     extensions: [\".js\", \".ts\", \".jsx\", \".tsx\", \".json\"],\n   },\n });\n"
                 }
             ],
             "date": 1747122755394,

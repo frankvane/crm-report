@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/types/component.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747227933741,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228400090,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,5 +22,5 @@\n   style?: Record<string, any>;\r\n   createdAt?: number | string;\r\n   updatedAt?: number | string;\r\n   meta?: Record<string, any>;\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747227933741,
+            "name": "Commit-0",
+            "content": "export interface ReportComponent {\r\n  id: string;\r\n  type: string; // 组件类型\r\n  x: number;\r\n  y: number;\r\n  width: number;\r\n  height: number;\r\n  locked: boolean;\r\n  visible: boolean;\r\n  zindex: number;\r\n  props: Record<string, any>;\r\n  parentId?: string | null;\r\n  children?: string[];\r\n  name?: string;\r\n  groupId?: string | null;\r\n  selected?: boolean;\r\n  draggable?: boolean;\r\n  resizable?: boolean;\r\n  rotatable?: boolean;\r\n  rotation?: number;\r\n  opacity?: number;\r\n  style?: Record<string, any>;\r\n  createdAt?: number | string;\r\n  updatedAt?: number | string;\r\n  meta?: Record<string, any>;\r\n}"
+        }
+    ]
+}

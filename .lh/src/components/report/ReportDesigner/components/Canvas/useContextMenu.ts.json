@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1747125861792,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747218441228,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,9 +8,9 @@\n }\r\n \r\n interface UseContextMenuProps {\r\n   components: CanvasComponent[];\r\n-  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;\r\n+  setSelectedIds: (ids: string[]) => void;\r\n   handleDelete: (id: string) => void;\r\n   handleCopy: (id: string) => void;\r\n   handleMoveToTop: (id: string) => void;\r\n   handleMoveToBottom: (id: string) => void;\r\n"
+                },
+                {
+                    "date": 1747227961811,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +0,0 @@\n- \n\\ No newline at end of file\n"
                 }
             ],
             "date": 1747125861792,

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/Canvas/useBatchDrag.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747211967864,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747218461854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,5 +43,5 @@\n     dragging,\r\n     offset,\r\n     handleMouseDown,\r\n   };\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                },
+                {
+                    "date": 1747218805373,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,47 +0,0 @@\n-import { useRef, useState } from \"react\";\r\n-\r\n-export function useBatchDrag({\r\n-  selectedIds,\r\n-  components,\r\n-  onBatchMove,\r\n-}: {\r\n-  selectedIds: string[];\r\n-  components: { id: string; x: number; y: number }[];\r\n-  onBatchMove: (ids: string[], dx: number, dy: number) => void;\r\n-}) {\r\n-  const [dragging, setDragging] = useState(false);\r\n-  const [offset, setOffset] = useState({ dx: 0, dy: 0 });\r\n-  const start = useRef<{ x: number; y: number } | null>(null);\r\n-\r\n-  function handleMouseDown(e: React.MouseEvent) {\r\n-    if (selectedIds.length === 0) return;\r\n-    if (e.button !== 0) return;\r\n-    e.stopPropagation();\r\n-    start.current = { x: e.clientX, y: e.clientY };\r\n-    setDragging(true);\r\n-    setOffset({ dx: 0, dy: 0 });\r\n-    window.addEventListener(\"mousemove\", handleMouseMove);\r\n-    window.addEventListener(\"mouseup\", handleMouseUp);\r\n-  }\r\n-  function handleMouseMove(e: MouseEvent) {\r\n-    if (!dragging || !start.current) return;\r\n-    const dx = e.clientX - start.current.x;\r\n-    const dy = e.clientY - start.current.y;\r\n-    setOffset({ dx, dy });\r\n-  }\r\n-  function handleMouseUp() {\r\n-    if (dragging && (offset.dx !== 0 || offset.dy !== 0)) {\r\n-      onBatchMove(selectedIds, offset.dx, offset.dy);\r\n-    }\r\n-    setDragging(false);\r\n-    setOffset({ dx: 0, dy: 0 });\r\n-    window.removeEventListener(\"mousemove\", handleMouseMove);\r\n-    window.removeEventListener(\"mouseup\", handleMouseUp);\r\n-  }\r\n-\r\n-  return {\r\n-    dragging,\r\n-    offset,\r\n-    handleMouseDown,\r\n-  };\r\n-}\r\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747211967864,
+            "name": "Commit-0",
+            "content": "import { useRef, useState } from \"react\";\r\n\r\nexport function useBatchDrag({\r\n  selectedIds,\r\n  components,\r\n  onBatchMove,\r\n}: {\r\n  selectedIds: string[];\r\n  components: { id: string; x: number; y: number }[];\r\n  onBatchMove: (ids: string[], dx: number, dy: number) => void;\r\n}) {\r\n  const [dragging, setDragging] = useState(false);\r\n  const [offset, setOffset] = useState({ dx: 0, dy: 0 });\r\n  const start = useRef<{ x: number; y: number } | null>(null);\r\n\r\n  function handleMouseDown(e: React.MouseEvent) {\r\n    if (selectedIds.length === 0) return;\r\n    if (e.button !== 0) return;\r\n    e.stopPropagation();\r\n    start.current = { x: e.clientX, y: e.clientY };\r\n    setDragging(true);\r\n    setOffset({ dx: 0, dy: 0 });\r\n    window.addEventListener(\"mousemove\", handleMouseMove);\r\n    window.addEventListener(\"mouseup\", handleMouseUp);\r\n  }\r\n  function handleMouseMove(e: MouseEvent) {\r\n    if (!dragging || !start.current) return;\r\n    const dx = e.clientX - start.current.x;\r\n    const dy = e.clientY - start.current.y;\r\n    setOffset({ dx, dy });\r\n  }\r\n  function handleMouseUp() {\r\n    if (dragging && (offset.dx !== 0 || offset.dy !== 0)) {\r\n      onBatchMove(selectedIds, offset.dx, offset.dy);\r\n    }\r\n    setDragging(false);\r\n    setOffset({ dx: 0, dy: 0 });\r\n    window.removeEventListener(\"mousemove\", handleMouseMove);\r\n    window.removeEventListener(\"mouseup\", handleMouseUp);\r\n  }\r\n\r\n  return {\r\n    dragging,\r\n    offset,\r\n    handleMouseDown,\r\n  };\r\n}"
+        }
+    ]
+}

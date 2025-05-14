@@ -1,7 +1,8 @@
-import ReportDesigner from "./components/report/ReportDesigner";
+import Designer from "@report/ReportDesigner/Designer";
+import React from "react";
 
 function App() {
-  return <ReportDesigner />;
+  return <Designer />;
 }
 
 export default App;

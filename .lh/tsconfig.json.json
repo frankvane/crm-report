@@ -1,0 +1,30 @@
+{
+    "sourceFile": "tsconfig.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747228734182,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228744919,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,26 +1,7 @@\n {\n-  \"compilerOptions\": {\n-    \"target\": \"ESNext\",\n-    \"useDefineForClassFields\": true,\n-    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ESNext\"],\n-    \"allowJs\": false,\n-    \"skipLibCheck\": true,\n-    \"esModuleInterop\": true,\n-    \"allowSyntheticDefaultImports\": true,\n-    \"strict\": true,\n-    \"forceConsistentCasingInFileNames\": true,\n-    \"module\": \"ESNext\",\n-    \"moduleResolution\": \"Node\",\n-    \"resolveJsonModule\": true,\n-    \"isolatedModules\": true,\n-    \"noEmit\": true,\n-    \"jsx\": \"react-jsx\",\n-    \"baseUrl\": \"./\",\n-    \"paths\": {\n-      \"@/*\": [\"src/*\"],\n-      \"@report/*\": [\"src/components/report/*\"]\n-    }\n-  },\n-  \"include\": [\"src\"],\n-  \"exclude\": [\"node_modules\"]\n+  \"files\": [],\n+  \"references\": [\n+    { \"path\": \"./tsconfig.app.json\" },\n+    { \"path\": \"./tsconfig.node.json\" }\n+  ]\n }\n"
+                },
+                {
+                    "date": 1747228779884,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,26 @@\n {\n-  \"files\": [],\n-  \"references\": [\n-    { \"path\": \"./tsconfig.app.json\" },\n-    { \"path\": \"./tsconfig.node.json\" }\n-  ]\n+  \"compilerOptions\": {\n+    \"target\": \"ESNext\",\n+    \"useDefineForClassFields\": true,\n+    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ESNext\"],\n+    \"allowJs\": false,\n+    \"skipLibCheck\": true,\n+    \"esModuleInterop\": true,\n+    \"allowSyntheticDefaultImports\": true,\n+    \"strict\": true,\n+    \"forceConsistentCasingInFileNames\": true,\n+    \"module\": \"ESNext\",\n+    \"moduleResolution\": \"Node\",\n+    \"resolveJsonModule\": true,\n+    \"isolatedModules\": true,\n+    \"noEmit\": true,\n+    \"jsx\": \"react-jsx\",\n+    \"baseUrl\": \"./\",\n+    \"paths\": {\n+      \"@/*\": [\"src/*\"],\n+      \"@report/*\": [\"src/components/report/*\"]\n+    }\n+  },\n+  \"include\": [\"src\"],\n+  \"references\": [{ \"path\": \"./tsconfig.node.json\" }]\n }\n"
+                },
+                {
+                    "date": 1747228981120,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,6 +21,5 @@\n       \"@report/*\": [\"src/components/report/*\"]\n     }\n   },\n   \"include\": [\"src\"],\n-  \"references\": [{ \"path\": \"./tsconfig.node.json\" }]\n }\n"
+                }
+            ],
+            "date": 1747228734182,
+            "name": "Commit-0",
+            "content": "{\n  \"compilerOptions\": {\n    \"target\": \"ESNext\",\n    \"useDefineForClassFields\": true,\n    \"lib\": [\"DOM\", \"DOM.Iterable\", \"ESNext\"],\n    \"allowJs\": false,\n    \"skipLibCheck\": true,\n    \"esModuleInterop\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"strict\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"module\": \"ESNext\",\n    \"moduleResolution\": \"Node\",\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"jsx\": \"react-jsx\",\n    \"baseUrl\": \"./\",\n    \"paths\": {\n      \"@/*\": [\"src/*\"],\n      \"@report/*\": [\"src/components/report/*\"]\n    }\n  },\n  \"include\": [\"src\"],\n  \"exclude\": [\"node_modules\"]\n}\n"
+        }
+    ]
+}

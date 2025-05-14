@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747125643430,
@@ -12,6 +12,14 @@
                 {
                     "date": 1747125652619,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,14 @@\n import { Button, Space, Tooltip } from \"antd\";\r\n import {\r\n+  EyeOutlined,\r\n   PlusOutlined,\r\n+  PrinterOutlined,\r\n+  RedoOutlined,\r\n   SaveOutlined,\r\n-  EyeOutlined,\r\n-  PrinterOutlined,\r\n   UndoOutlined,\r\n-  RedoOutlined,\r\n } from \"@ant-design/icons\";\r\n+\r\n import React from \"react\";\r\n \r\n const Toolbar: React.FC = () => {\r\n   return (\r\n"
+                },
+                {
+                    "date": 1747227978818,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,5 @@\n- \n\\ No newline at end of file\n+// 工具栏组件\r\n+\r\n+export default function Toolbar() {\r\n+  return null;\r\n+}\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747229329333,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,16 @@\n // 工具栏组件\r\n \r\n export default function Toolbar() {\r\n-  return null;\r\n+  return (\r\n+    <div style={{\r\n+      padding: 12,\r\n+      fontWeight: 600,\r\n+      color: '#f57c00',\r\n+      background: '#fff3e0',\r\n+      border: '2px solid #f57c00',\r\n+      borderRadius: 6\r\n+    }}>\r\n+      工具栏（静态内容）\r\n+    </div>\r\n+  );\r\n }\r\n"
                 }
             ],
             "date": 1747125643430,

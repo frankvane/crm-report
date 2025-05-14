@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/types/store.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747227940430,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228057953,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,6 +8,12 @@\n     showGrid: boolean;\r\n     snapToGrid: boolean;\r\n     // ...其他画布配置\r\n   };\r\n+  setComponents: (components: ReportComponent[]) => void;\r\n+  addComponent: (component: ReportComponent) => void;\r\n+  updateComponent: (id: string, data: Partial<ReportComponent>) => void;\r\n+  removeComponent: (id: string) => void;\r\n+  setSelectedIds: (ids: string[]) => void;\r\n+  setCanvasConfig: (config: Partial<{ gridSize: number; showGrid: boolean; snapToGrid: boolean }>) => void;\r\n   // ...其他全局状态，如批量操作、历史记录等\r\n }\r\n"
+                },
+                {
+                    "date": 1747228395264,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { ReportComponent } from \"./component\";\r\n+import { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\n \r\n export interface ReportDesignerState {\r\n   components: ReportComponent[]; // 组件列表\r\n   selectedIds: string[]; // 当前选中组件ID\r\n"
+                }
+            ],
+            "date": 1747227940430,
+            "name": "Commit-0",
+            "content": "import { ReportComponent } from './component';\r\n\r\nexport interface ReportDesignerState {\r\n  components: ReportComponent[];      // 组件列表\r\n  selectedIds: string[];              // 当前选中组件ID\r\n  canvasConfig: {\r\n    gridSize: number;\r\n    showGrid: boolean;\r\n    snapToGrid: boolean;\r\n    // ...其他画布配置\r\n  };\r\n  // ...其他全局状态，如批量操作、历史记录等\r\n}"
+        }
+    ]
+}

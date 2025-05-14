@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1747041895041,
@@ -20,6 +20,10 @@
                 {
                     "date": 1747052288144,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,55 +1,4 @@\n # UPDATE\n \n - 2025-05-12 17:24 Canvas 拖拽重构，使用 useCanvasDrag hook 优化拖拽逻辑，提升代码可维护性与交互体验。\n - 2025-05-12 20:17 修复拖拽偏移，offset 计算与内容区参考系完全一致，拖拽体验 100%准确。\n-\n-# React + TypeScript + Vite\n-\n-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.\n-\n-Currently, two official plugins are available:\n-\n-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh\n-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh\n-\n-## Expanding the ESLint configuration\n-\n-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:\n-\n-- Configure the top-level `parserOptions` property like this:\n-\n-```js\n-export default tseslint.config({\n-  languageOptions: {\n-    // other options...\n-    parserOptions: {\n-      project: [\"./tsconfig.node.json\", \"./tsconfig.app.json\"],\n-      tsconfigRootDir: import.meta.dirname,\n-    },\n-  },\n-});\n-```\n-\n-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`\n-- Optionally add `...tseslint.configs.stylisticTypeChecked`\n-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:\n-\n-```js\n-// eslint.config.js\n-import react from \"eslint-plugin-react\";\n-\n-export default tseslint.config({\n-  // Set the react version\n-  settings: { react: { version: \"18.3\" } },\n-  plugins: {\n-    // Add the react plugin\n-    react,\n-  },\n-  rules: {\n-    // other rules...\n-    // Enable its recommended rules\n-    ...react.configs.recommended.rules,\n-    ...react.configs[\"jsx-runtime\"].rules,\n-  },\n-});\n-```\n"
+                },
+                {
+                    "date": 1747227874007,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,23 @@\n- \n\\ No newline at end of file\n+# 重构目标与核心原则\r\n+\r\n+## 一、重构目标\r\n+\r\n+- **系统性**：构建结构清晰、职责分明的可视化报表设计器，便于团队协作和后续维护。\r\n+- **可扩展性**：支持灵活扩展新组件、新功能，满足多变的业务需求。\r\n+- **低代码能力**：让非开发人员也能通过拖拽、配置快速搭建报表页面。\r\n+- **高性能**：即使在大规模组件场景下也能流畅运行。\r\n+- **良好用户体验**：交互友好，操作直观，反馈及时。\r\n+- **易维护性**：代码规范、类型安全、易于测试和重构。\r\n+\r\n+## 二、核心原则\r\n+\r\n+- **第一性原理**：所有设计和实现都回归本质需求，避免无谓复杂度。\r\n+- **单一职责原则（SRP）**：每个模块/组件只做一件事，且做好。\r\n+- **KISS原则**：保持简单，避免过度设计。\r\n+- **DRY原则**：避免重复代码，提取通用逻辑。\r\n+- **SOLID原则**：面向对象五大原则，提升可维护性和可扩展性。\r\n+- **YAGNI原则**：只实现当前需要的功能，避免过早优化和无用功能。\r\n+- **类型安全**：充分利用 TypeScript，提升代码健壮性。\r\n+- **工程规范**：遵循团队代码规范、注重文档和注释。\r\n+\r\n+---\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1747041895041,

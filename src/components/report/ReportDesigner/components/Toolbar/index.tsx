@@ -1,38 +1,18 @@
-import { Button, Space, Tooltip } from "antd";
-import {
-  EyeOutlined,
-  PlusOutlined,
-  PrinterOutlined,
-  RedoOutlined,
-  SaveOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+// 工具栏组件
 
-import React from "react";
-
-const Toolbar: React.FC = () => {
+export default function Toolbar() {
   return (
-    <Space>
-      <Tooltip title="新建">
-        <Button type="primary" icon={<PlusOutlined />} />
-      </Tooltip>
-      <Tooltip title="保存">
-        <Button icon={<SaveOutlined />} />
-      </Tooltip>
-      <Tooltip title="预览">
-        <Button icon={<EyeOutlined />} />
-      </Tooltip>
-      <Tooltip title="打印">
-        <Button icon={<PrinterOutlined />} />
-      </Tooltip>
-      <Tooltip title="撤销">
-        <Button icon={<UndoOutlined />} />
-      </Tooltip>
-      <Tooltip title="重做">
-        <Button icon={<RedoOutlined />} />
-      </Tooltip>
-    </Space>
+    <div
+      style={{
+        padding: 12,
+        fontWeight: 600,
+        color: "#f57c00",
+        background: "#fff3e0",
+        border: "2px solid #f57c00",
+        borderRadius: 6,
+      }}
+    >
+      工具栏（静态内容）
+    </div>
   );
-};
-
-export default Toolbar;
+}

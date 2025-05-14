@@ -1,0 +1,34 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/Canvas/Canvas.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1747218759674,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747218767297,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,12 @@\n import React from \"react\";\r\n import { useDroppable } from \"@dnd-kit/core\";\r\n \r\n interface CanvasProps {\r\n-  gridSize: number;\r\n   children: React.ReactNode;\r\n }\r\n \r\n-const Canvas: React.FC<CanvasProps> = ({ gridSize, children }) => {\r\n+const Canvas: React.FC<CanvasProps> = ({ children }) => {\r\n   const { setNodeRef } = useDroppable({ id: \"canvas\" });\r\n   return (\r\n     <div\r\n       ref={setNodeRef}\r\n"
+                },
+                {
+                    "date": 1747218930744,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,5 +26,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default Canvas;\n\\ No newline at end of file\n+export default Canvas;\r\n"
+                },
+                {
+                    "date": 1747227949760,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,5 @@\n- \n\\ No newline at end of file\n+// 画布主组件\r\n+\r\n+export default function Canvas() {\r\n+  return null;\r\n+}\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747229315937,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,16 @@\n // 画布主组件\r\n \r\n export default function Canvas() {\r\n-  return null;\r\n+  return (\r\n+    <div style={{\r\n+      padding: 16,\r\n+      fontWeight: 600,\r\n+      color: '#1976d2',\r\n+      background: '#e3f2fd',\r\n+      border: '2px solid #1976d2',\r\n+      borderRadius: 6\r\n+    }}>\r\n+      画布区（静态内容）\r\n+    </div>\r\n+  );\r\n }\r\n"
+                }
+            ],
+            "date": 1747218759674,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport { useDroppable } from \"@dnd-kit/core\";\r\n\r\ninterface CanvasProps {\r\n  gridSize: number;\r\n  children: React.ReactNode;\r\n}\r\n\r\nconst Canvas: React.FC<CanvasProps> = ({ gridSize, children }) => {\r\n  const { setNodeRef } = useDroppable({ id: \"canvas\" });\r\n  return (\r\n    <div\r\n      ref={setNodeRef}\r\n      style={{\r\n        position: \"relative\",\r\n        width: 1200,\r\n        height: 800,\r\n        margin: 24,\r\n        background: \"#fff\",\r\n        border: \"2px solid #bfbfbf\",\r\n        borderRadius: 12,\r\n        overflow: \"hidden\",\r\n      }}\r\n    >\r\n      {/* 可扩展：网格线、辅助线等 */}\r\n      {children}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default Canvas;"
+        }
+    ]
+}

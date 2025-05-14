@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1747183631319,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747218832865,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,36 +0,0 @@\n-import React from \"react\";\r\n-\r\n-interface SelectionBoxProps {\r\n-  selectionBox: {\r\n-    startX: number;\r\n-    startY: number;\r\n-    endX: number;\r\n-    endY: number;\r\n-    active: boolean;\r\n-  };\r\n-}\r\n-\r\n-const SelectionBox: React.FC<SelectionBoxProps> = ({ selectionBox }) => {\r\n-  if (!selectionBox.active) return null;\r\n-  const left = Math.min(selectionBox.startX, selectionBox.endX);\r\n-  const top = Math.min(selectionBox.startY, selectionBox.endY);\r\n-  const width = Math.abs(selectionBox.endX - selectionBox.startX);\r\n-  const height = Math.abs(selectionBox.endY - selectionBox.startY);\r\n-  return (\r\n-    <div\r\n-      style={{\r\n-        position: \"absolute\",\r\n-        left,\r\n-        top,\r\n-        width,\r\n-        height,\r\n-        background: \"rgba(24,144,255,0.08)\",\r\n-        border: \"1.5px dashed #1890ff\",\r\n-        zIndex: 99999,\r\n-        pointerEvents: \"none\",\r\n-      }}\r\n-    />\r\n-  );\r\n-};\r\n-\r\n-export default SelectionBox;\r\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1747183631319,

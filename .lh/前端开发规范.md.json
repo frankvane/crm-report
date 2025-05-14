@@ -1,0 +1,22 @@
+{
+    "sourceFile": "前端开发规范.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747228681445,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747228744924,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,77 +0,0 @@\n-# 前端开发规范（适用于本项目）\r\n-\r\n-## 1. 目录结构\r\n-\r\n-- 遵循 feature-based（按业务域）分层：\r\n-  - `src/components/`：通用组件\r\n-  - `src/components/report/ReportDesigner/`：报表设计器相关所有代码（组件、hooks、store、types、utils 等）\r\n-  - `src/store/`：全局状态管理（如有）\r\n-  - `src/assets/`：静态资源\r\n-  - `src/utils/`：工具函数\r\n-  - `src/styles/`：全局样式、主题\r\n-\r\n-## 2. 技术栈与 UI 库\r\n-\r\n-- 统一使用 [Ant Design](https://ant.design/) 作为 UI 组件库，布局、表单、弹窗、按钮等优先用 antd 组件。\r\n-- 状态管理优先使用 [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)。\r\n-- 统一使用 TypeScript，开启严格模式。\r\n-- 构建工具采用 Vite。\r\n-\r\n-## 3. 代码风格\r\n-\r\n-- 统一使用函数组件 + hooks。\r\n-- 路径引用统一用 alias（如 @、@report），禁止深层级相对路径。\r\n-- 组件、hooks、store、types、utils 分层清晰。\r\n-- 变量、函数、组件命名采用小驼峰（camelCase）或大驼峰（PascalCase），文件夹/文件名与导出名一致。\r\n-- 样式优先用 antd 主题和类名，必要时用 CSS Modules。\r\n-\r\n-## 4. 组件开发\r\n-\r\n-- 组件拆分遵循单一职责原则（SRP），每个组件只做一件事。\r\n-- 复用性强的组件放在 `src/components/`，业务专用组件放在业务目录下。\r\n-- 组件 props 必须定义类型，禁止使用 any。\r\n-- 组件内部状态优先用 useState/useReducer，跨组件状态用 zustand。\r\n-- 组件必须有必要的注释和 JSDoc。\r\n-\r\n-## 5. 状态管理\r\n-\r\n-- 业务状态优先放在业务域 store（如 report/ReportDesigner/store/）。\r\n-- 全局状态放在 src/store/，如用户、权限、主题等。\r\n-- store 必须定义类型，actions 与 state 同文件。\r\n-- 禁止在组件内创建 store。\r\n-\r\n-## 6. UI/交互规范\r\n-\r\n-- 所有表单、按钮、弹窗、菜单等优先用 antd 组件。\r\n-- 布局统一用 antd Layout、Row、Col 等。\r\n-- 主题色、字号、间距等统一配置。\r\n-- 响应式优先用 antd Grid。\r\n-\r\n-## 7. 命名规范\r\n-\r\n-- 组件、hooks、store、types、utils 文件名与导出名一致。\r\n-- 事件处理函数用 handleXxx，状态变量用 xxxState。\r\n-- 目录、文件、变量、类型、接口命名必须见名知意。\r\n-\r\n-## 8. 注释与文档\r\n-\r\n-- 复杂业务、核心逻辑必须有注释。\r\n-- 组件、hooks、store 必须有 JSDoc 注释。\r\n-- 重要变更需在 PR/Commit 说明。\r\n-\r\n-## 9. 协作与代码管理\r\n-\r\n-- 统一使用 git，分支命名 feature/xxx、fix/xxx、refactor/xxx。\r\n-- 提交信息遵循 Conventional Commits 规范。\r\n-- 代码合并需评审，禁止直接推送主分支。\r\n-- 重要变更需同步更新文档。\r\n-\r\n-## 10. 质量保障\r\n-\r\n-- 必须通过 ESLint、Prettier 检查。\r\n-- 必须通过 TypeScript 类型检查。\r\n-- 重要功能需有单元测试或集成测试。\r\n-\r\n----\r\n-\r\n-如有特殊需求或建议，请团队成员及时沟通并补充完善本规范。\r\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747228681445,
+            "name": "Commit-0",
+            "content": "# 前端开发规范（适用于本项目）\r\n\r\n## 1. 目录结构\r\n- 遵循 feature-based（按业务域）分层：\r\n  - `src/components/`：通用组件\r\n  - `src/components/report/ReportDesigner/`：报表设计器相关所有代码（组件、hooks、store、types、utils等）\r\n  - `src/store/`：全局状态管理（如有）\r\n  - `src/assets/`：静态资源\r\n  - `src/utils/`：工具函数\r\n  - `src/styles/`：全局样式、主题\r\n\r\n## 2. 技术栈与UI库\r\n- 统一使用 [Ant Design](https://ant.design/) 作为UI组件库，布局、表单、弹窗、按钮等优先用 antd 组件。\r\n- 状态管理优先使用 [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)。\r\n- 统一使用 TypeScript，开启严格模式。\r\n- 构建工具采用 Vite。\r\n\r\n## 3. 代码风格\r\n- 统一使用函数组件 + hooks。\r\n- 路径引用统一用 alias（如 @、@report），禁止深层级相对路径。\r\n- 组件、hooks、store、types、utils 分层清晰。\r\n- 变量、函数、组件命名采用小驼峰（camelCase）或大驼峰（PascalCase），文件夹/文件名与导出名一致。\r\n- 样式优先用 antd 主题和类名，必要时用 CSS Modules。\r\n\r\n## 4. 组件开发\r\n- 组件拆分遵循单一职责原则（SRP），每个组件只做一件事。\r\n- 复用性强的组件放在 `src/components/`，业务专用组件放在业务目录下。\r\n- 组件 props 必须定义类型，禁止使用 any。\r\n- 组件内部状态优先用 useState/useReducer，跨组件状态用 zustand。\r\n- 组件必须有必要的注释和 JSDoc。\r\n\r\n## 5. 状态管理\r\n- 业务状态优先放在业务域 store（如 report/ReportDesigner/store/）。\r\n- 全局状态放在 src/store/，如用户、权限、主题等。\r\n- store 必须定义类型，actions 与 state 同文件。\r\n- 禁止在组件内创建 store。\r\n\r\n## 6. UI/交互规范\r\n- 所有表单、按钮、弹窗、菜单等优先用 antd 组件。\r\n- 布局统一用 antd Layout、Row、Col 等。\r\n- 主题色、字号、间距等统一配置。\r\n- 响应式优先用 antd Grid。\r\n\r\n## 7. 命名规范\r\n- 组件、hooks、store、types、utils 文件名与导出名一致。\r\n- 事件处理函数用 handleXxx，状态变量用 xxxState。\r\n- 目录、文件、变量、类型、接口命名必须见名知意。\r\n\r\n## 8. 注释与文档\r\n- 复杂业务、核心逻辑必须有注释。\r\n- 组件、hooks、store 必须有 JSDoc 注释。\r\n- 重要变更需在 PR/Commit 说明。\r\n\r\n## 9. 协作与代码管理\r\n- 统一使用 git，分支命名 feature/xxx、fix/xxx、refactor/xxx。\r\n- 提交信息遵循 Conventional Commits 规范。\r\n- 代码合并需评审，禁止直接推送主分支。\r\n- 重要变更需同步更新文档。\r\n\r\n## 10. 质量保障\r\n- 必须通过 ESLint、Prettier 检查。\r\n- 必须通过 TypeScript 类型检查。\r\n- 重要功能需有单元测试或集成测试。\r\n\r\n---\r\n\r\n如有特殊需求或建议，请团队成员及时沟通并补充完善本规范。"
+        }
+    ]
+}

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1747052831767,
@@ -12,6 +12,10 @@
                 {
                     "date": 1747052908644,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,9 +14,14 @@\n   gridStep: number = 40 // 新增参数，默认40\r\n ) {\r\n   let snapX = x;\r\n   let snapY = y;\r\n-  const guide: { x?: number; y?: number; xHighlight?: boolean; yHighlight?: boolean } = {};\r\n+  const guide: {\r\n+    x?: number;\r\n+    y?: number;\r\n+    xHighlight?: boolean;\r\n+    yHighlight?: boolean;\r\n+  } = {};\r\n   // 画布边缘吸附\r\n   if (Math.abs(x) < SNAP_THRESHOLD) {\r\n     snapX = 0;\r\n     guide.x = 0;\r\n"
+                },
+                {
+                    "date": 1747228003851,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n- \n\\ No newline at end of file\n+// 工具函数定义\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1747052831767,
