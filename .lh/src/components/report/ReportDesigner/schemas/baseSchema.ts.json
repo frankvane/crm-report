@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/baseSchema.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747230216840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747230252243,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,5 +17,5 @@\n   { key: \"rotation\", label: \"旋转角度\", type: \"number\" },\r\n   { key: \"opacity\", label: \"透明度\", type: \"number\" },\r\n   { key: \"createdAt\", label: \"创建时间\", type: \"text\", disabled: true },\r\n   { key: \"updatedAt\", label: \"更新时间\", type: \"text\", disabled: true },\r\n-];\n\\ No newline at end of file\n+];\r\n"
+                }
+            ],
+            "date": 1747230216840,
+            "name": "Commit-0",
+            "content": "// 基础属性 schema，所有组件通用\r\nexport const baseSchema = [\r\n  { key: \"id\", label: \"ID\", type: \"text\", disabled: true },\r\n  { key: \"type\", label: \"类型\", type: \"text\", disabled: true },\r\n  { key: \"name\", label: \"名称\", type: \"input\" },\r\n  { key: \"x\", label: \"X 坐标\", type: \"number\" },\r\n  { key: \"y\", label: \"Y 坐标\", type: \"number\" },\r\n  { key: \"width\", label: \"宽度\", type: \"number\" },\r\n  { key: \"height\", label: \"高度\", type: \"number\" },\r\n  { key: \"locked\", label: \"锁定\", type: \"switch\" },\r\n  { key: \"visible\", label: \"显示\", type: \"switch\" },\r\n  { key: \"zindex\", label: \"层级\", type: \"number\" },\r\n  { key: \"groupId\", label: \"分组ID\", type: \"input\" },\r\n  { key: \"draggable\", label: \"可拖动\", type: \"switch\" },\r\n  { key: \"resizable\", label: \"可缩放\", type: \"switch\" },\r\n  { key: \"rotatable\", label: \"可旋转\", type: \"switch\" },\r\n  { key: \"rotation\", label: \"旋转角度\", type: \"number\" },\r\n  { key: \"opacity\", label: \"透明度\", type: \"number\" },\r\n  { key: \"createdAt\", label: \"创建时间\", type: \"text\", disabled: true },\r\n  { key: \"updatedAt\", label: \"更新时间\", type: \"text\", disabled: true },\r\n];"
+        }
+    ]
+}

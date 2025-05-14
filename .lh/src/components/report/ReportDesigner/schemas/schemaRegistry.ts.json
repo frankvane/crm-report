@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/schemaRegistry.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747230569093,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747230647349,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,5 +12,5 @@\n }\r\n \r\n export function getComponentSchema(type: string): SchemaGroup | undefined {\r\n   return schemaRegistry[type];\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747230569093,
+            "name": "Commit-0",
+            "content": "// schemaRegistry.ts\r\nexport type SchemaGroup = {\r\n  base: any[];\r\n  standard: any[];\r\n  dataBinding: any[];\r\n};\r\n\r\nconst schemaRegistry: Record<string, SchemaGroup> = {};\r\n\r\nexport function registerComponentSchema(type: string, schema: SchemaGroup) {\r\n  schemaRegistry[type] = schema;\r\n}\r\n\r\nexport function getComponentSchema(type: string): SchemaGroup | undefined {\r\n  return schemaRegistry[type];\r\n}"
+        }
+    ]
+}

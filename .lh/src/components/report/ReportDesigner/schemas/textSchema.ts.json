@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/textSchema.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747230234143,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747230252240,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,5 +13,5 @@\n   { key: \"field\", label: \"字段\", type: \"input\" },\r\n   { key: \"format\", label: \"格式化\", type: \"input\" },\r\n   { key: \"expression\", label: \"表达式\", type: \"input\" },\r\n   { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n-];\n\\ No newline at end of file\n+];\r\n"
+                },
+                {
+                    "date": 1747230593040,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,40 @@\n-// text组件标准属性 schema\r\n-export const textStandardSchema = [\r\n-  { key: \"text\", label: \"文本内容\", type: \"input\" },\r\n-  { key: \"fontSize\", label: \"字号\", type: \"number\" },\r\n-  { key: \"color\", label: \"字体颜色\", type: \"color\" },\r\n-  { key: \"fontWeight\", label: \"加粗\", type: \"switch\" },\r\n-  { key: \"italic\", label: \"斜体\", type: \"switch\" },\r\n-];\r\n+import { registerComponentSchema } from './schemaRegistry';\r\n \r\n-// text组件数据绑定 schema\r\n-export const textDataBindingSchema = [\r\n-  { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\r\n-  { key: \"field\", label: \"字段\", type: \"input\" },\r\n-  { key: \"format\", label: \"格式化\", type: \"input\" },\r\n-  { key: \"expression\", label: \"表达式\", type: \"input\" },\r\n-  { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n-];\r\n+const textSchema = {\r\n+  base: [\r\n+    { key: \"id\", label: \"ID\", type: \"text\", disabled: true },\r\n+    { key: \"type\", label: \"类型\", type: \"text\", disabled: true },\r\n+    { key: \"name\", label: \"名称\", type: \"input\" },\r\n+    { key: \"x\", label: \"X 坐标\", type: \"number\" },\r\n+    { key: \"y\", label: \"Y 坐标\", type: \"number\" },\r\n+    { key: \"width\", label: \"宽度\", type: \"number\" },\r\n+    { key: \"height\", label: \"高度\", type: \"number\" },\r\n+    { key: \"locked\", label: \"锁定\", type: \"switch\" },\r\n+    { key: \"visible\", label: \"显示\", type: \"switch\" },\r\n+    { key: \"zindex\", label: \"层级\", type: \"number\" },\r\n+    { key: \"groupId\", label: \"分组ID\", type: \"input\" },\r\n+    { key: \"draggable\", label: \"可拖动\", type: \"switch\" },\r\n+    { key: \"resizable\", label: \"可缩放\", type: \"switch\" },\r\n+    { key: \"rotatable\", label: \"可旋转\", type: \"switch\" },\r\n+    { key: \"rotation\", label: \"旋转角度\", type: \"number\" },\r\n+    { key: \"opacity\", label: \"透明度\", type: \"number\" },\r\n+    { key: \"createdAt\", label: \"创建时间\", type: \"text\", disabled: true },\r\n+    { key: \"updatedAt\", label: \"更新时间\", type: \"text\", disabled: true },\r\n+  ],\r\n+  standard: [\r\n+    { key: \"text\", label: \"文本内容\", type: \"input\" },\r\n+    { key: \"fontSize\", label: \"字号\", type: \"number\" },\r\n+    { key: \"color\", label: \"字体颜色\", type: \"color\" },\r\n+    { key: \"fontWeight\", label: \"加粗\", type: \"switch\" },\r\n+    { key: \"italic\", label: \"斜体\", type: \"switch\" },\r\n+  ],\r\n+  dataBinding: [\r\n+    { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\r\n+    { key: \"field\", label: \"字段\", type: \"input\" },\r\n+    { key: \"format\", label: \"格式化\", type: \"input\" },\r\n+    { key: \"expression\", label: \"表达式\", type: \"input\" },\r\n+    { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n+  ],\r\n+};\r\n+\r\n+registerComponentSchema('text', textSchema);\r\n"
+                },
+                {
+                    "date": 1747230647380,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { registerComponentSchema } from './schemaRegistry';\r\n+import { registerComponentSchema } from \"./schemaRegistry\";\r\n \r\n const textSchema = {\r\n   base: [\r\n     { key: \"id\", label: \"ID\", type: \"text\", disabled: true },\r\n@@ -36,5 +36,5 @@\n     { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n   ],\r\n };\r\n \r\n-registerComponentSchema('text', textSchema);\r\n+registerComponentSchema(\"text\", textSchema);\r\n"
+                }
+            ],
+            "date": 1747230234143,
+            "name": "Commit-0",
+            "content": "// text组件标准属性 schema\r\nexport const textStandardSchema = [\r\n  { key: \"text\", label: \"文本内容\", type: \"input\" },\r\n  { key: \"fontSize\", label: \"字号\", type: \"number\" },\r\n  { key: \"color\", label: \"字体颜色\", type: \"color\" },\r\n  { key: \"fontWeight\", label: \"加粗\", type: \"switch\" },\r\n  { key: \"italic\", label: \"斜体\", type: \"switch\" },\r\n];\r\n\r\n// text组件数据绑定 schema\r\nexport const textDataBindingSchema = [\r\n  { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\r\n  { key: \"field\", label: \"字段\", type: \"input\" },\r\n  { key: \"format\", label: \"格式化\", type: \"input\" },\r\n  { key: \"expression\", label: \"表达式\", type: \"input\" },\r\n  { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n];"
+        }
+    ]
+}

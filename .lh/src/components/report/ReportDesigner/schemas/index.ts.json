@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/index.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747230244393,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747230252239,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n-import { labelDataBindingSchema, labelStandardSchema } from './labelSchema';\r\n-import { textDataBindingSchema, textStandardSchema } from './textSchema';\r\n+import { labelDataBindingSchema, labelStandardSchema } from \"./labelSchema\";\r\n+import { textDataBindingSchema, textStandardSchema } from \"./textSchema\";\r\n \r\n-import { baseSchema } from './baseSchema';\r\n+import { baseSchema } from \"./baseSchema\";\r\n \r\n export const componentSchemas = {\r\n   label: {\r\n     base: baseSchema,\r\n@@ -14,5 +14,5 @@\n     standard: textStandardSchema,\r\n     dataBinding: textDataBindingSchema,\r\n   },\r\n   // 其它组件...\r\n-}; \n\\ No newline at end of file\n+};\r\n"
+                },
+                {
+                    "date": 1747230607333,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,18 +1,8 @@\n-import { labelDataBindingSchema, labelStandardSchema } from \"./labelSchema\";\r\n-import { textDataBindingSchema, textStandardSchema } from \"./textSchema\";\r\n+// 只需导入所有schema文件，确保注册生效\r\n \r\n-import { baseSchema } from \"./baseSchema\";\r\n+import './labelSchema';\r\n+import './textSchema';\r\n \r\n-export const componentSchemas = {\r\n-  label: {\r\n-    base: baseSchema,\r\n-    standard: labelStandardSchema,\r\n-    dataBinding: labelDataBindingSchema,\r\n-  },\r\n-  text: {\r\n-    base: baseSchema,\r\n-    standard: textStandardSchema,\r\n-    dataBinding: textDataBindingSchema,\r\n-  },\r\n-  // 其它组件...\r\n-};\r\n+// 其它组件schema...\r\n+\r\n+export * from './schemaRegistry';\r\n"
+                },
+                {
+                    "date": 1747230647305,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n // 只需导入所有schema文件，确保注册生效\r\n \r\n-import './labelSchema';\r\n-import './textSchema';\r\n+import \"./labelSchema\";\r\n+import \"./textSchema\";\r\n \r\n // 其它组件schema...\r\n \r\n-export * from './schemaRegistry';\r\n+export * from \"./schemaRegistry\";\r\n"
+                }
+            ],
+            "date": 1747230244393,
+            "name": "Commit-0",
+            "content": "import { labelDataBindingSchema, labelStandardSchema } from './labelSchema';\r\nimport { textDataBindingSchema, textStandardSchema } from './textSchema';\r\n\r\nimport { baseSchema } from './baseSchema';\r\n\r\nexport const componentSchemas = {\r\n  label: {\r\n    base: baseSchema,\r\n    standard: labelStandardSchema,\r\n    dataBinding: labelDataBindingSchema,\r\n  },\r\n  text: {\r\n    base: baseSchema,\r\n    standard: textStandardSchema,\r\n    dataBinding: textDataBindingSchema,\r\n  },\r\n  // 其它组件...\r\n}; "
+        }
+    ]
+}
