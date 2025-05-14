@@ -9,3 +9,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>
 );
+
+document.addEventListener("mousemove", () => {
+  console.log("[全局] mousemove");
+});

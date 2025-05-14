@@ -45,5 +45,28 @@ export const useReportDesignerStore = create<ReportDesignerState>(
       set((state) => ({
         canvasConfig: { ...state.canvasConfig, ...config },
       })),
+    batchUpdateComponent: (ids: string[], data: Partial<ReportComponent>) =>
+      set((state) => ({
+        components: state.components.map((c) =>
+          ids.includes(c.id) ? { ...c, ...data } : c
+        ),
+      })),
+    batchRemoveComponent: (ids: string[]) =>
+      set((state) => ({
+        components: state.components.filter((c) => !ids.includes(c.id)),
+        selectedIds: state.selectedIds.filter((sid) => !ids.includes(sid)),
+      })),
+    batchLockComponent: (ids: string[], locked: boolean) =>
+      set((state) => ({
+        components: state.components.map((c) =>
+          ids.includes(c.id) ? { ...c, locked } : c
+        ),
+      })),
+    batchVisibleComponent: (ids: string[], visible: boolean) =>
+      set((state) => ({
+        components: state.components.map((c) =>
+          ids.includes(c.id) ? { ...c, visible } : c
+        ),
+      })),
   })
 );

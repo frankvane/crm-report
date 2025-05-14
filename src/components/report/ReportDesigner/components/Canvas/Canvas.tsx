@@ -1,9 +1,10 @@
 // 画布主组件
 
+import React, { useCallback, useRef, useState } from "react";
 import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
+import BatchToolbar from "./BatchToolbar";
 import ComponentItem from "./ComponentItem";
-import React from "react";
 import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 export default function Canvas() {
@@ -14,6 +15,105 @@ export default function Canvas() {
   const setSelectedIds = useReportDesignerStore((s) => s.setSelectedIds);
   const updateComponent = useReportDesignerStore((s) => s.updateComponent);
   const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
+  const batchUpdateComponent = useReportDesignerStore(
+    (s) => s.batchUpdateComponent
+  );
+  const batchRemoveComponent = useReportDesignerStore(
+    (s) => s.batchRemoveComponent
+  );
+  const batchLockComponent = useReportDesignerStore(
+    (s) => s.batchLockComponent
+  );
+  const batchVisibleComponent = useReportDesignerStore(
+    (s) => s.batchVisibleComponent
+  );
+
+  // 框选相关
+  const [selectRect, setSelectRect] = useState<null | {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+  }>(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const dragStart = useRef<{ x: number; y: number } | null>(null);
+
+  // 用useRef保存最新的组件数据，避免闭包
+  const componentsRef = useRef(components);
+  componentsRef.current = components;
+  const setSelectedIdsRef = useRef(setSelectedIds);
+  setSelectedIdsRef.current = setSelectedIds;
+
+  // 新增：最近一次操作类型标志位
+  const lastActionRef = useRef<string>("");
+
+  // 用useCallback确保引用稳定
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    lastActionRef.current = "select"; // 标记为框选
+    console.log("[框选] handleMouseMove");
+    if (!dragStart.current) return;
+    const canvas = document.getElementById("report-canvas-main");
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const curX = e.clientX - rect.left;
+    const curY = e.clientY - rect.top;
+    const x = Math.min(dragStart.current.x, curX);
+    const y = Math.min(dragStart.current.y, curY);
+    const w = Math.abs(curX - dragStart.current.x);
+    const h = Math.abs(curY - dragStart.current.y);
+    setSelectRect({ x, y, w, h });
+  }, []);
+
+  const handleMouseUp = useCallback((e: MouseEvent) => {
+    lastActionRef.current = "select"; // 标记为框选
+    e.stopPropagation(); // 防止冒泡导致选中状态被清空
+    console.log("[框选] handleMouseUp");
+    if (!dragStart.current) return;
+    const canvas = document.getElementById("report-canvas-main");
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const offsetLeft = 16; // 标尺宽度
+    const offsetTop = 16; // 标尺高度
+    const endX = e.clientX - rect.left - offsetLeft;
+    const endY = e.clientY - rect.top - offsetTop;
+    const startX = dragStart.current.x - offsetLeft;
+    const startY = dragStart.current.y - offsetTop;
+    const x1 = Math.min(startX, endX);
+    const y1 = Math.min(startY, endY);
+    const x2 = Math.max(startX, endX);
+    const y2 = Math.max(startY, endY);
+    console.log(`[框选] 区域: x1=${x1}, y1=${y1}, x2=${x2}, y2=${y2}`);
+    // 输出所有组件的坐标和尺寸
+    componentsRef.current.forEach((c) => {
+      console.log(
+        `[框选] 组件: id=${c.id}, x=${c.x}, y=${c.y}, w=${c.width}, h=${c.height}`
+      );
+    });
+    // 计算与选择框相交的组件
+    const selected = componentsRef.current.filter((c) => {
+      const cx1 = c.x;
+      const cy1 = c.y;
+      const cx2 = c.x + c.width;
+      const cy2 = c.y + c.height;
+      return cx1 < x2 && cx2 > x1 && cy1 < y2 && cy2 > y1;
+    });
+    console.log(
+      "[框选] 命中的组件id:",
+      selected.map((c) => c.id)
+    );
+    setSelectedIdsRef.current(selected.map((c) => c.id));
+    setSelectRect(null);
+    dragStart.current = null;
+    setIsSelecting(false); // 框选结束，恢复
+    document.removeEventListener("mousemove", handleMouseMoveRef.current!);
+    document.removeEventListener("mouseup", handleMouseUpRef.current!);
+  }, []);
+
+  // 用useRef保存最新的回调，确保解绑时引用一致
+  const handleMouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
+  const handleMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
+  handleMouseMoveRef.current = handleMouseMove;
+  handleMouseUpRef.current = handleMouseUp;
 
   // 监听拖拽结束，落盘添加组件或更新位置
   useDndMonitor({
@@ -61,6 +161,111 @@ export default function Canvas() {
       }
     },
   });
+
+  // 鼠标按下开始框选
+  const handleMouseDown = (e: React.MouseEvent) => {
+    lastActionRef.current = "select"; // 标记为框选
+    console.log("[框选] handleMouseDown", e.button);
+    if (e.button !== 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = e.clientX - rect.left;
+    const startY = e.clientY - rect.top;
+    dragStart.current = { x: startX, y: startY };
+    setSelectRect({ x: startX, y: startY, w: 0, h: 0 });
+    setIsSelecting(true);
+    document.addEventListener("mousemove", handleMouseMoveRef.current!);
+    document.addEventListener("mouseup", handleMouseUpRef.current!);
+    console.log("[框选] 已绑定document mousemove/mouseup");
+  };
+
+  // 批量操作实现
+  const handleDeleteSelected = () => {
+    batchRemoveComponent(selectedIds);
+  };
+  const handleBatchLock = (locked: boolean) => {
+    batchLockComponent(selectedIds, locked);
+  };
+  const handleBatchVisible = (visible: boolean) => {
+    batchVisibleComponent(selectedIds, visible);
+  };
+  const handleShowAll = () => {
+    batchVisibleComponent(
+      components.map((c) => c.id),
+      true
+    );
+  };
+  // 批量对齐
+  const handleAlign = (
+    type: "left" | "right" | "top" | "bottom" | "hcenter" | "vcenter"
+  ) => {
+    if (selectedIds.length < 2) return;
+    const selectedComps = components.filter((c) => selectedIds.includes(c.id));
+    if (selectedComps.length < 2) return;
+    const updates: Record<string, Partial<(typeof selectedComps)[0]>> = {};
+    if (["left", "right", "top", "bottom"].includes(type)) {
+      if (type === "left") {
+        const minX = Math.min(...selectedComps.map((c) => c.x));
+        selectedComps.forEach((c) => (updates[c.id] = { x: minX }));
+      } else if (type === "right") {
+        const maxR = Math.max(...selectedComps.map((c) => c.x + c.width));
+        selectedComps.forEach((c) => (updates[c.id] = { x: maxR - c.width }));
+      } else if (type === "top") {
+        const minY = Math.min(...selectedComps.map((c) => c.y));
+        selectedComps.forEach((c) => (updates[c.id] = { y: minY }));
+      } else if (type === "bottom") {
+        const maxB = Math.max(...selectedComps.map((c) => c.y + c.height));
+        selectedComps.forEach((c) => (updates[c.id] = { y: maxB - c.height }));
+      }
+    } else if (type === "hcenter") {
+      const minX = Math.min(...selectedComps.map((c) => c.x));
+      const maxR = Math.max(...selectedComps.map((c) => c.x + c.width));
+      const center = (minX + maxR) / 2;
+      selectedComps.forEach(
+        (c) => (updates[c.id] = { x: center - c.width / 2 })
+      );
+    } else if (type === "vcenter") {
+      const minY = Math.min(...selectedComps.map((c) => c.y));
+      const maxB = Math.max(...selectedComps.map((c) => c.y + c.height));
+      const center = (minY + maxB) / 2;
+      selectedComps.forEach(
+        (c) => (updates[c.id] = { y: center - c.height / 2 })
+      );
+    }
+    Object.entries(updates).forEach(([id, data]) =>
+      batchUpdateComponent([id], data)
+    );
+  };
+  // 批量分布
+  const handleDistribute = (type: "horizontal" | "vertical") => {
+    if (selectedIds.length < 3) return;
+    const selectedComps = components.filter((c) => selectedIds.includes(c.id));
+    if (selectedComps.length < 3) return;
+    if (type === "horizontal") {
+      const sorted = [...selectedComps].sort((a, b) => a.x - b.x);
+      const minX = sorted[0].x;
+      const maxR =
+        sorted[sorted.length - 1].x + sorted[sorted.length - 1].width;
+      const totalWidth = sorted.reduce((sum, c) => sum + c.width, 0);
+      const gap = (maxR - minX - totalWidth) / (sorted.length - 1);
+      let curX = minX;
+      sorted.forEach((c) => {
+        batchUpdateComponent([c.id], { x: curX });
+        curX += c.width + gap;
+      });
+    } else if (type === "vertical") {
+      const sorted = [...selectedComps].sort((a, b) => a.y - b.y);
+      const minY = sorted[0].y;
+      const maxB =
+        sorted[sorted.length - 1].y + sorted[sorted.length - 1].height;
+      const totalHeight = sorted.reduce((sum, c) => sum + c.height, 0);
+      const gap = (maxB - minY - totalHeight) / (sorted.length - 1);
+      let curY = minY;
+      sorted.forEach((c) => {
+        batchUpdateComponent([c.id], { y: curY });
+        curY += c.height + gap;
+      });
+    }
+  };
 
   // 标尺渲染
   const renderRuler = () => {
@@ -215,6 +420,7 @@ export default function Canvas() {
   return (
     <div
       ref={setNodeRef}
+      id="report-canvas-main"
       style={{
         minHeight: canvasConfig.height + 16,
         minWidth: canvasConfig.width + 16,
@@ -230,13 +436,19 @@ export default function Canvas() {
         position: "relative",
         overflow: "visible",
       }}
-      onClick={() => setSelectedIds([])}
+      onClick={() => {
+        if (lastActionRef.current === "select") {
+          lastActionRef.current = ""; // 框选后不清空，并重置
+          return;
+        }
+        setSelectedIds([]);
+      }}
     >
       {/* 标尺 */}
       {renderRuler()}
       {/* 网格 */}
       {renderGrid()}
-      {/* 画布内容区 */}
+      {/* 画布内容区（标准结构，支持框选和组件交互） */}
       <div
         style={{
           position: "absolute",
@@ -244,28 +456,78 @@ export default function Canvas() {
           top: 16,
           width: canvasConfig.width,
           height: canvasConfig.height,
+          userSelect: selectRect ? "none" : undefined,
+          zIndex: 10,
+          background: "transparent",
         }}
+        onMouseDown={handleMouseDown}
       >
-        {components.length === 0 && <div>拖拽左侧组件到此处</div>}
-        {components.map((comp) => (
-          <ComponentItem
-            key={comp.id}
-            comp={comp}
-            isSelected={selectedIds.length === 1 && selectedIds[0] === comp.id}
-            onSelect={() => {
-              console.log(
-                "[Canvas] onSelect 组件id:",
-                comp.id,
-                "当前selectedIds:",
-                selectedIds
-              );
-              setSelectedIds([comp.id]);
+        {/* 框选可视化 */}
+        {selectRect && (
+          <div
+            style={{
+              position: "absolute",
+              left: selectRect.x,
+              top: selectRect.y,
+              width: selectRect.w,
+              height: selectRect.h,
+              border: "1.5px dashed #1976d2",
+              background: "rgba(25, 118, 210, 0.08)",
+              pointerEvents: "none",
+              zIndex: 1000,
             }}
-            onResize={(w: number, h: number) =>
-              updateComponent(comp.id, { width: w, height: h })
-            }
           />
-        ))}
+        )}
+        {/* 组件容器，pointerEvents受isSelecting控制 */}
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            pointerEvents: isSelecting ? "none" : "auto",
+            zIndex: 20,
+          }}
+        >
+          {/* 批量操作工具栏 */}
+          {selectedIds.length > 1 && (
+            <div
+              style={{ position: "absolute", left: 24, top: 12, zIndex: 2000 }}
+            >
+              <BatchToolbar
+                selectedCount={selectedIds.length}
+                canDistribute={selectedIds.length >= 3}
+                onDeleteSelected={handleDeleteSelected}
+                onBatchLock={handleBatchLock}
+                onBatchVisible={handleBatchVisible}
+                onShowAll={handleShowAll}
+                onAlign={handleAlign}
+                onDistribute={handleDistribute}
+              />
+            </div>
+          )}
+          {components.length === 0 && <div>拖拽左侧组件到此处</div>}
+          {components.map((comp) => (
+            <ComponentItem
+              key={comp.id}
+              comp={comp}
+              isSelected={selectedIds.includes(comp.id)}
+              onSelect={() => {
+                console.log(
+                  "[Canvas] onSelect 组件id:",
+                  comp.id,
+                  "当前selectedIds:",
+                  selectedIds
+                );
+                setSelectedIds([comp.id]);
+              }}
+              onResize={(w: number, h: number) =>
+                updateComponent(comp.id, { width: w, height: h })
+              }
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
