@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { CanvasComponent } from "../../types";
+import type { CanvasComponent } from "@/components/report/ReportDesigner/types";
 
 interface SelectionBoxState {
   startX: number;
@@ -13,7 +13,7 @@ interface SelectionBoxState {
 interface UseSelectionBoxProps {
   contentRef: React.RefObject<HTMLDivElement>;
   components: CanvasComponent[];
-  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedIds: (ids: string[]) => void;
   COMPONENT_WIDTH: number;
   COMPONENT_HEIGHT: number;
 }
@@ -50,6 +50,7 @@ export function useSelectionBox({
 
   // 框选开始
   const handleSelectionMouseDown = (e: React.MouseEvent) => {
+    console.log("框选开始", e);
     if (e.button !== 0 || e.target !== contentRef.current) return;
     const rect = contentRef.current!.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -63,22 +64,46 @@ export function useSelectionBox({
     const rect = contentRef.current!.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    // 先更新选区
     setSelectionBox((prev) => ({ ...prev, endX: x, endY: y }));
-
-    // 用最新的 startX/startY 和当前 x/y 计算选区
     const minX = Math.min(selectionBox.startX, x);
     const maxX = Math.max(selectionBox.startX, x);
     const minY = Math.min(selectionBox.startY, y);
     const maxY = Math.max(selectionBox.startY, y);
+    console.log("选区:", { minX, maxX, minY, maxY });
+    console.log("当前 components:", components);
+    components.forEach((comp) => {
+      const x = comp.props?.x ?? comp.x ?? 0;
+      const y = comp.props?.y ?? comp.y ?? 0;
+      const width = comp.props?.width ?? comp.width ?? COMPONENT_WIDTH;
+      const height = comp.props?.height ?? comp.height ?? COMPONENT_HEIGHT;
+      const visible = comp.props?.visible ?? comp.visible ?? true;
+      console.log(
+        "组件",
+        comp.id,
+        "x:",
+        x,
+        "y:",
+        y,
+        "width:",
+        width,
+        "height:",
+        height,
+        "visible:",
+        visible
+      );
+    });
     const selected = components
       .filter((comp) => {
-        if (comp.visible === false) return false;
-        const compLeft = comp.x;
-        const compTop = comp.y;
-        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
-        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
-        // 只要有部分区域在框选区内就算命中
+        const x = comp.props?.x ?? comp.x ?? 0;
+        const y = comp.props?.y ?? comp.y ?? 0;
+        const width = comp.props?.width ?? comp.width ?? COMPONENT_WIDTH;
+        const height = comp.props?.height ?? comp.height ?? COMPONENT_HEIGHT;
+        const visible = comp.props?.visible ?? comp.visible ?? true;
+        if (!visible) return false;
+        const compLeft = x;
+        const compTop = y;
+        const compRight = x + width;
+        const compBottom = y + height;
         const isIntersect =
           compLeft < maxX &&
           compRight > minX &&
@@ -87,11 +112,8 @@ export function useSelectionBox({
         return isIntersect;
       })
       .map((comp) => comp.id);
-    if (e.shiftKey || e.ctrlKey) {
-      setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));
-    } else {
-      setSelectedIds(selected);
-    }
+    console.log("框选移动，当前选中：", selected);
+    setSelectedIds(selected);
   };
 
   // 框选结束，x/y为鼠标松开时相对于contentRef的坐标
@@ -106,12 +128,16 @@ export function useSelectionBox({
     const maxY = Math.max(selectionBox.startY, endY);
     const selected = components
       .filter((comp) => {
-        if (comp.visible === false) return false;
-        const compLeft = comp.x;
-        const compTop = comp.y;
-        const compRight = comp.x + (comp.width ?? COMPONENT_WIDTH);
-        const compBottom = comp.y + (comp.height ?? COMPONENT_HEIGHT);
-        // 只要有部分区域在框选区内就算命中
+        const x = comp.props?.x ?? comp.x ?? 0;
+        const y = comp.props?.y ?? comp.y ?? 0;
+        const width = comp.props?.width ?? comp.width ?? COMPONENT_WIDTH;
+        const height = comp.props?.height ?? comp.height ?? COMPONENT_HEIGHT;
+        const visible = comp.props?.visible ?? comp.visible ?? true;
+        if (!visible) return false;
+        const compLeft = x;
+        const compTop = y;
+        const compRight = x + width;
+        const compBottom = y + height;
         const isIntersect =
           compLeft < maxX &&
           compRight > minX &&
@@ -120,15 +146,8 @@ export function useSelectionBox({
         return isIntersect;
       })
       .map((comp) => comp.id);
-    if (
-      window.event &&
-      ((window.event as MouseEvent).shiftKey ||
-        (window.event as MouseEvent).ctrlKey)
-    ) {
-      setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));
-    } else {
-      setSelectedIds(selected);
-    }
+    console.log("框选结束，最终选中：", selected);
+    setSelectedIds(selected);
     setSelectionBox({ startX: 0, startY: 0, endX: 0, endY: 0, active: false });
   };
 

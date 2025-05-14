@@ -1,8 +1,14 @@
-import { Divider, Typography } from "antd";
+import {
+  basePropsSchema as labelBasePropsSchema,
+  commonPropsSchema as labelCommonPropsSchema,
+} from "../../schemas/labelComponentSchema";
+import {
+  basePropsSchema as textBasePropsSchema,
+  commonPropsSchema as textCommonPropsSchema,
+} from "../../schemas/textComponentSchema";
 
 import React from "react";
-
-const { Title } = Typography;
+import { registerComponent } from "../../componentRegistry";
 
 export interface ComponentLibraryItem {
   type: string;
@@ -15,63 +21,115 @@ interface ComponentLibraryProps {
   onDragStart: (e: React.DragEvent<HTMLDivElement>, type: string) => void;
 }
 
-const transparentImg =
-  "data:image/svg+xml;base64," +
-  btoa('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>');
-
 const ComponentLibrary: React.FC<ComponentLibraryProps> = ({
   components,
   onDragStart,
-}) => (
-  <div
-    style={{
-      width: 220,
-      background: "#fff",
-      borderRight: "1px solid #f0f0f0",
-      padding: 0,
-      color: "#222",
-      fontFamily: "inherit",
-    }}
-  >
-    <div style={{ padding: 20 }}>
-      <Title level={5} style={{ marginTop: 0, color: "#222" }}>
-        组件库
-      </Title>
-      <Divider style={{ margin: "8px 0" }} />
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {components.map((item) => (
-          <div
-            key={item.type}
-            draggable
-            onDragStart={(e) => {
-              const img = new window.Image();
-              img.src = transparentImg;
-              e.dataTransfer.setDragImage(img, 0, 0);
-              onDragStart(e, item.type);
-            }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "8px 12px",
-              border: "1px solid #e5e5e5",
-              borderRadius: 6,
-              background: "#fafafa",
-              cursor: "grab",
-              fontSize: 16,
-              color: "#222",
-              transition: "background 0.2s, box-shadow 0.2s",
-              userSelect: "none",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.background = "#f0f5ff")}
-            onMouseOut={(e) => (e.currentTarget.style.background = "#fafafa")}
-          >
-            <span style={{ marginRight: 8 }}>{item.icon}</span>
+}) => {
+  return (
+    <div
+      style={{
+        width: 80,
+        background: "#fff",
+        borderRight: "1px solid #f0f0f0",
+        padding: "16px 0",
+      }}
+    >
+      {components.map((item) => (
+        <div
+          key={item.type}
+          draggable
+          onDragStart={(e) => onDragStart(e, item.type)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: 24,
+            cursor: "grab",
+            userSelect: "none",
+          }}
+        >
+          <span style={{ fontSize: 28 }}>{item.icon}</span>
+          <span style={{ fontSize: 13, color: "#333", marginTop: 4 }}>
             {item.name}
-          </div>
-        ))}
-      </div>
+          </span>
+        </div>
+      ))}
     </div>
+  );
+};
+
+// 占位渲染组件
+const LabelComponent: React.FC<any> = (props) => (
+  <div style={{ border: "1px dashed #aaa", padding: 4 }}>
+    {props.text || "标签"}
   </div>
 );
+const TextComponent: React.FC<any> = (props) => (
+  <div style={{ border: "1px solid #aaa", padding: 4 }}>
+    {props.text || "文本"}
+  </div>
+);
+
+// 注册 label 组件
+registerComponent({
+  type: "label",
+  displayName: "标签",
+  icon: "🏷️",
+  defaultBaseProps: {
+    name: "标签",
+    x: 0,
+    y: 0,
+    width: 100,
+    height: 30,
+    locked: false,
+    visible: true,
+  },
+  defaultCustomProps: {
+    text: "标签内容",
+    color: "#333",
+    fontSize: 14,
+    fontWeight: "normal",
+    background: "",
+  },
+  render: LabelComponent,
+  propsSchema: {
+    ...labelBasePropsSchema,
+    properties: {
+      ...labelBasePropsSchema.properties,
+      ...labelCommonPropsSchema.properties,
+    },
+  },
+});
+
+// 注册 text 组件
+registerComponent({
+  type: "text",
+  displayName: "文本",
+  icon: "🔤",
+  defaultBaseProps: {
+    name: "文本",
+    x: 0,
+    y: 0,
+    width: 120,
+    height: 32,
+    locked: false,
+    visible: true,
+  },
+  defaultCustomProps: {
+    text: "文本内容",
+    color: "#222",
+    fontSize: 16,
+    fontWeight: "normal",
+    textAlign: "left",
+  },
+  render: TextComponent,
+  propsSchema: {
+    ...textBasePropsSchema,
+    properties: {
+      ...textBasePropsSchema.properties,
+      ...textCommonPropsSchema.properties,
+    },
+  },
+});
 
 export default ComponentLibrary;

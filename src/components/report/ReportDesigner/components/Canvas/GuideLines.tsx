@@ -7,7 +7,7 @@ interface GuideLinesProps {
   yHighlight?: boolean;
 }
 
-export const GuideLines: React.FC<GuideLinesProps> = ({
+const GuideLines: React.FC<GuideLinesProps> = ({
   x,
   y,
   xHighlight,
@@ -44,3 +44,5 @@ export const GuideLines: React.FC<GuideLinesProps> = ({
     )}
   </>
 );
+
+export default GuideLines;

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/report/components/LabelComponent/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747149634896,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747149634896,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\nexport interface LabelComponentProps {\r\n  text: string;\r\n  color?: string;\r\n  fontSize?: number;\r\n  fontWeight?: React.CSSProperties[\"fontWeight\"];\r\n  background?: string;\r\n  width?: number;\r\n  height?: number;\r\n}\r\n\r\nconst LabelComponent: React.FC<LabelComponentProps> = ({\r\n  text,\r\n  color = \"#333\",\r\n  fontSize = 14,\r\n  fontWeight = \"normal\",\r\n  background = \"#f5f5f5\",\r\n  width,\r\n  height,\r\n}) => {\r\n  return (\r\n    <div\r\n      style={{\r\n        color,\r\n        fontSize,\r\n        fontWeight,\r\n        background,\r\n        width: width ? width : undefined,\r\n        height: height ? height : undefined,\r\n        display: \"flex\",\r\n        alignItems: \"center\",\r\n        justifyContent: \"center\",\r\n        borderRadius: 4,\r\n        padding: \"4px 8px\",\r\n        boxSizing: \"border-box\",\r\n        overflow: \"hidden\",\r\n        whiteSpace: \"nowrap\",\r\n        textOverflow: \"ellipsis\",\r\n      }}\r\n    >\r\n      {text}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default LabelComponent;\r\n"
+        }
+    ]
+}

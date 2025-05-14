@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { CanvasComponent } from "../../types";
+import type { CanvasComponent } from "@/components/report/ReportDesigner/types";
 
 export interface MenuItem {
   label: string;

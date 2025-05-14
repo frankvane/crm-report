@@ -1,40 +1,69 @@
-import React, { useState } from "react";
-
 import type { CanvasComponent } from "../../types";
+import React from "react";
+import { useRef } from "react";
 import { useResizable } from "./useResizable";
 
 const anchors = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 
 function getAnchorStyle(anchor: string, width: number, height: number) {
-  const size = 8;
+  const size = 10;
   const half = size / 2;
-  const pos: Record<string, React.CSSProperties> = {
-    nw: { left: -half, top: -half, cursor: "nwse-resize" },
-    n: { left: width / 2 - half, top: -half, cursor: "ns-resize" },
-    ne: { left: width - half, top: -half, cursor: "nesw-resize" },
-    e: { left: width - half, top: height / 2 - half, cursor: "ew-resize" },
-    se: { left: width - half, top: height - half, cursor: "nwse-resize" },
-    s: { left: width / 2 - half, top: height - half, cursor: "ns-resize" },
-    sw: { left: -half, top: height - half, cursor: "nesw-resize" },
-    w: { left: -half, top: height / 2 - half, cursor: "ew-resize" },
-  };
-  return {
-    position: "absolute" as const,
+  const style: React.CSSProperties = {
+    position: "absolute",
     width: size,
     height: size,
-    background: "#1890ff",
-    borderRadius: "50%",
-    border: "2px solid #fff",
+    background: "#fff",
+    border: "2px solid #1890ff",
+    borderRadius: 4,
     zIndex: 10,
-    ...pos[anchor],
+    cursor: `${anchor}-resize`,
+    boxSizing: "border-box",
   };
+  switch (anchor) {
+    case "nw":
+      style.left = -half;
+      style.top = -half;
+      break;
+    case "n":
+      style.left = width / 2 - half;
+      style.top = -half;
+      break;
+    case "ne":
+      style.left = width - half;
+      style.top = -half;
+      break;
+    case "e":
+      style.left = width - half;
+      style.top = height / 2 - half;
+      break;
+    case "se":
+      style.left = width - half;
+      style.top = height - half;
+      break;
+    case "s":
+      style.left = width / 2 - half;
+      style.top = height - half;
+      break;
+    case "sw":
+      style.left = -half;
+      style.top = height - half;
+      break;
+    case "w":
+      style.left = -half;
+      style.top = height / 2 - half;
+      break;
+  }
+  return style;
 }
 
 interface ResizableWrapperProps {
-  width: number;
-  height: number;
-  x: number;
-  y: number;
+  baseProps: {
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    locked?: boolean;
+  };
   onResize: (rect: {
     width: number;
     height: number;
@@ -42,7 +71,6 @@ interface ResizableWrapperProps {
     y: number;
   }) => void;
   selected: boolean;
-  locked?: boolean;
   children: React.ReactNode;
   allComponents?: CanvasComponent[];
   selfId?: string;
@@ -61,38 +89,73 @@ interface ResizableWrapperProps {
   onContextMenu?: (e: React.MouseEvent) => void;
 }
 
-export const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
-  width,
-  height,
+function useDraggable({
   x,
   y,
-  onResize,
-  selected,
+  onDrag,
   locked,
-  children,
-  allComponents,
-  selfId,
-  canvasWidth,
-  canvasHeight,
-  snapThreshold,
-  onGuideChange,
-  handleDragStart,
-  onContextMenu,
-}) => {
+}: {
+  x: number;
+  y: number;
+  onDrag: (pos: { x: number; y: number }) => void;
+  locked?: boolean;
+}) {
+  const start = useRef({ x: 0, y: 0, left: 0, top: 0 });
+  function handleDragMouseDown(e: React.MouseEvent) {
+    if (locked) return;
+    // 只允许左键
+    if (e.button !== 0) return;
+    e.stopPropagation();
+    start.current = { x: e.clientX, y: e.clientY, left: x, top: y };
+    window.addEventListener("mousemove", handleDragMouseMove);
+    window.addEventListener("mouseup", handleDragMouseUp);
+  }
+  function handleDragMouseMove(e: MouseEvent) {
+    const deltaX = e.clientX - start.current.x;
+    const deltaY = e.clientY - start.current.y;
+    const newX = start.current.left + deltaX;
+    const newY = start.current.top + deltaY;
+    onDrag({ x: newX, y: newY });
+  }
+  function handleDragMouseUp() {
+    window.removeEventListener("mousemove", handleDragMouseMove);
+    window.removeEventListener("mouseup", handleDragMouseUp);
+  }
+  return { handleDragMouseDown };
+}
+
+export const ResizableWrapper: React.FC<ResizableWrapperProps> = (props) => {
+  // 兜底，保证 baseProps 一定有值
+  const baseProps = props.baseProps ?? {
+    width: 120,
+    height: 40,
+    x: 0,
+    y: 0,
+    locked: false,
+  };
+  const { width, height, x, y, locked } = baseProps;
   const { handleMouseDown } = useResizable({
     width,
     height,
     x,
     y,
-    onResize,
-    allComponents,
-    selfId,
-    canvasWidth,
-    canvasHeight,
-    snapThreshold,
-    onGuideChange,
+    onResize: props.onResize,
+    allComponents: props.allComponents,
+    selfId: props.selfId,
+    canvasWidth: props.canvasWidth,
+    canvasHeight: props.canvasHeight,
+    snapThreshold: props.snapThreshold,
+    onGuideChange: props.onGuideChange,
   });
-  const [hover, setHover] = useState(false);
+  const { handleDragMouseDown } = useDraggable({
+    x,
+    y,
+    locked,
+    onDrag: (pos) => {
+      // 只更新位置，不改变宽高
+      props.onResize({ width, height, x: pos.x, y: pos.y });
+    },
+  });
   return (
     <div
       style={{
@@ -101,31 +164,54 @@ export const ResizableWrapper: React.FC<ResizableWrapperProps> = ({
         top: y,
         width,
         height,
-        boxSizing: "border-box",
+        border: props.selected ? "2px solid #1890ff" : "1px solid #e5e5e5",
+        borderRadius: 6,
+        background: "#fafafa",
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        fontSize: 16,
+        color: "#333",
         cursor: locked ? "not-allowed" : "move",
-        boxShadow: hover ? "0 2px 8px rgba(0, 0, 0, 0.2)" : undefined,
-        transition: "box-shadow 0.18s",
-        pointerEvents: "auto",
+        zIndex: props.selected ? 1000 : 1,
         opacity: locked ? 0.5 : 1,
+        pointerEvents: "auto",
+        boxSizing: "border-box",
       }}
-      onMouseDown={(e) => {
-        if ((e.target as HTMLElement).classList.contains("resize-anchor"))
-          return;
-        if (!locked) handleDragStart?.(e);
+      onMouseDown={
+        locked
+          ? undefined
+          : (e) => {
+              if ((e.target as HTMLElement).classList.contains("resize-anchor"))
+                return;
+              // 先处理拖拽移动
+              handleDragMouseDown(e);
+              // 兼容原有 handleDragStart
+              console.log("[ResizableWrapper] handleDragStart", e);
+              props.handleDragStart?.(e);
+            }
+      }
+      onContextMenu={(e) => {
+        console.log("[ResizableWrapper] onContextMenu", e);
+        props.onContextMenu?.(e);
       }}
-      onContextMenu={onContextMenu}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
     >
-      {children}
-      {!locked &&
-        selected &&
+      {props.children}
+      {props.selected &&
+        !locked &&
         anchors.map((anchor) => (
           <div
             key={anchor}
             className="resize-anchor"
             style={getAnchorStyle(anchor, width, height)}
-            onMouseDown={(e) => handleMouseDown(e, anchor)}
+            onMouseDown={(e) => {
+              console.log(
+                "[ResizableWrapper] resize-anchor onMouseDown",
+                anchor,
+                e
+              );
+              handleMouseDown(e, anchor);
+            }}
           />
         ))}
     </div>

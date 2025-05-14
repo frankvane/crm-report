@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/Canvas/GuideLines.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747183584797,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747183584797,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\n\r\ninterface GuideLinesProps {\r\n  x?: number;\r\n  y?: number;\r\n  xHighlight?: boolean;\r\n  yHighlight?: boolean;\r\n}\r\n\r\nconst GuideLines: React.FC<GuideLinesProps> = ({\r\n  x,\r\n  y,\r\n  xHighlight,\r\n  yHighlight,\r\n}) => (\r\n  <>\r\n    {x !== undefined && (\r\n      <div\r\n        style={{\r\n          position: \"absolute\",\r\n          left: x,\r\n          top: 0,\r\n          width: 1,\r\n          height: \"100%\",\r\n          borderLeft: xHighlight ? \"2px solid #0050b3\" : \"2px solid #ccc\",\r\n          zIndex: 9999,\r\n          pointerEvents: \"none\",\r\n        }}\r\n      />\r\n    )}\r\n    {y !== undefined && (\r\n      <div\r\n        style={{\r\n          position: \"absolute\",\r\n          top: y,\r\n          left: 0,\r\n          height: 1,\r\n          width: \"100%\",\r\n          borderTop: yHighlight ? \"2px solid #0050b3\" : \"2px solid #ccc\",\r\n          zIndex: 9999,\r\n          pointerEvents: \"none\",\r\n        }}\r\n      />\r\n    )}\r\n  </>\r\n);\r\n\r\nexport default GuideLines;\r\n"
+        }
+    ]
+}

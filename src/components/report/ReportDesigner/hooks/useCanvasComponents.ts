@@ -59,9 +59,16 @@ export function useCanvasComponents(componentList: ComponentLibraryItem[]) {
   // 属性面板变更
   const handlePropertyChange = (formData: Partial<CanvasComponent>) => {
     const { id, ...rest } = formData;
+    console.log("【useCanvasComponents】属性变更目标id", id, rest);
     if (!id) return;
     setCanvasComponents((prev) =>
-      prev.map((comp) => (comp.id === id ? { ...comp, ...rest } : comp))
+      prev.map((comp) => {
+        if (comp.id === id) {
+          console.log("【useCanvasComponents】更新组件", id, rest);
+          return { ...comp, ...rest };
+        }
+        return comp;
+      })
     );
   };
   // 删除组件

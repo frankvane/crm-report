@@ -1,16 +1,11 @@
 import React from "react";
 
-export interface MenuItem {
-  label: string;
-  onClick: () => void;
-}
-
 interface ContextMenuProps {
   visible: boolean;
   x: number;
   y: number;
   onClose: () => void;
-  menuItems: MenuItem[];
+  menuItems: { label: string; onClick: () => void }[];
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -20,44 +15,49 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
   onClose,
   menuItems,
 }) => {
-  React.useEffect(() => {
-    if (!visible) return;
-    const onClick = () => onClose();
-    window.addEventListener("click", onClick);
-    return () => window.removeEventListener("click", onClick);
-  }, [visible, onClose]);
-
   if (!visible) return null;
+
   return (
-    <ul
+    <div
       style={{
         position: "fixed",
         left: x,
         top: y,
-        background: "#fff",
-        border: "1px solid #ccc",
-        borderRadius: 4,
-        boxShadow: "0 2px 8px #0001",
-        padding: 0,
-        margin: 0,
         zIndex: 99999,
+        background: "#fff",
+        border: "1px solid #e5e5e5",
+        borderRadius: 6,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         minWidth: 120,
-        listStyle: "none",
+        padding: "6px 0",
+      }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onClose();
       }}
     >
-      {menuItems.map((item) => (
-        <li
-          key={item.label}
-          style={{ padding: "8px 16px", cursor: "pointer" }}
+      {menuItems.map((item, idx) => (
+        <div
+          key={idx}
           onClick={() => {
             item.onClick();
             onClose();
           }}
+          style={{
+            padding: "8px 20px",
+            cursor: "pointer",
+            color: "#222",
+            fontSize: 15,
+            userSelect: "none",
+            transition: "background 0.2s",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.background = "#f0f5ff")}
+          onMouseOut={(e) => (e.currentTarget.style.background = "#fff")}
         >
           {item.label}
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

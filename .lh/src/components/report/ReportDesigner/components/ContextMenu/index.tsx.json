@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/ContextMenu/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747124611031,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747124628171,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n import React from \"react\";\r\n-import { useCanvasStore } from \"@/store/canvasStore\";\r\n \r\n interface ContextMenuProps {\r\n   visible: boolean;\r\n   x: number;\r\n@@ -15,13 +14,8 @@\n   y,\r\n   onClose,\r\n   menuItems,\r\n }) => {\r\n-  // 可根据需要直接用zustand的selectedIds、deleteComponent、batchUpdate等\r\n-  // const selectedIds = useCanvasStore(state => state.selectedIds);\r\n-  // const deleteComponent = useCanvasStore(state => state.deleteComponent);\r\n-  // const batchUpdate = useCanvasStore(state => state.batchUpdate);\r\n-\r\n   if (!visible) return null;\r\n \r\n   return (\r\n     <div\r\n"
+                },
+                {
+                    "date": 1747125306149,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n \r\n   return (\r\n     <div\r\n       style={{\r\n-        position: \"absolute\",\r\n+        position: \"fixed\",\r\n         left: x,\r\n         top: y,\r\n         zIndex: 99999,\r\n         background: \"#fff\",\r\n"
+                }
+            ],
+            "date": 1747124611031,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\r\nimport { useCanvasStore } from \"@/store/canvasStore\";\r\n\r\ninterface ContextMenuProps {\r\n  visible: boolean;\r\n  x: number;\r\n  y: number;\r\n  onClose: () => void;\r\n  menuItems: { label: string; onClick: () => void }[];\r\n}\r\n\r\nconst ContextMenu: React.FC<ContextMenuProps> = ({ visible, x, y, onClose, menuItems }) => {\r\n  // 可根据需要直接用zustand的selectedIds、deleteComponent、batchUpdate等\r\n  // const selectedIds = useCanvasStore(state => state.selectedIds);\r\n  // const deleteComponent = useCanvasStore(state => state.deleteComponent);\r\n  // const batchUpdate = useCanvasStore(state => state.batchUpdate);\r\n\r\n  if (!visible) return null;\r\n\r\n  return (\r\n    <div\r\n      style={{\r\n        position: \"absolute\",\r\n        left: x,\r\n        top: y,\r\n        zIndex: 99999,\r\n        background: \"#fff\",\r\n        border: \"1px solid #e5e5e5\",\r\n        borderRadius: 6,\r\n        boxShadow: \"0 2px 8px rgba(0,0,0,0.08)\",\r\n        minWidth: 120,\r\n        padding: \"6px 0\",\r\n      }}\r\n      onContextMenu={e => {\r\n        e.preventDefault();\r\n        onClose();\r\n      }}\r\n    >\r\n      {menuItems.map((item, idx) => (\r\n        <div\r\n          key={idx}\r\n          onClick={() => {\r\n            item.onClick();\r\n            onClose();\r\n          }}\r\n          style={{\r\n            padding: \"8px 20px\",\r\n            cursor: \"pointer\",\r\n            color: \"#222\",\r\n            fontSize: 15,\r\n            userSelect: \"none\",\r\n            transition: \"background 0.2s\",\r\n          }}\r\n          onMouseOver={e => (e.currentTarget.style.background = \"#f0f5ff\")}\r\n          onMouseOut={e => (e.currentTarget.style.background = \"#fff\")}\r\n        >\r\n          {item.label}\r\n        </div>\r\n      ))}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default ContextMenu;\r\n"
+        }
+    ]
+}

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 12,
             "patches": [
                 {
                     "date": 1747106264006,
@@ -44,6 +44,18 @@
                 {
                     "date": 1747116048141,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -97,10 +97,10 @@\n   // 框选结束，x/y为鼠标松开时相对于contentRef的坐标\r\n   const handleSelectionMouseUp = (x?: number, y?: number) => {\r\n     if (!selectionBox.active) return;\r\n     // 如果没传x/y，默认用selectionBox.endX/endY\r\n-    const endX = typeof x === 'number' ? x : selectionBox.endX;\r\n-    const endY = typeof y === 'number' ? y : selectionBox.endY;\r\n+    const endX = typeof x === \"number\" ? x : selectionBox.endX;\r\n+    const endY = typeof y === \"number\" ? y : selectionBox.endY;\r\n     const minX = Math.min(selectionBox.startX, endX);\r\n     const maxX = Math.max(selectionBox.startX, endX);\r\n     const minY = Math.min(selectionBox.startY, endY);\r\n     const maxY = Math.max(selectionBox.startY, endY);\r\n"
+                },
+                {
+                    "date": 1747125923859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,11 @@\n import { useEffect, useState } from \"react\";\r\n \r\n import type { CanvasComponent } from \"../../types\";\r\n \r\n+// 修改成@引入\r\n+\r\n+\r\n interface SelectionBoxState {\r\n   startX: number;\r\n   startY: number;\r\n   endX: number;\r\n"
+                },
+                {
+                    "date": 1747125983895,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,13 @@\n import { useEffect, useState } from \"react\";\r\n \r\n-import type { CanvasComponent } from \"../../types\";\r\n+import type { CanvasComponent } from \"@/components/report/ReportDesigner/types\";\r\n \r\n // 修改成@引入\r\n \r\n+\r\n+\r\n+\r\n interface SelectionBoxState {\r\n   startX: number;\r\n   startY: number;\r\n   endX: number;\r\n"
+                },
+                {
+                    "date": 1747188085625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n \r\n interface UseSelectionBoxProps {\r\n   contentRef: React.RefObject<HTMLDivElement>;\r\n   components: CanvasComponent[];\r\n-  setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>;\r\n+  setSelectedIds: (ids: string[]) => void;\r\n   COMPONENT_WIDTH: number;\r\n   COMPONENT_HEIGHT: number;\r\n }\r\n \r\n@@ -86,13 +86,9 @@\n           compBottom > minY;\r\n         return isIntersect;\r\n       })\r\n       .map((comp) => comp.id);\r\n-    if (e.shiftKey || e.ctrlKey) {\r\n-      setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));\r\n-    } else {\r\n-      setSelectedIds(selected);\r\n-    }\r\n+    setSelectedIds(selected);\r\n   };\r\n \r\n   // 框选结束，x/y为鼠标松开时相对于contentRef的坐标\r\n   const handleSelectionMouseUp = (x?: number, y?: number) => {\r\n@@ -119,17 +115,9 @@\n           compBottom > minY;\r\n         return isIntersect;\r\n       })\r\n       .map((comp) => comp.id);\r\n-    if (\r\n-      window.event &&\r\n-      ((window.event as MouseEvent).shiftKey ||\r\n-        (window.event as MouseEvent).ctrlKey)\r\n-    ) {\r\n-      setSelectedIds((prev) => Array.from(new Set([...prev, ...selected])));\r\n-    } else {\r\n-      setSelectedIds(selected);\r\n-    }\r\n+    setSelectedIds(selected);\r\n     setSelectionBox({ startX: 0, startY: 0, endX: 0, endY: 0, active: false });\r\n   };\r\n \r\n   return {\r\n"
                 }
             ],
             "date": 1747106264006,

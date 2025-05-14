@@ -1,15 +1,26 @@
-import { JSONSchema7 } from "json-schema";
-
-export const textComponentSchema: JSONSchema7 = {
+// 文本组件 schema，rjsf 扁平化三段式
+export const basePropsSchema = {
   type: "object",
   properties: {
-    name: { type: "string", title: "组件名称" },
+    id: { type: "string", title: "唯一标识", readOnly: true },
+    x: { type: "number", title: "X 坐标" },
+    y: { type: "number", title: "Y 坐标" },
+    width: { type: "number", title: "宽度" },
+    height: { type: "number", title: "高度" },
+    locked: { type: "boolean", title: "锁定" },
+    visible: { type: "boolean", title: "可见", default: true },
+  },
+};
+
+export const commonPropsSchema = {
+  type: "object",
+  properties: {
     text: { type: "string", title: "文本内容" },
-    fontSize: { type: "number", title: "字体大小", default: 14 },
-    color: { type: "string", title: "字体颜色", default: "#222222" },
+    fontSize: { type: "number", title: "字号", default: 16 },
+    color: { type: "string", title: "颜色", default: "#222" },
     fontWeight: {
       type: "string",
-      title: "字体粗细",
+      title: "加粗",
       enum: ["normal", "bold", "bolder", "lighter"],
       default: "normal",
     },
@@ -19,23 +30,27 @@ export const textComponentSchema: JSONSchema7 = {
       enum: ["left", "center", "right"],
       default: "left",
     },
-    dataBinding: {
-      type: "object",
-      title: "数据绑定",
-      properties: {
-        source: { type: "string", title: "数据源" },
-        field: { type: "string", title: "字段" },
-        format: {
-          type: "string",
-          title: "格式化",
-          enum: ["none", "currency", "date", "percent"],
-          default: "none",
-        },
-        expression: { type: "string", title: "表达式" },
-      },
-    },
-    mockData: { type: "string", title: "Mock数据（JSON）" },
-    width: { type: "number", title: "宽度(px)", minimum: 20, default: 120 },
-    height: { type: "number", title: "高度(px)", minimum: 20, default: 32 },
   },
+};
+
+export const dataPropsSchema = {
+  type: "object",
+  properties: {
+    source: { type: "string", title: "数据源" },
+    field: { type: "string", title: "字段" },
+    format: {
+      type: "string",
+      title: "格式化",
+      enum: ["none", "currency", "date", "percent"],
+      default: "none",
+    },
+    expression: { type: "string", title: "表达式" },
+    mockData: { type: "object", title: "Mock数据" },
+  },
+};
+
+export default {
+  basePropsSchema,
+  commonPropsSchema,
+  dataPropsSchema,
 };

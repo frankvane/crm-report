@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/componentRegistry.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747150628175,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747150730690,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,5 +24,5 @@\n }\r\n \r\n export function getAllComponentMetas(): ComponentMeta[] {\r\n   return Object.values(registry);\r\n-} \n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747150628175,
+            "name": "Commit-0",
+            "content": "// 组件注册中心，支持动态注册和获取组件元信息\r\n\r\nimport React from \"react\";\r\n\r\nexport interface ComponentMeta {\r\n  type: string; // 组件类型，如 label、text\r\n  displayName: string; // 组件显示名\r\n  icon?: string; // 组件图标\r\n  defaultBaseProps: Record<string, any>; // 基础属性默认值\r\n  defaultCustomProps: Record<string, any>; // 特有属性默认值\r\n  render: React.FC<any>; // 渲染组件\r\n  propsSchema: any; // 属性schema\r\n}\r\n\r\nconst registry: Record<string, ComponentMeta> = {};\r\n\r\nexport function registerComponent(meta: ComponentMeta) {\r\n  if (!meta.type) throw new Error(\"组件type不能为空\");\r\n  registry[meta.type] = meta;\r\n}\r\n\r\nexport function getComponentMeta(type: string): ComponentMeta | undefined {\r\n  return registry[type];\r\n}\r\n\r\nexport function getAllComponentMetas(): ComponentMeta[] {\r\n  return Object.values(registry);\r\n} "
+        }
+    ]
+}

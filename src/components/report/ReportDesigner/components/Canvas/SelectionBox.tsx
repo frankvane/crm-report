@@ -10,7 +10,7 @@ interface SelectionBoxProps {
   };
 }
 
-export const SelectionBox: React.FC<SelectionBoxProps> = ({ selectionBox }) => {
+const SelectionBox: React.FC<SelectionBoxProps> = ({ selectionBox }) => {
   if (!selectionBox.active) return null;
   const left = Math.min(selectionBox.startX, selectionBox.endX);
   const top = Math.min(selectionBox.startY, selectionBox.endY);
@@ -32,3 +32,5 @@ export const SelectionBox: React.FC<SelectionBoxProps> = ({ selectionBox }) => {
     />
   );
 };
+
+export default SelectionBox;

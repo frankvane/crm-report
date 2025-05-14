@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/Toolbar/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747125643430,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747125652619,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,14 @@\n import { Button, Space, Tooltip } from \"antd\";\r\n import {\r\n+  EyeOutlined,\r\n   PlusOutlined,\r\n+  PrinterOutlined,\r\n+  RedoOutlined,\r\n   SaveOutlined,\r\n-  EyeOutlined,\r\n-  PrinterOutlined,\r\n   UndoOutlined,\r\n-  RedoOutlined,\r\n } from \"@ant-design/icons\";\r\n+\r\n import React from \"react\";\r\n \r\n const Toolbar: React.FC = () => {\r\n   return (\r\n"
+                }
+            ],
+            "date": 1747125643430,
+            "name": "Commit-0",
+            "content": "import { Button, Space, Tooltip } from \"antd\";\r\nimport {\r\n  PlusOutlined,\r\n  SaveOutlined,\r\n  EyeOutlined,\r\n  PrinterOutlined,\r\n  UndoOutlined,\r\n  RedoOutlined,\r\n} from \"@ant-design/icons\";\r\nimport React from \"react\";\r\n\r\nconst Toolbar: React.FC = () => {\r\n  return (\r\n    <Space>\r\n      <Tooltip title=\"新建\">\r\n        <Button type=\"primary\" icon={<PlusOutlined />} />\r\n      </Tooltip>\r\n      <Tooltip title=\"保存\">\r\n        <Button icon={<SaveOutlined />} />\r\n      </Tooltip>\r\n      <Tooltip title=\"预览\">\r\n        <Button icon={<EyeOutlined />} />\r\n      </Tooltip>\r\n      <Tooltip title=\"打印\">\r\n        <Button icon={<PrinterOutlined />} />\r\n      </Tooltip>\r\n      <Tooltip title=\"撤销\">\r\n        <Button icon={<UndoOutlined />} />\r\n      </Tooltip>\r\n      <Tooltip title=\"重做\">\r\n        <Button icon={<RedoOutlined />} />\r\n      </Tooltip>\r\n    </Space>\r\n  );\r\n};\r\n\r\nexport default Toolbar;\r\n"
+        }
+    ]
+}

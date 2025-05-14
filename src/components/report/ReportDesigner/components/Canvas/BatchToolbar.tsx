@@ -9,16 +9,16 @@ import {
   EyeOutlined,
   LockOutlined,
   UnlockOutlined,
+  UnorderedListOutlined,
   VerticalAlignBottomOutlined,
+  VerticalAlignMiddleOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
+import { Button, Divider, Tooltip } from "antd";
 
 import React from "react";
-import { Tooltip } from "antd";
 
 interface BatchToolbarProps {
-  selectedCount: number;
-  canDistribute: boolean;
   onShowAll: () => void;
   onDeleteSelected: () => void;
   onAlign: (
@@ -27,165 +27,177 @@ interface BatchToolbarProps {
   onDistribute: (type: "horizontal" | "vertical") => void;
   onBatchLock: (locked: boolean) => void;
   onBatchVisible: (visible: boolean) => void;
+  selectedCount?: number;
+  canDistribute?: boolean;
 }
 
+const iconBtnProps = {
+  type: "text" as const,
+  shape: "circle" as const,
+  size: "small" as const,
+  style: { fontSize: 18, margin: 0, padding: 0 },
+};
+
 const BatchToolbar: React.FC<BatchToolbarProps> = ({
-  selectedCount,
-  canDistribute,
   onShowAll,
   onDeleteSelected,
   onAlign,
   onDistribute,
   onBatchLock,
   onBatchVisible,
+  selectedCount = 0,
+  canDistribute = false,
 }) => {
+  const disabled = selectedCount === 0;
+
   return (
     <div
       style={{
         display: "flex",
+        justifyContent: "center",
         alignItems: "center",
-        gap: 12,
-        padding: "8px 24px 0 24px",
-        height: 48,
+        gap: 4,
         background: "#fff",
-        borderBottom: "1px solid #e5e5e5",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
+        border: "1px solid #e5e5e5",
+        borderRadius: 8,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+        padding: "4px 12px",
         zIndex: 10001,
+        width: "fit-content",
       }}
     >
-      <Tooltip title="显示全部">
-        <button
-          style={{
-            padding: 6,
-            fontSize: 16,
-            borderRadius: 4,
-            border: "1px solid #d9d9d9",
-            background: "#f5f6fa",
-            cursor: "pointer",
-          }}
-          onClick={onShowAll}
-        >
-          <EyeOutlined />
-        </button>
-      </Tooltip>
-      <Tooltip title="删除选中">
-        <button
-          style={{
-            padding: 6,
-            fontSize: 16,
-            borderRadius: 4,
-            border: "1px solid #d9d9d9",
-            background: selectedCount > 0 ? "#f5f6fa" : "#f0f0f0",
-            color: selectedCount > 0 ? undefined : "#bbb",
-            cursor: selectedCount > 0 ? "pointer" : "not-allowed",
-          }}
-          onClick={selectedCount > 0 ? onDeleteSelected : undefined}
-          disabled={selectedCount === 0}
-        >
-          <DeleteOutlined />
-        </button>
-      </Tooltip>
-      <span style={{ marginLeft: 16, display: "flex", gap: 4 }}>
-        <Tooltip title="左对齐">
-          <button disabled={selectedCount < 2} onClick={() => onAlign("left")}>
-            {" "}
-            <AlignLeftOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="右对齐">
-          <button disabled={selectedCount < 2} onClick={() => onAlign("right")}>
-            {" "}
-            <AlignRightOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="顶部对齐">
-          <button disabled={selectedCount < 2} onClick={() => onAlign("top")}>
-            {" "}
-            <VerticalAlignTopOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="底部对齐">
-          <button
-            disabled={selectedCount < 2}
-            onClick={() => onAlign("bottom")}
-          >
-            {" "}
-            <VerticalAlignBottomOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="水平居中">
-          <button
-            disabled={selectedCount < 2}
-            onClick={() => onAlign("hcenter")}
-          >
-            {" "}
-            <AlignCenterOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="垂直居中">
-          <button
-            disabled={selectedCount < 2}
-            onClick={() => onAlign("vcenter")}
-          >
-            {" "}
-            <ColumnWidthOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="水平分布">
-          <button
-            disabled={!canDistribute}
-            onClick={() => onDistribute("horizontal")}
-          >
-            {" "}
-            <ColumnWidthOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="垂直分布">
-          <button
-            disabled={!canDistribute}
-            onClick={() => onDistribute("vertical")}
-          >
-            {" "}
-            <ColumnHeightOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="批量锁定">
-          <button
-            disabled={selectedCount === 0}
-            onClick={() => onBatchLock(true)}
-          >
-            {" "}
-            <LockOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="批量解锁">
-          <button
-            disabled={selectedCount === 0}
-            onClick={() => onBatchLock(false)}
-          >
-            {" "}
-            <UnlockOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="批量隐藏">
-          <button
-            disabled={selectedCount === 0}
-            onClick={() => onBatchVisible(false)}
-          >
-            {" "}
-            <EyeInvisibleOutlined />{" "}
-          </button>
-        </Tooltip>
-        <Tooltip title="批量显示">
-          <button
-            disabled={selectedCount === 0}
-            onClick={() => onBatchVisible(true)}
-          >
-            {" "}
-            <EyeOutlined />{" "}
-          </button>
-        </Tooltip>
+      <span
+        style={{
+          color: disabled ? "#aaa" : "#222",
+          fontSize: 14,
+          marginRight: 4,
+        }}
+      >
+        {disabled ? "未选中组件" : `已选中 ${selectedCount} 个组件`}
       </span>
+      <Tooltip title="删除">
+        <Button
+          {...iconBtnProps}
+          icon={<DeleteOutlined />}
+          onClick={onDeleteSelected}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="锁定">
+        <Button
+          {...iconBtnProps}
+          icon={<LockOutlined />}
+          onClick={() => onBatchLock(true)}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="解锁">
+        <Button
+          {...iconBtnProps}
+          icon={<UnlockOutlined />}
+          onClick={() => onBatchLock(false)}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="显示">
+        <Button
+          {...iconBtnProps}
+          icon={<EyeOutlined />}
+          onClick={() => onBatchVisible(true)}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="隐藏">
+        <Button
+          {...iconBtnProps}
+          icon={<EyeInvisibleOutlined />}
+          onClick={() => onBatchVisible(false)}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="显示全部">
+        <Button
+          {...iconBtnProps}
+          icon={<UnorderedListOutlined />}
+          onClick={onShowAll}
+        />
+      </Tooltip>
+      <Divider
+        type="vertical"
+        style={{ height: 20, margin: "0 4px", background: "#eee" }}
+      />
+      <Tooltip title="左对齐">
+        <Button
+          {...iconBtnProps}
+          icon={<AlignLeftOutlined />}
+          onClick={() => onAlign("left")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="右对齐">
+        <Button
+          {...iconBtnProps}
+          icon={<AlignRightOutlined />}
+          onClick={() => onAlign("right")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="顶对齐">
+        <Button
+          {...iconBtnProps}
+          icon={<VerticalAlignTopOutlined />}
+          onClick={() => onAlign("top")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="底对齐">
+        <Button
+          {...iconBtnProps}
+          icon={<VerticalAlignBottomOutlined />}
+          onClick={() => onAlign("bottom")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="水平居中">
+        <Button
+          {...iconBtnProps}
+          icon={<AlignCenterOutlined />}
+          onClick={() => onAlign("hcenter")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="垂直居中">
+        <Button
+          {...iconBtnProps}
+          icon={<VerticalAlignMiddleOutlined />}
+          onClick={() => onAlign("vcenter")}
+          disabled={disabled}
+        />
+      </Tooltip>
+      {canDistribute && (
+        <>
+          <Divider
+            type="vertical"
+            style={{ height: 20, margin: "0 4px", background: "#eee" }}
+          />
+          <Tooltip title="水平分布">
+            <Button
+              {...iconBtnProps}
+              icon={<ColumnWidthOutlined />}
+              onClick={() => onDistribute("horizontal")}
+              disabled={disabled}
+            />
+          </Tooltip>
+          <Tooltip title="垂直分布">
+            <Button
+              {...iconBtnProps}
+              icon={<ColumnHeightOutlined />}
+              onClick={() => onDistribute("vertical")}
+              disabled={disabled}
+            />
+          </Tooltip>
+        </>
+      )}
     </div>
   );
 };

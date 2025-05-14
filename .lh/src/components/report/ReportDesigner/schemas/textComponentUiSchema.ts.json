@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/textComponentUiSchema.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747128670843,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747128686007,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,13 @@\n export const textComponentUiSchema = {\r\n   \"ui:widget\": \"tabs\",\r\n   baseProps: {\r\n-    id: { \"ui:disabled\": true }\r\n+    id: { \"ui:disabled\": true },\r\n   },\r\n   commonProps: {\r\n     color: { \"ui:widget\": \"color\" },\r\n-    fontSize: { \"ui:widget\": \"updown\" }\r\n+    fontSize: { \"ui:widget\": \"updown\" },\r\n   },\r\n   dataProps: {\r\n-    mockData: { \"ui:widget\": \"textarea\" }\r\n\\ No newline at end of file\n-  }\r\n-}; \n+    mockData: { \"ui:widget\": \"textarea\" },\r\n+  },\r\n+};\r\n"
+                },
+                {
+                    "date": 1747135001287,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n export const textComponentUiSchema = {\r\n-  \"ui:widget\": \"tabs\",\r\n   baseProps: {\r\n     id: { \"ui:disabled\": true },\r\n   },\r\n   commonProps: {\r\n"
+                },
+                {
+                    "date": 1747145025091,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +0,0 @@\n-export const textComponentUiSchema = {\r\n-  baseProps: {\r\n-    id: { \"ui:disabled\": true },\r\n-  },\r\n-  commonProps: {\r\n-    color: { \"ui:widget\": \"color\" },\r\n-    fontSize: { \"ui:widget\": \"updown\" },\r\n-  },\r\n-  dataProps: {\r\n-    mockData: { \"ui:widget\": \"textarea\" },\r\n-  },\r\n-};\r\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747128670843,
+            "name": "Commit-0",
+            "content": "export const textComponentUiSchema = {\r\n  \"ui:widget\": \"tabs\",\r\n  baseProps: {\r\n    id: { \"ui:disabled\": true }\r\n  },\r\n  commonProps: {\r\n    color: { \"ui:widget\": \"color\" },\r\n    fontSize: { \"ui:widget\": \"updown\" }\r\n  },\r\n  dataProps: {\r\n    mockData: { \"ui:widget\": \"textarea\" }\r\n  }\r\n}; "
+        }
+    ]
+}

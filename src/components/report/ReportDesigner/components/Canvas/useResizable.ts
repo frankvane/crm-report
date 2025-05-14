@@ -1,5 +1,5 @@
-import type { CanvasComponent } from "../../types";
-import { getSnapAndGuides } from "../../utils";
+import type { CanvasComponent } from "@/components/report/ReportDesigner/types";
+import { getSnapAndGuides } from "@/components/report/ReportDesigner/utils";
 import { useRef } from "react";
 
 export interface UseResizableProps {
@@ -56,6 +56,7 @@ export function useResizable({
   });
 
   function handleMouseDown(e: React.MouseEvent, anchor: string) {
+    console.log("[useResizable] handleMouseDown", anchor, e);
     e.stopPropagation();
     start.current = {
       x: e.clientX,
@@ -71,6 +72,7 @@ export function useResizable({
   }
 
   function handleMouseMove(e: MouseEvent) {
+    console.log("[useResizable] handleMouseMove", e.clientX, e.clientY);
     const deltaX = e.clientX - start.current.x;
     const deltaY = e.clientY - start.current.y;
     let newWidth = start.current.width;
@@ -126,9 +128,16 @@ export function useResizable({
       if (onGuideChange) onGuideChange(null);
     }
     onResize({ width: newWidth, height: newHeight, x: newX, y: newY });
+    console.log("[useResizable] onResize", {
+      width: newWidth,
+      height: newHeight,
+      x: newX,
+      y: newY,
+    });
   }
 
   function handleMouseUp() {
+    console.log("[useResizable] handleMouseUp");
     window.removeEventListener("mousemove", handleMouseMove);
     window.removeEventListener("mouseup", handleMouseUp);
     if (onGuideChange) onGuideChange(null);
