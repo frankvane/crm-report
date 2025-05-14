@@ -9,6 +9,9 @@ export const useReportDesignerStore = create<ReportDesignerState>(
     canvasConfig: {
       gridSize: 20,
       showGrid: true,
+      showRuler: true,
+      rulerUnit: "px",
+      allowSnapToGrid: true,
       snapToGrid: true,
       width: 1123, // A4横向
       height: 794,

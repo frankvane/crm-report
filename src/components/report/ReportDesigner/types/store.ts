@@ -6,6 +6,9 @@ export interface ReportDesignerState {
   canvasConfig: {
     gridSize: number;
     showGrid: boolean;
+    showRuler: boolean;
+    rulerUnit: "px" | "mm";
+    allowSnapToGrid: boolean;
     snapToGrid: boolean;
     width: number; // 画布宽度
     height: number; // 画布高度
@@ -21,6 +24,9 @@ export interface ReportDesignerState {
     config: Partial<{
       gridSize: number;
       showGrid: boolean;
+      showRuler: boolean;
+      rulerUnit: "px" | "mm";
+      allowSnapToGrid: boolean;
       snapToGrid: boolean;
       width: number;
       height: number;
