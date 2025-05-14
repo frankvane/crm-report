@@ -1,10 +1,14 @@
 // 画布主组件
 
 import React, { useCallback, useRef, useState } from "react";
+import { getAlignUpdates, getDistributeUpdates } from "../../utils/align";
 import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
 import BatchToolbar from "./BatchToolbar";
-import ComponentItem from "./ComponentItem";
+import CanvasContent from "./CanvasContent";
+import Grid from "./Grid";
+import type { ReportComponent } from "../../types/component";
+import Ruler from "./Ruler";
 import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 export default function Canvas() {
@@ -199,222 +203,18 @@ export default function Canvas() {
     type: "left" | "right" | "top" | "bottom" | "hcenter" | "vcenter"
   ) => {
     if (selectedIds.length < 2) return;
-    const selectedComps = components.filter((c) => selectedIds.includes(c.id));
-    if (selectedComps.length < 2) return;
-    const updates: Record<string, Partial<(typeof selectedComps)[0]>> = {};
-    if (["left", "right", "top", "bottom"].includes(type)) {
-      if (type === "left") {
-        const minX = Math.min(...selectedComps.map((c) => c.x));
-        selectedComps.forEach((c) => (updates[c.id] = { x: minX }));
-      } else if (type === "right") {
-        const maxR = Math.max(...selectedComps.map((c) => c.x + c.width));
-        selectedComps.forEach((c) => (updates[c.id] = { x: maxR - c.width }));
-      } else if (type === "top") {
-        const minY = Math.min(...selectedComps.map((c) => c.y));
-        selectedComps.forEach((c) => (updates[c.id] = { y: minY }));
-      } else if (type === "bottom") {
-        const maxB = Math.max(...selectedComps.map((c) => c.y + c.height));
-        selectedComps.forEach((c) => (updates[c.id] = { y: maxB - c.height }));
-      }
-    } else if (type === "hcenter") {
-      const minX = Math.min(...selectedComps.map((c) => c.x));
-      const maxR = Math.max(...selectedComps.map((c) => c.x + c.width));
-      const center = (minX + maxR) / 2;
-      selectedComps.forEach(
-        (c) => (updates[c.id] = { x: center - c.width / 2 })
-      );
-    } else if (type === "vcenter") {
-      const minY = Math.min(...selectedComps.map((c) => c.y));
-      const maxB = Math.max(...selectedComps.map((c) => c.y + c.height));
-      const center = (minY + maxB) / 2;
-      selectedComps.forEach(
-        (c) => (updates[c.id] = { y: center - c.height / 2 })
-      );
-    }
+    const updates = getAlignUpdates(components, selectedIds, type);
     Object.entries(updates).forEach(([id, data]) =>
-      batchUpdateComponent([id], data)
+      batchUpdateComponent([id], data as Partial<ReportComponent>)
     );
   };
   // 批量分布
   const handleDistribute = (type: "horizontal" | "vertical") => {
     if (selectedIds.length < 3) return;
-    const selectedComps = components.filter((c) => selectedIds.includes(c.id));
-    if (selectedComps.length < 3) return;
-    if (type === "horizontal") {
-      const sorted = [...selectedComps].sort((a, b) => a.x - b.x);
-      const minX = sorted[0].x;
-      const maxR =
-        sorted[sorted.length - 1].x + sorted[sorted.length - 1].width;
-      const totalWidth = sorted.reduce((sum, c) => sum + c.width, 0);
-      const gap = (maxR - minX - totalWidth) / (sorted.length - 1);
-      let curX = minX;
-      sorted.forEach((c) => {
-        batchUpdateComponent([c.id], { x: curX });
-        curX += c.width + gap;
-      });
-    } else if (type === "vertical") {
-      const sorted = [...selectedComps].sort((a, b) => a.y - b.y);
-      const minY = sorted[0].y;
-      const maxB =
-        sorted[sorted.length - 1].y + sorted[sorted.length - 1].height;
-      const totalHeight = sorted.reduce((sum, c) => sum + c.height, 0);
-      const gap = (maxB - minY - totalHeight) / (sorted.length - 1);
-      let curY = minY;
-      sorted.forEach((c) => {
-        batchUpdateComponent([c.id], { y: curY });
-        curY += c.height + gap;
-      });
-    }
-  };
-
-  // 标尺渲染
-  const renderRuler = () => {
-    if (!canvasConfig.showRuler) return null;
-    const { width, height, gridSize } = canvasConfig;
-    // 顶部标尺
-    const topTicks = [];
-    for (let x = 0; x <= width; x += gridSize) {
-      topTicks.push(
-        <div
-          key={x}
-          style={{
-            position: "absolute",
-            left: x,
-            top: 0,
-            width: 1,
-            height: 16,
-            background: "#bdbdbd",
-          }}
-        />
-      );
-      if (x % (gridSize * 5) === 0) {
-        topTicks.push(
-          <div
-            key={x + "-label"}
-            style={{
-              position: "absolute",
-              left: x + 2,
-              top: 0,
-              fontSize: 10,
-              color: "#888",
-              userSelect: "none",
-            }}
-          >
-            {x}
-          </div>
-        );
-      }
-    }
-    // 左侧标尺
-    const leftTicks = [];
-    for (let y = 0; y <= height; y += gridSize) {
-      leftTicks.push(
-        <div
-          key={y}
-          style={{
-            position: "absolute",
-            top: y,
-            left: 0,
-            width: 16,
-            height: 1,
-            background: "#bdbdbd",
-          }}
-        />
-      );
-      if (y % (gridSize * 5) === 0) {
-        leftTicks.push(
-          <div
-            key={y + "-label"}
-            style={{
-              position: "absolute",
-              top: y + 2,
-              left: 0,
-              fontSize: 10,
-              color: "#888",
-              userSelect: "none",
-            }}
-          >
-            {y}
-          </div>
-        );
-      }
-    }
-    return (
-      <>
-        {/* 顶部标尺 */}
-        <div
-          style={{
-            position: "absolute",
-            left: 16,
-            top: 0,
-            width: width,
-            height: 16,
-            background: "#f5f5f5",
-            borderBottom: "1px solid #e0e0e0",
-            zIndex: 20,
-          }}
-        >
-          {topTicks}
-        </div>
-        {/* 左侧标尺 */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 16,
-            width: 16,
-            height: height,
-            background: "#f5f5f5",
-            borderRight: "1px solid #e0e0e0",
-            zIndex: 20,
-          }}
-        >
-          {leftTicks}
-        </div>
-      </>
+    const updates = getDistributeUpdates(components, selectedIds, type);
+    Object.entries(updates).forEach(([id, data]) =>
+      batchUpdateComponent([id], data as Partial<ReportComponent>)
     );
-  };
-
-  // 网格渲染
-  const renderGrid = () => {
-    if (!canvasConfig.showGrid) return null;
-    const { width, height, gridSize } = canvasConfig;
-    const lines: React.ReactNode[] = [];
-    // 竖线
-    for (let x = gridSize; x < width; x += gridSize) {
-      lines.push(
-        <div
-          key={"v-" + x}
-          style={{
-            position: "absolute",
-            left: x + 16, // 预留左侧标尺宽度
-            top: 16,
-            width: 1,
-            height: height,
-            background: "#e0e0e0",
-            zIndex: 5,
-          }}
-        />
-      );
-    }
-    // 横线
-    for (let y = gridSize; y < height; y += gridSize) {
-      lines.push(
-        <div
-          key={"h-" + y}
-          style={{
-            position: "absolute",
-            top: y + 16, // 预留顶部标尺高度
-            left: 16,
-            width: width,
-            height: 1,
-            background: "#e0e0e0",
-            zIndex: 5,
-          }}
-        />
-      );
-    }
-    return <>{lines}</>;
   };
 
   return (
@@ -456,73 +256,19 @@ export default function Canvas() {
         }}
       >
         {/* 标尺 */}
-        {renderRuler()}
+        <Ruler canvasConfig={canvasConfig} />
         {/* 网格 */}
-        {renderGrid()}
+        <Grid canvasConfig={canvasConfig} />
         {/* 画布内容区（标准结构，支持框选和组件交互） */}
-        <div
-          style={{
-            position: "absolute",
-            left: 16,
-            top: 16,
-            width: canvasConfig.width,
-            height: canvasConfig.height,
-            userSelect: selectRect ? "none" : undefined,
-            zIndex: 10,
-            background: "transparent",
-          }}
-          onMouseDown={handleMouseDown}
-        >
-          {/* 框选可视化 */}
-          {selectRect && (
-            <div
-              style={{
-                position: "absolute",
-                left: selectRect.x,
-                top: selectRect.y,
-                width: selectRect.w,
-                height: selectRect.h,
-                border: "1.5px dashed #1976d2",
-                background: "rgba(25, 118, 210, 0.08)",
-                pointerEvents: "none",
-                zIndex: 1000,
-              }}
-            />
-          )}
-          {/* 组件容器，pointerEvents受isSelecting控制 */}
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              left: 0,
-              top: 0,
-              pointerEvents: isSelecting ? "none" : "auto",
-              zIndex: 20,
-            }}
-          >
-            {components.length === 0 && <div>拖拽左侧组件到此处</div>}
-            {components.map((comp) => (
-              <ComponentItem
-                key={comp.id}
-                comp={comp}
-                isSelected={selectedIds.includes(comp.id)}
-                onSelect={() => {
-                  console.log(
-                    "[Canvas] onSelect 组件id:",
-                    comp.id,
-                    "当前selectedIds:",
-                    selectedIds
-                  );
-                  setSelectedIds([comp.id]);
-                }}
-                onResize={(w: number, h: number) =>
-                  updateComponent(comp.id, { width: w, height: h })
-                }
-              />
-            ))}
-          </div>
-        </div>
+        <CanvasContent
+          components={components}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          isSelecting={isSelecting}
+          selectRect={selectRect}
+          handleMouseDown={handleMouseDown}
+          onResize={(id, w, h) => updateComponent(id, { width: w, height: h })}
+        />
       </div>
     </>
   );
