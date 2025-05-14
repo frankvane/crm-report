@@ -1,61 +1,45 @@
 import Canvas from "@report/ReportDesigner/components/Canvas/Canvas";
 import ComponentLibrary from "@report/ReportDesigner/components/ComponentLibrary";
+import { DndContext } from "@dnd-kit/core";
+import { Layout } from "antd";
 import PropertyPanel from "@report/ReportDesigner/components/PropertyPanel";
 import React from "react";
 import Toolbar from "@report/ReportDesigner/components/Toolbar";
 
+const { Header, Sider, Content } = Layout;
+
 // 主入口，三栏式布局骨架
-const Designer: React.FC = () => {
-  return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-      {/* 顶部工具栏 */}
-      <div
+const Designer: React.FC = () => (
+  <DndContext>
+    <Layout style={{ height: "100vh" }}>
+      <Header
         style={{
-          height: 48,
-          borderBottom: "1px solid #eee",
           background: "#fafafa",
+          padding: 0,
+          borderBottom: "1px solid #eee",
         }}
       >
         <Toolbar />
-      </div>
-      {/* 主体区域 */}
-      <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
-        {/* 左侧组件库 */}
-        <div
-          style={{
-            width: 220,
-            borderRight: "1px solid #eee",
-            background: "#f7f8fa",
-            overflow: "auto",
-          }}
+      </Header>
+      <Layout>
+        <Sider
+          width={220}
+          style={{ background: "#f7f8fa", borderRight: "1px solid #eee" }}
         >
           <ComponentLibrary />
-        </div>
-        {/* 中间画布区 */}
-        <div
-          style={{
-            flex: 1,
-            background: "#fff",
-            position: "relative",
-            overflow: "auto",
-          }}
-        >
+        </Sider>
+        <Content style={{ background: "#fff", position: "relative" }}>
           <Canvas />
-        </div>
-        {/* 右侧属性面板 */}
-        <div
-          style={{
-            width: 300,
-            borderLeft: "1px solid #eee",
-            background: "#fafbfc",
-            overflow: "auto",
-          }}
+        </Content>
+        <Sider
+          width={300}
+          style={{ background: "#fafbfc", borderLeft: "1px solid #eee" }}
         >
           <PropertyPanel />
-        </div>
-      </div>
-    </div>
-  );
-};
+        </Sider>
+      </Layout>
+    </Layout>
+  </DndContext>
+);
 
 export default Designer;
