@@ -418,117 +418,112 @@ export default function Canvas() {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      id="report-canvas-main"
-      style={{
-        minHeight: canvasConfig.height + 16,
-        minWidth: canvasConfig.width + 16,
-        width: canvasConfig.width + 16,
-        height: canvasConfig.height + 16,
-        padding: 0,
-        fontWeight: 600,
-        color: isOver ? "#fff" : "#1976d2",
-        background: isOver ? "#1976d2" : "#e3f2fd",
-        border: "2px solid #1976d2",
-        borderRadius: 6,
-        transition: "all 0.2s",
-        position: "relative",
-        overflow: "visible",
-      }}
-      onClick={() => {
-        if (lastActionRef.current === "select") {
-          lastActionRef.current = ""; // 框选后不清空，并重置
-          return;
-        }
-        setSelectedIds([]);
-      }}
-    >
-      {/* 标尺 */}
-      {renderRuler()}
-      {/* 网格 */}
-      {renderGrid()}
-      {/* 画布内容区（标准结构，支持框选和组件交互） */}
+    <>
+      <BatchToolbar
+        selectedCount={selectedIds.length}
+        canDistribute={selectedIds.length >= 3}
+        onDeleteSelected={handleDeleteSelected}
+        onBatchLock={handleBatchLock}
+        onBatchVisible={handleBatchVisible}
+        onShowAll={handleShowAll}
+        onAlign={handleAlign}
+        onDistribute={handleDistribute}
+      />
       <div
+        ref={setNodeRef}
+        id="report-canvas-main"
         style={{
-          position: "absolute",
-          left: 16,
-          top: 16,
-          width: canvasConfig.width,
-          height: canvasConfig.height,
-          userSelect: selectRect ? "none" : undefined,
-          zIndex: 10,
-          background: "transparent",
+          minHeight: canvasConfig.height + 16,
+          minWidth: canvasConfig.width + 16,
+          width: canvasConfig.width + 16,
+          height: canvasConfig.height + 16,
+          padding: 0,
+          fontWeight: 600,
+          color: isOver ? "#fff" : "#1976d2",
+          background: isOver ? "#1976d2" : "#e3f2fd",
+          border: "2px solid #1976d2",
+          borderRadius: 6,
+          transition: "all 0.2s",
+          position: "relative",
+          overflow: "visible",
         }}
-        onMouseDown={handleMouseDown}
+        onClick={() => {
+          if (lastActionRef.current === "select") {
+            lastActionRef.current = ""; // 框选后不清空，并重置
+            return;
+          }
+          setSelectedIds([]);
+        }}
       >
-        {/* 框选可视化 */}
-        {selectRect && (
-          <div
-            style={{
-              position: "absolute",
-              left: selectRect.x,
-              top: selectRect.y,
-              width: selectRect.w,
-              height: selectRect.h,
-              border: "1.5px dashed #1976d2",
-              background: "rgba(25, 118, 210, 0.08)",
-              pointerEvents: "none",
-              zIndex: 1000,
-            }}
-          />
-        )}
-        {/* 组件容器，pointerEvents受isSelecting控制 */}
+        {/* 标尺 */}
+        {renderRuler()}
+        {/* 网格 */}
+        {renderGrid()}
+        {/* 画布内容区（标准结构，支持框选和组件交互） */}
         <div
           style={{
-            width: "100%",
-            height: "100%",
             position: "absolute",
-            left: 0,
-            top: 0,
-            pointerEvents: isSelecting ? "none" : "auto",
-            zIndex: 20,
+            left: 16,
+            top: 16,
+            width: canvasConfig.width,
+            height: canvasConfig.height,
+            userSelect: selectRect ? "none" : undefined,
+            zIndex: 10,
+            background: "transparent",
           }}
+          onMouseDown={handleMouseDown}
         >
-          {/* 批量操作工具栏 */}
-          {selectedIds.length > 1 && (
+          {/* 框选可视化 */}
+          {selectRect && (
             <div
-              style={{ position: "absolute", left: 24, top: 12, zIndex: 2000 }}
-            >
-              <BatchToolbar
-                selectedCount={selectedIds.length}
-                canDistribute={selectedIds.length >= 3}
-                onDeleteSelected={handleDeleteSelected}
-                onBatchLock={handleBatchLock}
-                onBatchVisible={handleBatchVisible}
-                onShowAll={handleShowAll}
-                onAlign={handleAlign}
-                onDistribute={handleDistribute}
-              />
-            </div>
-          )}
-          {components.length === 0 && <div>拖拽左侧组件到此处</div>}
-          {components.map((comp) => (
-            <ComponentItem
-              key={comp.id}
-              comp={comp}
-              isSelected={selectedIds.includes(comp.id)}
-              onSelect={() => {
-                console.log(
-                  "[Canvas] onSelect 组件id:",
-                  comp.id,
-                  "当前selectedIds:",
-                  selectedIds
-                );
-                setSelectedIds([comp.id]);
+              style={{
+                position: "absolute",
+                left: selectRect.x,
+                top: selectRect.y,
+                width: selectRect.w,
+                height: selectRect.h,
+                border: "1.5px dashed #1976d2",
+                background: "rgba(25, 118, 210, 0.08)",
+                pointerEvents: "none",
+                zIndex: 1000,
               }}
-              onResize={(w: number, h: number) =>
-                updateComponent(comp.id, { width: w, height: h })
-              }
             />
-          ))}
+          )}
+          {/* 组件容器，pointerEvents受isSelecting控制 */}
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              pointerEvents: isSelecting ? "none" : "auto",
+              zIndex: 20,
+            }}
+          >
+            {components.length === 0 && <div>拖拽左侧组件到此处</div>}
+            {components.map((comp) => (
+              <ComponentItem
+                key={comp.id}
+                comp={comp}
+                isSelected={selectedIds.includes(comp.id)}
+                onSelect={() => {
+                  console.log(
+                    "[Canvas] onSelect 组件id:",
+                    comp.id,
+                    "当前selectedIds:",
+                    selectedIds
+                  );
+                  setSelectedIds([comp.id]);
+                }}
+                onResize={(w: number, h: number) =>
+                  updateComponent(comp.id, { width: w, height: h })
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
