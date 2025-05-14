@@ -111,8 +111,6 @@ export default function ComponentItem({
   return (
     <div
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
       style={style}
       tabIndex={0}
       onClick={handleClick}
@@ -141,6 +139,33 @@ export default function ComponentItem({
         );
       }}
     >
+      {/* 拖拽手柄（左上角） */}
+      <div
+        {...listeners}
+        {...attributes}
+        style={{
+          position: "absolute",
+          left: -10,
+          top: -10,
+          width: 18,
+          height: 18,
+          background: "#1976d2",
+          borderRadius: 4,
+          cursor: isDragging ? "grabbing" : "grab",
+          zIndex: 99,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#fff",
+          fontSize: 12,
+          userSelect: "none",
+          boxShadow: "0 2px 8px #1976d233",
+        }}
+        onClick={(e) => e.stopPropagation()} // 防止拖拽手柄点击影响选中
+        title="拖拽移动"
+      >
+        ≡
+      </div>
       <div style={{ width: "100%", height: "100%" }}>
         {content}
         {/* 右下角缩放手柄 */}

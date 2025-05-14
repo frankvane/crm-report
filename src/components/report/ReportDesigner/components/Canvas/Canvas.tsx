@@ -13,6 +13,7 @@ export default function Canvas() {
   const selectedIds = useReportDesignerStore((s) => s.selectedIds);
   const setSelectedIds = useReportDesignerStore((s) => s.setSelectedIds);
   const updateComponent = useReportDesignerStore((s) => s.updateComponent);
+  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
 
   // 监听拖拽结束，落盘添加组件或更新位置
   useDndMonitor({
@@ -58,7 +59,10 @@ export default function Canvas() {
     <div
       ref={setNodeRef}
       style={{
-        minHeight: 300,
+        minHeight: canvasConfig.height,
+        minWidth: canvasConfig.width,
+        width: canvasConfig.width,
+        height: canvasConfig.height,
         padding: 16,
         fontWeight: 600,
         color: isOver ? "#fff" : "#1976d2",

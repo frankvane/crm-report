@@ -10,6 +10,9 @@ export const useReportDesignerStore = create<ReportDesignerState>(
       gridSize: 20,
       showGrid: true,
       snapToGrid: true,
+      width: 1123, // A4横向
+      height: 794,
+      sizeType: "A4-landscape",
     },
     setComponents: (components: ReportComponent[]) => set({ components }),
     addComponent: (component: ReportComponent) =>
