@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/widgets/getJustifyContent.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747351247002,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747351277045,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n export function getJustifyContent(align: \"left\" | \"center\" | \"right\" = \"left\") {\r\n   if (align === \"center\") return \"center\";\r\n   if (align === \"right\") return \"flex-end\";\r\n   return \"flex-start\";\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747351247002,
+            "name": "Commit-0",
+            "content": "export function getJustifyContent(align: \"left\" | \"center\" | \"right\" = \"left\") {\r\n  if (align === \"center\") return \"center\";\r\n  if (align === \"right\") return \"flex-end\";\r\n  return \"flex-start\";\r\n}"
+        }
+    ]
+}

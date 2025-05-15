@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/widgets/LabelWidget.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747351259549,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747351266792,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n import React from \"react\";\n-// @ts-expect-error: dayjs 没有类型声明文件，需忽略类型检查\n import dayjs from \"dayjs\";\n import { formatLabelValue } from \"./formatLabelValue\";\n import { getJustifyContent } from \"./getJustifyContent\";\n // @ts-expect-error: numeral 没有类型声明文件，需忽略类型检查\n"
+                }
+            ],
+            "date": 1747351259549,
+            "name": "Commit-0",
+            "content": "import React from \"react\";\n// @ts-expect-error: dayjs 没有类型声明文件，需忽略类型检查\nimport dayjs from \"dayjs\";\nimport { formatLabelValue } from \"./formatLabelValue\";\nimport { getJustifyContent } from \"./getJustifyContent\";\n// @ts-expect-error: numeral 没有类型声明文件，需忽略类型检查\nimport numeral from \"numeral\";\nimport { useDataSourceStore } from \"@/components/report/ReportDesigner/store/dataSourceStore\";\n\ninterface LabelWidgetProps {\n  text?: string;\n  color?: string;\n  fontSize?: number;\n  background?: string;\n  align?: \"left\" | \"center\" | \"right\";\n  style?: React.CSSProperties;\n  dataBinding?: {\n    dataSource?: string;\n    field?: string;\n    format?: string;\n    formatPattern?: string;\n    customFormat?: string;\n    [key: string]: any;\n  };\n}\n\nconst LabelWidget: React.FC<LabelWidgetProps> = ({\n  text = \"标签\",\n  color = \"#1976d2\",\n  fontSize = 16,\n  background = \"#fff\",\n  align = \"left\",\n  style = {},\n  dataBinding,\n}) => {\n  const dataSources = useDataSourceStore((s) => s.dataSources);\n  let displayText = text;\n  if (dataBinding?.dataSource && dataBinding?.field) {\n    const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\n    if (ds && ds.sample) {\n      displayText = ds.sample[dataBinding.field] ?? text;\n    }\n  }\n  displayText = formatLabelValue(displayText, dataBinding, numeral, dayjs);\n\n  const justifyContent = getJustifyContent(align);\n\n  return (\n    <div\n      style={{\n        display: \"flex\",\n        justifyContent,\n        width: \"100%\",\n        background,\n        ...style,\n        transform: style.transform,\n        opacity: style.opacity,\n      }}\n    >\n      <span\n        style={{\n          color,\n          fontSize,\n          padding: \"2px 8px\",\n          borderRadius: 4,\n          fontWeight: 500,\n          background: \"transparent\",\n        }}\n      >\n        {displayText}\n      </span>\n    </div>\n  );\n};\n\nexport default LabelWidget;\n"
+        }
+    ]
+}
