@@ -33,6 +33,8 @@ const TextWidget: React.FC<TextWidgetProps> = ({
         fontWeight: fontWeight ? "bold" : 400,
         fontStyle: italic ? "italic" : "normal",
         ...style,
+        transform: style.transform,
+        opacity: style.opacity,
       }}
       readOnly
     />

@@ -29,6 +29,8 @@ const LabelWidget: React.FC<LabelWidgetProps> = ({
         borderRadius: 4,
         fontWeight: 500,
         ...style,
+        transform: style.transform,
+        opacity: style.opacity,
       }}
     >
       {text}

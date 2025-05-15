@@ -14,7 +14,7 @@ import {
   VerticalAlignMiddleOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
-import { Button, Divider, Tooltip } from "antd";
+import { Button, Divider, InputNumber, Switch, Tooltip } from "antd";
 
 import React from "react";
 
@@ -27,6 +27,10 @@ interface BatchToolbarProps {
   onDistribute: (type: "horizontal" | "vertical") => void;
   onBatchLock: (locked: boolean) => void;
   onBatchVisible: (visible: boolean) => void;
+  onBatchResizable: (resizable: boolean) => void;
+  onBatchRotatable: (rotatable: boolean) => void;
+  onBatchRotation: (rotation: number) => void;
+  onBatchOpacity: (opacity: number) => void;
   selectedCount?: number;
   canDistribute?: boolean;
 }
@@ -45,6 +49,10 @@ const BatchToolbar: React.FC<BatchToolbarProps> = ({
   onDistribute,
   onBatchLock,
   onBatchVisible,
+  onBatchResizable,
+  onBatchRotatable,
+  onBatchRotation,
+  onBatchOpacity,
   selectedCount = 0,
   canDistribute = false,
 }) => {
@@ -198,6 +206,50 @@ const BatchToolbar: React.FC<BatchToolbarProps> = ({
           </Tooltip>
         </>
       )}
+      <Divider
+        type="vertical"
+        style={{ height: 20, margin: "0 4px", background: "#eee" }}
+      />
+      <Tooltip title="可缩放">
+        <span style={{ fontWeight: 400, color: "#888" }}>可缩放</span>
+        <Switch
+          defaultChecked={true}
+          onChange={onBatchResizable}
+          size="small"
+          disabled={disabled}
+        />
+      </Tooltip>
+      <Tooltip title="可旋转">
+        <span style={{ fontWeight: 400, color: "#888" }}>可旋转</span>
+        <Switch
+          defaultChecked={false}
+          onChange={onBatchRotatable}
+          size="small"
+          disabled={disabled}
+        />
+      </Tooltip>
+      <span style={{ fontWeight: 400, color: "#888" }}>旋转角度</span>
+      <InputNumber
+        min={-360}
+        max={360}
+        step={1}
+        defaultValue={0}
+        onChange={(v) => typeof v === "number" && onBatchRotation(v)}
+        size="small"
+        disabled={disabled}
+        style={{ width: 60 }}
+      />
+      <span style={{ fontWeight: 400, color: "#888" }}>透明度</span>
+      <InputNumber
+        min={0}
+        max={1}
+        step={0.01}
+        defaultValue={1}
+        onChange={(v) => typeof v === "number" && onBatchOpacity(v)}
+        size="small"
+        disabled={disabled}
+        style={{ width: 60 }}
+      />
     </div>
   );
 };

@@ -34,6 +34,10 @@ export function useCanvasDnd({
           visible: true,
           zindex: 1,
           props: { text: type === "label" ? "新标签" : "新文本" },
+          resizable: true,
+          rotatable: false,
+          rotation: 0,
+          opacity: 1,
         });
         setSelectedIds([id]);
       }

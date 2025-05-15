@@ -122,7 +122,18 @@ export default function ComponentItem({
     userSelect: "none",
     zIndex: comp.zindex ?? 1,
     transition: "box-shadow 0.2s, border 0.2s",
-    opacity: comp.locked ? 0.5 : isDragging ? 0.7 : 1,
+    opacity:
+      typeof comp.opacity === "number"
+        ? comp.opacity
+        : comp.locked
+        ? 0.5
+        : isDragging
+        ? 0.7
+        : 1,
+    transform:
+      comp.rotatable && typeof comp.rotation === "number"
+        ? `rotate(${comp.rotation}deg)`
+        : undefined,
     overflow: "visible",
     pointerEvents: comp.locked ? "none" : "auto",
   };
@@ -136,7 +147,7 @@ export default function ComponentItem({
   const Comp =
     componentMap[comp.type] ||
     (() => <span style={{ color: "red" }}>未知组件类型: {comp.type}</span>);
-  const content = <Comp {...comp.props} />;
+  const content = <Comp {...comp.props} style={{ opacity: style.opacity }} />;
 
   return (
     <>
@@ -228,7 +239,7 @@ export default function ComponentItem({
         <div style={{ width: "100%", height: "100%" }}>
           {content}
           {/* 右下角缩放手柄 */}
-          {isSelected && !comp.locked && (
+          {isSelected && !comp.locked && comp.resizable !== false && (
             <div
               onMouseDown={handleResizeMouseDown}
               style={{

@@ -100,6 +100,18 @@ export default function Canvas() {
         onShowAll={batchActions.handleShowAll}
         onAlign={batchActions.handleAlign}
         onDistribute={batchActions.handleDistribute}
+        onBatchResizable={(resizable) => {
+          selectedIds.forEach((id) => updateComponent(id, { resizable }));
+        }}
+        onBatchRotatable={(rotatable) => {
+          selectedIds.forEach((id) => updateComponent(id, { rotatable }));
+        }}
+        onBatchRotation={(rotation) => {
+          selectedIds.forEach((id) => updateComponent(id, { rotation }));
+        }}
+        onBatchOpacity={(opacity) => {
+          selectedIds.forEach((id) => updateComponent(id, { opacity }));
+        }}
       />
       <div
         ref={setNodeRef}
