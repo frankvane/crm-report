@@ -31,6 +31,12 @@
 - 组件支持自动生成唯一 name
 - 支持 Ant Design、Zustand 等主流技术栈
 
+## 页面结构与路由规范
+
+- 页面级业务模块（如数据源管理、报表设计器）统一放在 `src/pages` 目录下，采用"目录+index.tsx"标准结构。
+- 页面通过 `react-router-dom` 进行统一路由管理，便于全局导航、权限控制和页面扩展。
+- 通用 UI 组件、功能组件放在 `src/components` 下，页面只负责业务聚合和路由。
+
 ## JSON 字段编辑说明
 
 属性面板中如表格（table）等组件的 `columns`、`dataSource` 等 json 类型字段，现已采用多行文本框（Input.TextArea）进行编辑：
@@ -54,7 +60,7 @@
 3. 代码提交与推送：
    ```bash
    git add .
-   git commit -m "feat: 属性面板json字段支持多行文本编辑"
+   git commit -m "feat: 页面结构与路由规范完善，README补充"
    git push
    ```
 
