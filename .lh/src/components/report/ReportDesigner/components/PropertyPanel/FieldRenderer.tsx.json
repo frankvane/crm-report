@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/PropertyPanel/FieldRenderer.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747350658202,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747350892759,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -58,9 +58,11 @@\n       );\r\n     case \"json\":\r\n       return (\r\n         <Input.TextArea\r\n-          value={typeof value === \"string\" ? value : JSON.stringify(value, null, 2)}\r\n+          value={\r\n+            typeof value === \"string\" ? value : JSON.stringify(value, null, 2)\r\n+          }\r\n           onChange={(e) => {\r\n             const val = e.target.value;\r\n             try {\r\n               const parsed = JSON.parse(val);\r\n@@ -89,5 +91,5 @@\n       return <Input value={value} disabled style={{ width: 180 }} />;\r\n     default:\r\n       return null;\r\n   }\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747350658201,
+            "name": "Commit-0",
+            "content": "import { Input, InputNumber, Select, Switch } from \"antd\";\r\n\r\nimport React from \"react\";\r\n\r\nexport default function FieldRenderer({ item, value, onChange }: any) {\r\n  switch (item.type) {\r\n    case \"input\":\r\n      return (\r\n        <Input\r\n          value={value}\r\n          onChange={(e) => onChange(e.target.value)}\r\n          style={{ width: 180 }}\r\n          disabled={item.disabled}\r\n        />\r\n      );\r\n    case \"number\":\r\n      return (\r\n        <InputNumber\r\n          value={value}\r\n          onChange={onChange}\r\n          style={{ width: 120 }}\r\n          disabled={item.disabled}\r\n        />\r\n      );\r\n    case \"switch\":\r\n      return (\r\n        <Switch\r\n          checked={!!value}\r\n          onChange={onChange}\r\n          disabled={item.disabled}\r\n        />\r\n      );\r\n    case \"select\":\r\n      return (\r\n        <Select\r\n          value={value}\r\n          onChange={onChange}\r\n          style={{ width: 120 }}\r\n          options={item.options || []}\r\n          disabled={item.disabled}\r\n        />\r\n      );\r\n    case \"color\":\r\n      return (\r\n        <Input\r\n          type=\"color\"\r\n          value={value}\r\n          onChange={(e) => onChange(e.target.value)}\r\n          style={{\r\n            width: 40,\r\n            height: 32,\r\n            padding: 0,\r\n            border: \"none\",\r\n            background: \"none\",\r\n          }}\r\n          disabled={item.disabled}\r\n        />\r\n      );\r\n    case \"json\":\r\n      return (\r\n        <Input.TextArea\r\n          value={typeof value === \"string\" ? value : JSON.stringify(value, null, 2)}\r\n          onChange={(e) => {\r\n            const val = e.target.value;\r\n            try {\r\n              const parsed = JSON.parse(val);\r\n              onChange(parsed);\r\n            } catch {\r\n              // 不更新，或可提示错误\r\n            }\r\n          }}\r\n          autoSize={{ minRows: 4, maxRows: 16 }}\r\n          style={{ width: 320 }}\r\n          placeholder=\"请输入合法的 JSON 格式\"\r\n        />\r\n      );\r\n    case \"textarea\":\r\n      return (\r\n        <Input.TextArea\r\n          value={value}\r\n          onChange={(e) => onChange(e.target.value)}\r\n          autoSize={{ minRows: 2, maxRows: 8 }}\r\n          style={{ width: 320 }}\r\n          disabled={item.disabled}\r\n          placeholder={item.placeholder}\r\n        />\r\n      );\r\n    case \"text\":\r\n      return <Input value={value} disabled style={{ width: 180 }} />;\r\n    default:\r\n      return null;\r\n  }\r\n}"
+        }
+    ]
+}

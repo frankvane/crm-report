@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/PropertyPanel/StandardPropertyPanel.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747351015469,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747351063927,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,5 +35,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default StandardPropertyPanel; \n\\ No newline at end of file\n+export default StandardPropertyPanel;\r\n"
+                }
+            ],
+            "date": 1747351015469,
+            "name": "Commit-0",
+            "content": "import FieldRenderer from \"./FieldRenderer\";\r\nimport React from \"react\";\r\n\r\ninterface StandardPropertyPanelProps {\r\n  schema: any;\r\n  selected: any;\r\n  handleStandardChange: (key: string, value: any) => void;\r\n}\r\n\r\nconst StandardPropertyPanel: React.FC<StandardPropertyPanelProps> = ({\r\n  schema,\r\n  selected,\r\n  handleStandardChange,\r\n}) => {\r\n  return (\r\n    <div>\r\n      {schema.standard?.map((item: any) => (\r\n        <div\r\n          key={item.key}\r\n          style={{\r\n            marginBottom: 8,\r\n            display: \"flex\",\r\n            alignItems: \"center\",\r\n            gap: 8,\r\n          }}\r\n        >\r\n          <span style={{ width: 80 }}>{item.label}：</span>\r\n          <FieldRenderer\r\n            item={item}\r\n            value={selected.props?.[item.key] ?? item.default}\r\n            onChange={(val: any) => handleStandardChange(item.key, val)}\r\n          />\r\n        </div>\r\n      ))}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default StandardPropertyPanel; "
+        }
+    ]
+}

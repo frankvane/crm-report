@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/PropertyPanel/DataBindingPanel.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747351027566,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747351063917,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -66,5 +66,5 @@\n     </div>\r\n   );\r\n };\r\n \r\n-export default DataBindingPanel;\n\\ No newline at end of file\n+export default DataBindingPanel;\r\n"
+                }
+            ],
+            "date": 1747351027566,
+            "name": "Commit-0",
+            "content": "import FieldRenderer from \"./FieldRenderer\";\r\nimport React from \"react\";\r\n\r\ninterface DataBindingPanelProps {\r\n  schema: any;\r\n  selected: any;\r\n  dataSources: any[];\r\n  fieldOptions: any[];\r\n  handleDataBindingChange: (key: string, value: any) => void;\r\n}\r\n\r\nconst DataBindingPanel: React.FC<DataBindingPanelProps> = ({\r\n  schema,\r\n  selected,\r\n  dataSources,\r\n  fieldOptions,\r\n  handleDataBindingChange,\r\n}) => {\r\n  return (\r\n    <div>\r\n      {schema.dataBinding?.map((item: any) => {\r\n        // 只在 format 为 custom 时显示 customFormat 字段\r\n        if (item.key === \"customFormat\") {\r\n          if (selected.props?.dataBinding?.format !== \"custom\") return null;\r\n        }\r\n        // 只在 format 不为 custom 时显示 formatPattern 字段\r\n        if (item.key === \"formatPattern\") {\r\n          if (\r\n            !selected.props?.dataBinding?.format ||\r\n            selected.props?.dataBinding?.format === \"custom\"\r\n          )\r\n            return null;\r\n        }\r\n        let fieldItem = item;\r\n        if (item.key === \"dataSource\") {\r\n          fieldItem = {\r\n            ...item,\r\n            options: dataSources.map((ds: any) => ({\r\n              label: ds.name,\r\n              value: ds.key,\r\n            })),\r\n          };\r\n        }\r\n        if (item.key === \"field\") {\r\n          fieldItem = { ...item, options: fieldOptions };\r\n        }\r\n        return (\r\n          <div\r\n            key={item.key}\r\n            style={{\r\n              marginBottom: 8,\r\n              display: \"flex\",\r\n              alignItems: \"center\",\r\n              gap: 8,\r\n            }}\r\n          >\r\n            <span style={{ width: 80 }}>{item.label}：</span>\r\n            <FieldRenderer\r\n              item={fieldItem}\r\n              value={selected.props?.dataBinding?.[item.key] ?? item.default}\r\n              onChange={(val: any) => handleDataBindingChange(item.key, val)}\r\n            />\r\n          </div>\r\n        );\r\n      })}\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default DataBindingPanel;"
+        }
+    ]
+}

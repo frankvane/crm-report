@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/PropertyPanel/usePropertyChangeHandlers.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747350701319,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747350892804,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -38,5 +38,5 @@\n     [selected, updateComponent]\r\n   );\r\n \r\n   return { handleBaseChange, handleStandardChange, handleDataBindingChange };\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747350701319,
+            "name": "Commit-0",
+            "content": "import { useCallback } from \"react\";\r\nimport { useReportDesignerStore } from \"@report/ReportDesigner/store\";\r\n\r\nexport function usePropertyChangeHandlers(selected: any) {\r\n  const updateComponent = useReportDesignerStore((s) => s.updateComponent);\r\n\r\n  // 处理主属性（baseSchema）\r\n  const handleBaseChange = useCallback(\r\n    (key: string, value: any) => {\r\n      if (!selected) return;\r\n      updateComponent(selected.id, { [key]: value });\r\n    },\r\n    [selected, updateComponent]\r\n  );\r\n\r\n  // 处理标准属性（props）\r\n  const handleStandardChange = useCallback(\r\n    (key: string, value: any) => {\r\n      if (!selected) return;\r\n      updateComponent(selected.id, {\r\n        props: { ...selected.props, [key]: value },\r\n      });\r\n    },\r\n    [selected, updateComponent]\r\n  );\r\n\r\n  // 处理数据绑定属性（props.dataBinding）\r\n  const handleDataBindingChange = useCallback(\r\n    (key: string, value: any) => {\r\n      if (!selected) return;\r\n      updateComponent(selected.id, {\r\n        props: {\r\n          ...selected.props,\r\n          dataBinding: { ...selected.props.dataBinding, [key]: value },\r\n        },\r\n      });\r\n    },\r\n    [selected, updateComponent]\r\n  );\r\n\r\n  return { handleBaseChange, handleStandardChange, handleDataBindingChange };\r\n}"
+        }
+    ]
+}
