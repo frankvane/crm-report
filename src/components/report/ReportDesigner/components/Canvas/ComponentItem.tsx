@@ -1,8 +1,8 @@
 // 单个组件的拖拽/渲染
 
-import { Dropdown, Menu } from "antd";
 import React, { useRef, useState } from "react";
 
+import { Dropdown } from "antd";
 import { LockOutlined } from "@ant-design/icons";
 import { useDraggable } from "@dnd-kit/core";
 
@@ -36,9 +36,21 @@ export default function ComponentItem({
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
 
+  const menuItems = [
+    { key: "top", label: "置顶" },
+    { key: "bottom", label: "置底" },
+    { key: "up", label: "上移一层" },
+    { key: "down", label: "下移一层" },
+    { type: "divider" as const },
+    { key: "delete", label: "删除" },
+    { key: "copy", label: "复制" },
+    { type: "divider" as const },
+    { key: "lock", label: comp.locked ? "解锁" : "锁定" },
+    { key: "visible", label: comp.visible ? "隐藏" : "显示" },
+  ];
+
   // 隐藏：visible为false直接不渲染（必须在Hooks之后）
   if (comp.visible === false) return null;
-  console.log("[ComponentItem] 渲染", comp.id, "isSelected:", isSelected);
 
   // 缩放事件
   const handleResizeMouseDown = (e: React.MouseEvent) => {
@@ -71,12 +83,6 @@ export default function ComponentItem({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!resizing.current) {
-      console.log(
-        "[ComponentItem] handleClick 组件id:",
-        comp.id,
-        "isSelected:",
-        isSelected
-      );
       onSelect();
     } else {
       console.log("[ComponentItem] handleClick 忽略(正在缩放)", comp.id);
@@ -132,28 +138,6 @@ export default function ComponentItem({
     content = <span>未知组件类型: {comp.type}</span>;
   }
 
-  console.log(
-    "[ComponentItem] render return",
-    comp.id,
-    "isSelected:",
-    isSelected
-  );
-
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="top">置顶</Menu.Item>
-      <Menu.Item key="bottom">置底</Menu.Item>
-      <Menu.Item key="up">上移一层</Menu.Item>
-      <Menu.Item key="down">下移一层</Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="delete">删除</Menu.Item>
-      <Menu.Item key="copy">复制</Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="lock">{comp.locked ? "解锁" : "锁定"}</Menu.Item>
-      <Menu.Item key="visible">{comp.visible ? "隐藏" : "显示"}</Menu.Item>
-    </Menu>
-  );
-
   return (
     <>
       <div
@@ -161,42 +145,9 @@ export default function ComponentItem({
         style={style}
         tabIndex={0}
         onClick={comp.locked ? undefined : handleClick}
-        onPointerDown={
-          comp.locked
-            ? undefined
-            : () => {
-                console.log(
-                  "[ComponentItem] onPointerDown",
-                  comp.id,
-                  "isSelected:",
-                  isSelected
-                );
-              }
-        }
-        onMouseDown={
-          comp.locked
-            ? undefined
-            : () => {
-                console.log(
-                  "[ComponentItem] onMouseDown",
-                  comp.id,
-                  "isSelected:",
-                  isSelected
-                );
-              }
-        }
-        onPointerUp={
-          comp.locked
-            ? undefined
-            : () => {
-                console.log(
-                  "[ComponentItem] onPointerUp",
-                  comp.id,
-                  "isSelected:",
-                  isSelected
-                );
-              }
-        }
+        onPointerDown={comp.locked ? undefined : () => {}}
+        onMouseDown={comp.locked ? undefined : () => {}}
+        onPointerUp={comp.locked ? undefined : () => {}}
         onContextMenu={handleContextMenu}
       >
         {/* 锁定icon */}
@@ -330,7 +281,7 @@ export default function ComponentItem({
         </span>
       </div>
       <Dropdown
-        overlay={menu}
+        menu={{ items: menuItems, onClick: handleMenuClick }}
         open={menuVisible}
         trigger={[]}
         onOpenChange={setMenuVisible}

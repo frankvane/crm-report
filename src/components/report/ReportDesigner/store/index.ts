@@ -46,6 +46,9 @@ export const useReportDesignerStore = create(
             state.selectedIds = state.selectedIds.filter((sid) => sid !== id);
           }),
         setSelectedIds: (ids: string[]) => {
+          if (ids.length === 0) {
+            console.trace("[store] setSelectedIds([]) 被调用");
+          }
           console.log("[store] setSelectedIds调用，参数:", ids);
           set((state) => {
             state.selectedIds = ids;

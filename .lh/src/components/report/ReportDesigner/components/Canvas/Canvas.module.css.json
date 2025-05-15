@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/Canvas/Canvas.module.css",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747289581667,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747289737898,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,5 +16,5 @@\n \r\n .canvasMainOver {\r\n   color: #fff;\r\n   background: #1976d2;\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747289581667,
+            "name": "Commit-0",
+            "content": ".canvasMain {\r\n  min-height: 810px;\r\n  min-width: 1139px;\r\n  width: 1139px;\r\n  height: 810px;\r\n  padding: 0;\r\n  font-weight: 600;\r\n  color: #1976d2;\r\n  background: #e3f2fd;\r\n  border: 2px solid #1976d2;\r\n  border-radius: 6px;\r\n  transition: all 0.2s;\r\n  position: relative;\r\n  overflow: visible;\r\n}\r\n\r\n.canvasMainOver {\r\n  color: #fff;\r\n  background: #1976d2;\r\n}"
+        }
+    ]
+}

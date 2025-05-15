@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/hooks/useBatchActions.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747289491122,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747289704039,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,14 +10,14 @@\n   setSelectedIds: (ids: string[]) => void,\r\n   getAlignUpdates: (\r\n     components: ReportComponent[],\r\n     selectedIds: string[],\r\n-    type: string\r\n+    type: \"top\" | \"bottom\" | \"left\" | \"right\" | \"hcenter\" | \"vcenter\"\r\n   ) => Record<string, Partial<ReportComponent>>,\r\n   getDistributeUpdates: (\r\n     components: ReportComponent[],\r\n     selectedIds: string[],\r\n-    type: string\r\n+    type: \"horizontal\" | \"vertical\"\r\n   ) => Record<string, Partial<ReportComponent>>\r\n ) {\r\n   // 批量删除\r\n   const handleDeleteSelected = () => {\r\n@@ -32,12 +32,9 @@\n     batchVisibleComponent(selectedIds, visible);\r\n   };\r\n   // 显示全部\r\n   const handleShowAll = () => {\r\n-    batchVisibleComponent(\r\n-      components.map((c) => c.id),\r\n-      true\r\n-    );\r\n+    batchVisibleComponent(components.map((c) => c.id), true);\r\n   };\r\n   // 批量对齐\r\n   const handleAlign = (\r\n     type: \"left\" | \"right\" | \"top\" | \"bottom\" | \"hcenter\" | \"vcenter\"\r\n"
+                }
+            ],
+            "date": 1747289491122,
+            "name": "Commit-0",
+            "content": "import type { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\n\r\nexport function useBatchActions(\r\n  components: ReportComponent[],\r\n  selectedIds: string[],\r\n  batchRemoveComponent: (ids: string[]) => void,\r\n  batchLockComponent: (ids: string[], locked: boolean) => void,\r\n  batchVisibleComponent: (ids: string[], visible: boolean) => void,\r\n  batchUpdateComponent: (ids: string[], data: Partial<ReportComponent>) => void,\r\n  setSelectedIds: (ids: string[]) => void,\r\n  getAlignUpdates: (components: ReportComponent[], selectedIds: string[], type: string) => Record<string, Partial<ReportComponent>>,\r\n  getDistributeUpdates: (components: ReportComponent[], selectedIds: string[], type: string) => Record<string, Partial<ReportComponent>>\r\n) {\r\n  // 批量删除\r\n  const handleDeleteSelected = () => {\r\n    batchRemoveComponent(selectedIds);\r\n  };\r\n  // 批量锁定\r\n  const handleBatchLock = (locked: boolean) => {\r\n    batchLockComponent(selectedIds, locked);\r\n  };\r\n  // 批量显示/隐藏\r\n  const handleBatchVisible = (visible: boolean) => {\r\n    batchVisibleComponent(selectedIds, visible);\r\n  };\r\n  // 显示全部\r\n  const handleShowAll = () => {\r\n    batchVisibleComponent(components.map((c) => c.id), true);\r\n  };\r\n  // 批量对齐\r\n  const handleAlign = (\r\n    type: \"left\" | \"right\" | \"top\" | \"bottom\" | \"hcenter\" | \"vcenter\"\r\n  ) => {\r\n    if (selectedIds.length < 2) return;\r\n    const updates = getAlignUpdates(components, selectedIds, type);\r\n    Object.entries(updates).forEach(([id, data]) =>\r\n      batchUpdateComponent([id], data as Partial<ReportComponent>)\r\n    );\r\n  };\r\n  // 批量分布\r\n  const handleDistribute = (type: \"horizontal\" | \"vertical\") => {\r\n    if (selectedIds.length < 3) return;\r\n    const updates = getDistributeUpdates(components, selectedIds, type);\r\n    Object.entries(updates).forEach(([id, data]) =>\r\n      batchUpdateComponent([id], data as Partial<ReportComponent>)\r\n    );\r\n  };\r\n  return {\r\n    handleDeleteSelected,\r\n    handleBatchLock,\r\n    handleBatchVisible,\r\n    handleShowAll,\r\n    handleAlign,\r\n    handleDistribute,\r\n  };\r\n}"
+        }
+    ]
+}

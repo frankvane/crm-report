@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/hooks/useCanvasDnd.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747289562088,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747289738071,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -60,5 +60,5 @@\n         }\r\n       }\r\n     },\r\n   });\r\n-}\n\\ No newline at end of file\n+}\r\n"
+                }
+            ],
+            "date": 1747289562088,
+            "name": "Commit-0",
+            "content": "import type { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\nimport { useDndMonitor } from \"@dnd-kit/core\";\r\n\r\ninterface UseCanvasDndParams {\r\n  components: ReportComponent[];\r\n  canvasConfig: { allowSnapToGrid: boolean; gridSize: number };\r\n  addComponent: (comp: ReportComponent) => void;\r\n  setSelectedIds: (ids: string[]) => void;\r\n  updateComponent: (id: string, data: Partial<ReportComponent>) => void;\r\n}\r\n\r\nexport function useCanvasDnd({\r\n  components,\r\n  canvasConfig,\r\n  addComponent,\r\n  setSelectedIds,\r\n  updateComponent,\r\n}: UseCanvasDndParams) {\r\n  useDndMonitor({\r\n    onDragEnd(event) {\r\n      const { active, over, delta } = event;\r\n      // 画布外拖拽落盘\r\n      if (over?.id === \"canvas\" && active.data?.current?.type) {\r\n        const type = active.data.current.type;\r\n        const id = `${type}_${Date.now()}`;\r\n        addComponent({\r\n          id,\r\n          type,\r\n          x: 40 + Math.random() * 200,\r\n          y: 40 + Math.random() * 100,\r\n          width: 120,\r\n          height: 40,\r\n          locked: false,\r\n          visible: true,\r\n          zindex: 1,\r\n          props: { text: type === \"label\" ? \"新标签\" : \"新文本\" },\r\n        });\r\n        setSelectedIds([id]);\r\n      }\r\n      // 画布内拖动，更新x/y\r\n      if (\r\n        active.id &&\r\n        typeof active.id === \"string\" &&\r\n        components.some((c) => c.id === active.id) &&\r\n        delta\r\n      ) {\r\n        const comp = components.find((c) => c.id === active.id);\r\n        if (comp) {\r\n          let newX = comp.x + delta.x;\r\n          let newY = comp.y + delta.y;\r\n          if (canvasConfig.allowSnapToGrid) {\r\n            const grid = canvasConfig.gridSize;\r\n            newX = Math.round(newX / grid) * grid;\r\n            newY = Math.round(newY / grid) * grid;\r\n          }\r\n          updateComponent(comp.id, {\r\n            x: newX,\r\n            y: newY,\r\n          });\r\n        }\r\n      }\r\n    },\r\n  });\r\n}"
+        }
+    ]
+}

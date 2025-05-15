@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/hooks/useComponentMenu.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747289638168,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747289738070,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,12 @@\n   components: ReportComponent[];\r\n   updateComponent: (id: string, data: Partial<ReportComponent>) => void;\r\n   removeComponent: (id: string) => void;\r\n   copyComponent: (id: string) => void;\r\n-  moveComponentZIndex: (id: string, type: \"top\" | \"bottom\" | \"up\" | \"down\") => void;\r\n+  moveComponentZIndex: (\r\n+    id: string,\r\n+    type: \"top\" | \"bottom\" | \"up\" | \"down\"\r\n+  ) => void;\r\n   setSelectedIds: (ids: string[]) => void;\r\n }\r\n \r\n export function useComponentMenu({\r\n@@ -54,6 +57,13 @@\n       setSelectedIds([id]);\r\n     };\r\n     window.addEventListener(\"component-menu\", handler);\r\n     return () => window.removeEventListener(\"component-menu\", handler);\r\n-  }, [components, updateComponent, removeComponent, copyComponent, moveComponentZIndex, setSelectedIds]);\r\n-}\n\\ No newline at end of file\n+  }, [\r\n+    components,\r\n+    updateComponent,\r\n+    removeComponent,\r\n+    copyComponent,\r\n+    moveComponentZIndex,\r\n+    setSelectedIds,\r\n+  ]);\r\n+}\r\n"
+                }
+            ],
+            "date": 1747289638168,
+            "name": "Commit-0",
+            "content": "import type { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\nimport { useEffect } from \"react\";\r\n\r\ninterface UseComponentMenuParams {\r\n  components: ReportComponent[];\r\n  updateComponent: (id: string, data: Partial<ReportComponent>) => void;\r\n  removeComponent: (id: string) => void;\r\n  copyComponent: (id: string) => void;\r\n  moveComponentZIndex: (id: string, type: \"top\" | \"bottom\" | \"up\" | \"down\") => void;\r\n  setSelectedIds: (ids: string[]) => void;\r\n}\r\n\r\nexport function useComponentMenu({\r\n  components,\r\n  updateComponent,\r\n  removeComponent,\r\n  copyComponent,\r\n  moveComponentZIndex,\r\n  setSelectedIds,\r\n}: UseComponentMenuParams) {\r\n  useEffect(() => {\r\n    const handler = (e: Event) => {\r\n      const { key, id } = (e as CustomEvent).detail;\r\n      const comp = components.find((c) => c.id === id);\r\n      if (!comp) return;\r\n      switch (key) {\r\n        case \"top\":\r\n          moveComponentZIndex(id, \"top\");\r\n          break;\r\n        case \"bottom\":\r\n          moveComponentZIndex(id, \"bottom\");\r\n          break;\r\n        case \"up\":\r\n          moveComponentZIndex(id, \"up\");\r\n          break;\r\n        case \"down\":\r\n          moveComponentZIndex(id, \"down\");\r\n          break;\r\n        case \"delete\":\r\n          removeComponent(id);\r\n          break;\r\n        case \"copy\":\r\n          copyComponent(id);\r\n          break;\r\n        case \"lock\":\r\n          updateComponent(id, { locked: !comp.locked });\r\n          break;\r\n        case \"visible\":\r\n          updateComponent(id, { visible: !comp.visible });\r\n          break;\r\n        default:\r\n          break;\r\n      }\r\n      setSelectedIds([id]);\r\n    };\r\n    window.addEventListener(\"component-menu\", handler);\r\n    return () => window.removeEventListener(\"component-menu\", handler);\r\n  }, [components, updateComponent, removeComponent, copyComponent, moveComponentZIndex, setSelectedIds]);\r\n}"
+        }
+    ]
+}
