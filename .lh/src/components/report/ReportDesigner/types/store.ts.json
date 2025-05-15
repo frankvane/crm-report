@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747227940430,
@@ -16,6 +16,10 @@
                 {
                     "date": 1747228395264,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { ReportComponent } from \"./component\";\r\n+import { ReportComponent } from \"@report/ReportDesigner/types/component\";\r\n \r\n export interface ReportDesignerState {\r\n   components: ReportComponent[]; // 组件列表\r\n   selectedIds: string[]; // 当前选中组件ID\r\n"
+                },
+                {
+                    "date": 1747285245819,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,6 +36,8 @@\n   batchUpdateComponent: (ids: string[], data: Partial<ReportComponent>) => void;\r\n   batchRemoveComponent: (ids: string[]) => void;\r\n   batchLockComponent: (ids: string[], locked: boolean) => void;\r\n   batchVisibleComponent: (ids: string[], visible: boolean) => void;\r\n+  copyComponent: (id: string) => void;\r\n+  moveComponentZIndex: (id: string, type: \"top\" | \"bottom\" | \"up\" | \"down\") => void;\r\n   // ...其他全局状态，如批量操作、历史记录等\r\n }\r\n"
                 }
             ],
             "date": 1747227940430,

@@ -1,6 +1,7 @@
 // 单个组件的拖拽/渲染
 
-import React, { useRef } from "react";
+import { Dropdown, Menu } from "antd";
+import React, { useRef, useState } from "react";
 
 import { LockOutlined } from "@ant-design/icons";
 import { useDraggable } from "@dnd-kit/core";
@@ -31,6 +32,9 @@ export default function ComponentItem({
     useDraggable({ id: comp.id });
   const resizing = useRef(false);
   const start = useRef({ x: 0, y: 0, width: 0, height: 0 });
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
 
   // 隐藏：visible为false直接不渲染（必须在Hooks之后）
   if (comp.visible === false) return null;
@@ -79,6 +83,23 @@ export default function ComponentItem({
     }
   };
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenuPos({ x: e.clientX, y: e.clientY });
+    setMenuVisible(true);
+  };
+
+  const handleMenuClick = ({ key }: { key: string }) => {
+    setMenuVisible(false);
+    // 这里建议通过 window 事件总线或 props 回调与 store 通信
+    // 示例：window.dispatchEvent(new CustomEvent('component-menu', { detail: { key, id: comp.id } }))
+    // 你可以根据实际项目注入 props 进行替换
+    window.dispatchEvent(
+      new CustomEvent("component-menu", { detail: { key, id: comp.id } })
+    );
+  };
+
   const style: React.CSSProperties = {
     position: "absolute",
     left: comp.x + (transform?.x || 0),
@@ -96,7 +117,7 @@ export default function ComponentItem({
     boxShadow: isSelected ? "0 0 0 3px #ffe0b2" : "0 2px 8px #1976d233",
     cursor: comp.locked ? "not-allowed" : isDragging ? "grabbing" : "move",
     userSelect: "none",
-    zIndex: isSelected ? 10 : 1,
+    zIndex: comp.zindex ?? 1,
     transition: "box-shadow 0.2s, border 0.2s",
     opacity: comp.locked ? 0.5 : isDragging ? 0.7 : 1,
     overflow: "visible",
@@ -117,98 +138,87 @@ export default function ComponentItem({
     "isSelected:",
     isSelected
   );
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="top">置顶</Menu.Item>
+      <Menu.Item key="bottom">置底</Menu.Item>
+      <Menu.Item key="up">上移一层</Menu.Item>
+      <Menu.Item key="down">下移一层</Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="delete">删除</Menu.Item>
+      <Menu.Item key="copy">复制</Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="lock">{comp.locked ? "解锁" : "锁定"}</Menu.Item>
+      <Menu.Item key="visible">{comp.visible ? "隐藏" : "显示"}</Menu.Item>
+    </Menu>
+  );
+
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      tabIndex={0}
-      onClick={comp.locked ? undefined : handleClick}
-      onPointerDown={
-        comp.locked
-          ? undefined
-          : () => {
-              console.log(
-                "[ComponentItem] onPointerDown",
-                comp.id,
-                "isSelected:",
-                isSelected
-              );
-            }
-      }
-      onMouseDown={
-        comp.locked
-          ? undefined
-          : () => {
-              console.log(
-                "[ComponentItem] onMouseDown",
-                comp.id,
-                "isSelected:",
-                isSelected
-              );
-            }
-      }
-      onPointerUp={
-        comp.locked
-          ? undefined
-          : () => {
-              console.log(
-                "[ComponentItem] onPointerUp",
-                comp.id,
-                "isSelected:",
-                isSelected
-              );
-            }
-      }
-    >
-      {/* 锁定icon */}
-      {comp.locked && (
-        <span
-          style={{
-            position: "absolute",
-            left: 4,
-            top: 4,
-            color: "#bdbdbd",
-            fontSize: 16,
-            zIndex: 100,
-            pointerEvents: "none",
-          }}
-          title="已锁定"
-        >
-          <LockOutlined />
-        </span>
-      )}
-      {/* 拖拽手柄（左上角） */}
-      {!comp.locked && showGroupDragHandle && onGroupDragPointerDown ? (
-        <div
-          style={{
-            position: "absolute",
-            left: -10,
-            top: -10,
-            width: 18,
-            height: 18,
-            background: "#1976d2",
-            borderRadius: 4,
-            cursor: "grab",
-            zIndex: 99,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontSize: 12,
-            userSelect: "none",
-            boxShadow: "0 2px 8px #1976d233",
-          }}
-          onPointerDown={onGroupDragPointerDown}
-          onClick={(e) => e.stopPropagation()}
-          title="多选拖动"
-        >
-          ≡
-        </div>
-      ) : (
-        !comp.locked && (
+    <>
+      <div
+        ref={setNodeRef}
+        style={style}
+        tabIndex={0}
+        onClick={comp.locked ? undefined : handleClick}
+        onPointerDown={
+          comp.locked
+            ? undefined
+            : () => {
+                console.log(
+                  "[ComponentItem] onPointerDown",
+                  comp.id,
+                  "isSelected:",
+                  isSelected
+                );
+              }
+        }
+        onMouseDown={
+          comp.locked
+            ? undefined
+            : () => {
+                console.log(
+                  "[ComponentItem] onMouseDown",
+                  comp.id,
+                  "isSelected:",
+                  isSelected
+                );
+              }
+        }
+        onPointerUp={
+          comp.locked
+            ? undefined
+            : () => {
+                console.log(
+                  "[ComponentItem] onPointerUp",
+                  comp.id,
+                  "isSelected:",
+                  isSelected
+                );
+              }
+        }
+        onContextMenu={handleContextMenu}
+      >
+        {/* 锁定icon */}
+        {comp.locked && (
+          <span
+            style={{
+              position: "absolute",
+              left: 4,
+              top: 4,
+              color: "#bdbdbd",
+              fontSize: 16,
+              zIndex: 100,
+              pointerEvents: "none",
+            }}
+            title="已锁定"
+          >
+            <LockOutlined />
+          </span>
+        )}
+        {/* 拖拽手柄（左上角） */}
+        {!comp.locked && showGroupDragHandle && onGroupDragPointerDown ? (
           <div
-            {...listeners}
-            {...attributes}
             style={{
               position: "absolute",
               left: -10,
@@ -217,7 +227,7 @@ export default function ComponentItem({
               height: 18,
               background: "#1976d2",
               borderRadius: 4,
-              cursor: isDragging ? "grabbing" : "grab",
+              cursor: "grab",
               zIndex: 99,
               display: "flex",
               alignItems: "center",
@@ -227,47 +237,91 @@ export default function ComponentItem({
               userSelect: "none",
               boxShadow: "0 2px 8px #1976d233",
             }}
-            onClick={(e) => e.stopPropagation()} // 防止拖拽手柄点击影响选中
-            title="拖拽移动"
+            onPointerDown={onGroupDragPointerDown}
+            onClick={(e) => e.stopPropagation()}
+            title="多选拖动"
           >
             ≡
           </div>
-        )
-      )}
-      <div style={{ width: "100%", height: "100%" }}>
-        {content}
-        {/* 右下角缩放手柄 */}
-        {isSelected && !comp.locked && (
-          <div
-            onMouseDown={handleResizeMouseDown}
-            style={{
-              position: "absolute",
-              right: -10,
-              bottom: -10,
-              width: 18,
-              height: 18,
-              background: "#fff",
-              border: "2.5px solid #ff9800",
-              borderRadius: 4,
-              cursor: "nwse-resize",
-              zIndex: 99,
-              boxShadow: "0 2px 8px #1976d233",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+        ) : (
+          !comp.locked && (
             <div
+              {...listeners}
+              {...attributes}
               style={{
-                width: 10,
-                height: 10,
-                background: "#ff9800",
-                borderRadius: 2,
+                position: "absolute",
+                left: -10,
+                top: -10,
+                width: 18,
+                height: 18,
+                background: "#1976d2",
+                borderRadius: 4,
+                cursor: isDragging ? "grabbing" : "grab",
+                zIndex: 99,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontSize: 12,
+                userSelect: "none",
+                boxShadow: "0 2px 8px #1976d233",
               }}
-            />
-          </div>
+              data-drag-handle="true"
+              onClick={(e) => e.stopPropagation()}
+              title="拖拽移动"
+            >
+              ≡
+            </div>
+          )
         )}
+        <div style={{ width: "100%", height: "100%" }}>
+          {content}
+          {/* 右下角缩放手柄 */}
+          {isSelected && !comp.locked && (
+            <div
+              onMouseDown={handleResizeMouseDown}
+              style={{
+                position: "absolute",
+                right: -10,
+                bottom: -10,
+                width: 18,
+                height: 18,
+                background: "#fff",
+                border: "2.5px solid #ff9800",
+                borderRadius: 4,
+                cursor: "nwse-resize",
+                zIndex: 99,
+                boxShadow: "0 2px 8px #1976d233",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  background: "#ff9800",
+                  borderRadius: 2,
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      <Dropdown
+        overlay={menu}
+        open={menuVisible}
+        trigger={[]}
+        onOpenChange={setMenuVisible}
+        getPopupContainer={() => document.body}
+        overlayStyle={{
+          position: "fixed",
+          left: menuPos.x,
+          top: menuPos.y,
+          zIndex: 2000,
+        }}
+      />
+    </>
   );
 }

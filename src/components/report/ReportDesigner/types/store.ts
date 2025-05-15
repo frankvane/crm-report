@@ -37,5 +37,10 @@ export interface ReportDesignerState {
   batchRemoveComponent: (ids: string[]) => void;
   batchLockComponent: (ids: string[], locked: boolean) => void;
   batchVisibleComponent: (ids: string[], visible: boolean) => void;
+  copyComponent: (id: string) => void;
+  moveComponentZIndex: (
+    id: string,
+    type: "top" | "bottom" | "up" | "down"
+  ) => void;
   // ...其他全局状态，如批量操作、历史记录等
 }

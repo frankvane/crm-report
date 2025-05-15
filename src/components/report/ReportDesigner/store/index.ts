@@ -28,6 +28,11 @@ export const useReportDesignerStore = create(
           }),
         addComponent: (component: ReportComponent) =>
           set((state) => {
+            const maxZ =
+              state.components.length > 0
+                ? Math.max(...state.components.map((c) => c.zindex ?? 1))
+                : 0;
+            component.zindex = maxZ + 1;
             state.components.push(component);
           }),
         updateComponent: (id: string, data: Partial<ReportComponent>) =>
@@ -82,6 +87,65 @@ export const useReportDesignerStore = create(
             state.components.forEach((c) => {
               if (ids.includes(c.id)) c.visible = visible;
             });
+          }),
+        moveComponentZIndex: (
+          id: string,
+          type: "top" | "bottom" | "up" | "down"
+        ) =>
+          set((state) => {
+            const comps = state.components;
+            const idx = comps.findIndex((c) => c.id === id);
+            if (idx === -1) return;
+            const comp = comps[idx];
+            // 取所有zindex，升序
+            const sorted = comps
+              .slice()
+              .sort((a, b) => (a.zindex ?? 1) - (b.zindex ?? 1));
+            const zList = sorted.map((c) => c.zindex ?? 1);
+            let newZ = comp.zindex ?? 1;
+            if (type === "top") {
+              newZ = Math.max(...zList) + 1;
+            } else if (type === "bottom") {
+              newZ = Math.min(...zList) - 1;
+            } else if (type === "up") {
+              // 找到比自己大且最近的zindex
+              const above = sorted.find(
+                (c) => (c.zindex ?? 1) > (comp.zindex ?? 1)
+              );
+              if (above) {
+                // 交换zindex
+                const tmp = above.zindex;
+                above.zindex = comp.zindex;
+                newZ = tmp;
+              }
+            } else if (type === "down") {
+              // 找到比自己小且最近的zindex
+              const below = [...sorted]
+                .reverse()
+                .find((c) => (c.zindex ?? 1) < (comp.zindex ?? 1));
+              if (below) {
+                const tmp = below.zindex;
+                below.zindex = comp.zindex;
+                newZ = tmp;
+              }
+            }
+            comp.zindex = newZ;
+            // 保证zindex唯一且递增
+            const uniq = Array.from(
+              new Set(comps.map((c) => c.zindex ?? 1))
+            ).sort((a, b) => a - b);
+            uniq.forEach((z, i) => {
+              comps
+                .filter((c) => c.zindex === z)
+                .forEach((c) => (c.zindex = i + 1));
+            });
+          }),
+        copyComponent: (id: string) =>
+          set((state) => {
+            const comp = state.components.find((c) => c.id === id);
+            if (!comp) return;
+            const newComp = { ...comp, id: `${comp.id}_copy_${Date.now()}` };
+            state.components.push(newComp);
           }),
       })),
       {

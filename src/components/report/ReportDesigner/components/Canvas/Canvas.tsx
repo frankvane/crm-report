@@ -1,6 +1,6 @@
 // 画布主组件
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { getAlignUpdates, getDistributeUpdates } from "../../utils/align";
 import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 
@@ -31,6 +31,11 @@ export default function Canvas() {
   const batchVisibleComponent = useReportDesignerStore(
     (s) => s.batchVisibleComponent
   );
+  const removeComponent = useReportDesignerStore((s) => s.removeComponent);
+  const copyComponent = useReportDesignerStore((s) => s.copyComponent);
+  const moveComponentZIndex = useReportDesignerStore(
+    (s) => s.moveComponentZIndex
+  );
 
   // 框选相关
   const [selectRect, setSelectRect] = useState<null | {
@@ -41,6 +46,9 @@ export default function Canvas() {
   }>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
+  const isSelectingRef = useRef(false);
+  const selectThresholdWRef = useRef(5);
+  const selectThresholdHRef = useRef(5);
 
   // 用useRef保存最新的组件数据，避免闭包
   const componentsRef = useRef(components);
@@ -51,33 +59,42 @@ export default function Canvas() {
   // 新增：最近一次操作类型标志位
   const lastActionRef = useRef<string>("");
 
-  // 用useCallback确保引用稳定
+  // 鼠标移动
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    lastActionRef.current = "select"; // 标记为框选
-    console.log("[框选] handleMouseMove");
     if (!dragStart.current) return;
     const canvas = document.getElementById("report-canvas-main");
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const curX = e.clientX - rect.left;
     const curY = e.clientY - rect.top;
-    const x = Math.min(dragStart.current.x, curX);
-    const y = Math.min(dragStart.current.y, curY);
-    const w = Math.abs(curX - dragStart.current.x);
-    const h = Math.abs(curY - dragStart.current.y);
-    setSelectRect({ x, y, w, h });
+    const dx = Math.abs(curX - dragStart.current.x);
+    const dy = Math.abs(curY - dragStart.current.y);
+    if (
+      !isSelectingRef.current &&
+      dx > selectThresholdWRef.current &&
+      dy > selectThresholdHRef.current
+    ) {
+      isSelectingRef.current = true;
+      setIsSelecting(true);
+    }
+    if (isSelectingRef.current) {
+      const x = Math.min(dragStart.current.x, curX);
+      const y = Math.min(dragStart.current.y, curY);
+      const w = Math.abs(curX - dragStart.current.x);
+      const h = Math.abs(curY - dragStart.current.y);
+      setSelectRect({ x, y, w, h });
+    }
   }, []);
 
+  // 鼠标抬起
   const handleMouseUp = useCallback((e: MouseEvent) => {
-    lastActionRef.current = "select"; // 标记为框选
-    e.stopPropagation(); // 防止冒泡导致选中状态被清空
-    console.log("[框选] handleMouseUp");
+    e.stopPropagation();
     if (!dragStart.current) return;
     const canvas = document.getElementById("report-canvas-main");
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const offsetLeft = 16; // 标尺宽度
-    const offsetTop = 16; // 标尺高度
+    const offsetLeft = 16;
+    const offsetTop = 16;
     const endX = e.clientX - rect.left - offsetLeft;
     const endY = e.clientY - rect.top - offsetTop;
     const startX = dragStart.current.x - offsetLeft;
@@ -86,32 +103,65 @@ export default function Canvas() {
     const y1 = Math.min(startY, endY);
     const x2 = Math.max(startX, endX);
     const y2 = Math.max(startY, endY);
-    console.log(`[框选] 区域: x1=${x1}, y1=${y1}, x2=${x2}, y2=${y2}`);
-    // 输出所有组件的坐标和尺寸
-    componentsRef.current.forEach((c) => {
-      console.log(
-        `[框选] 组件: id=${c.id}, x=${c.x}, y=${c.y}, w=${c.width}, h=${c.height}`
+    if (isSelectingRef.current) {
+      // 框选逻辑
+      const selected = componentsRef.current.filter((c) => {
+        const cx1 = c.x;
+        const cy1 = c.y;
+        const cx2 = c.x + c.width;
+        const cy2 = c.y + c.height;
+        return cx1 < x2 && cx2 > x1 && cy1 < y2 && cy2 > y1;
+      });
+      setSelectedIdsRef.current(selected.map((c) => c.id));
+    } else {
+      // 单击逻辑
+      const mouseX = endX;
+      const mouseY = endY;
+      const hit = componentsRef.current.find(
+        (c) =>
+          mouseX >= c.x &&
+          mouseX <= c.x + c.width &&
+          mouseY >= c.y &&
+          mouseY <= c.y + c.height
       );
-    });
-    // 计算与选择框相交的组件
-    const selected = componentsRef.current.filter((c) => {
-      const cx1 = c.x;
-      const cy1 = c.y;
-      const cx2 = c.x + c.width;
-      const cy2 = c.y + c.height;
-      return cx1 < x2 && cx2 > x1 && cy1 < y2 && cy2 > y1;
-    });
-    console.log(
-      "[框选] 命中的组件id:",
-      selected.map((c) => c.id)
-    );
-    setSelectedIdsRef.current(selected.map((c) => c.id));
+      setSelectedIdsRef.current(hit ? [hit.id] : []);
+    }
     setSelectRect(null);
     dragStart.current = null;
-    setIsSelecting(false); // 框选结束，恢复
+    setIsSelecting(false);
+    isSelectingRef.current = false;
     document.removeEventListener("mousemove", handleMouseMoveRef.current!);
     document.removeEventListener("mouseup", handleMouseUpRef.current!);
   }, []);
+
+  // 鼠标按下开始框选/单选
+  const handleMouseDown = (e: React.MouseEvent) => {
+    lastActionRef.current = "select";
+    if (e.button !== 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = e.clientX - rect.left;
+    const startY = e.clientY - rect.top;
+    dragStart.current = { x: startX, y: startY };
+    setSelectRect(null);
+    setIsSelecting(false);
+    isSelectingRef.current = false;
+    // 计算动态阈值（最小组件宽高）
+    if (components.length > 0) {
+      selectThresholdWRef.current = Math.max(
+        5,
+        Math.min(...components.map((c) => c.width))
+      );
+      selectThresholdHRef.current = Math.max(
+        5,
+        Math.min(...components.map((c) => c.height))
+      );
+    } else {
+      selectThresholdWRef.current = 5;
+      selectThresholdHRef.current = 5;
+    }
+    document.addEventListener("mousemove", handleMouseMoveRef.current!);
+    document.addEventListener("mouseup", handleMouseUpRef.current!);
+  };
 
   // 用useRef保存最新的回调，确保解绑时引用一致
   const handleMouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
@@ -166,22 +216,6 @@ export default function Canvas() {
     },
   });
 
-  // 鼠标按下开始框选
-  const handleMouseDown = (e: React.MouseEvent) => {
-    lastActionRef.current = "select"; // 标记为框选
-    console.log("[框选] handleMouseDown", e.button);
-    if (e.button !== 0) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const startX = e.clientX - rect.left;
-    const startY = e.clientY - rect.top;
-    dragStart.current = { x: startX, y: startY };
-    setSelectRect({ x: startX, y: startY, w: 0, h: 0 });
-    setIsSelecting(true);
-    document.addEventListener("mousemove", handleMouseMoveRef.current!);
-    document.addEventListener("mouseup", handleMouseUpRef.current!);
-    console.log("[框选] 已绑定document mousemove/mouseup");
-  };
-
   // 批量操作实现
   const handleDeleteSelected = () => {
     batchRemoveComponent(selectedIds);
@@ -216,6 +250,50 @@ export default function Canvas() {
       batchUpdateComponent([id], data as Partial<ReportComponent>)
     );
   };
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { key, id } = (e as CustomEvent).detail;
+      const comp = components.find((c) => c.id === id);
+      if (!comp) return;
+      switch (key) {
+        case "top":
+          moveComponentZIndex(id, "top");
+          break;
+        case "bottom":
+          moveComponentZIndex(id, "bottom");
+          break;
+        case "up":
+          moveComponentZIndex(id, "up");
+          break;
+        case "down":
+          moveComponentZIndex(id, "down");
+          break;
+        case "delete":
+          removeComponent(id);
+          break;
+        case "copy":
+          copyComponent(id);
+          break;
+        case "lock":
+          updateComponent(id, { locked: !comp.locked });
+          break;
+        case "visible":
+          updateComponent(id, { visible: !comp.visible });
+          break;
+        default:
+          break;
+      }
+    };
+    window.addEventListener("component-menu", handler);
+    return () => window.removeEventListener("component-menu", handler);
+  }, [
+    components,
+    updateComponent,
+    removeComponent,
+    copyComponent,
+    moveComponentZIndex,
+  ]);
 
   return (
     <>

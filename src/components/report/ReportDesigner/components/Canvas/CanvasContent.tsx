@@ -35,14 +35,9 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
       if (!isGroupDraggingRef.current || !groupDragStart.current) return;
       const dx = e.clientX - groupDragStart.current.x;
       const dy = e.clientY - groupDragStart.current.y;
-      console.log("[GroupDrag] Dragging", { dx, dy });
-      const updates: Record<string, { x: number; y: number }> = {};
+      // 只更新 UI，不更新 store
       Object.entries(groupDragOrigin.current).forEach(([id, pos]) => {
-        updates[id] = { x: pos.x + dx, y: pos.y + dy };
-      });
-      Object.entries(updates).forEach(([id, data]) => {
-        console.log("[GroupDrag] Update", id, data);
-        onMove(id, data.x, data.y);
+        onMove(id, pos.x + dx, pos.y + dy);
       });
     },
     [onMove]
@@ -50,7 +45,6 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
 
   // 拖动结束
   const handleGroupPointerUp = React.useCallback(() => {
-    console.log("[GroupDrag] PointerUp");
     isGroupDraggingRef.current = false;
     groupDragStart.current = null;
     groupDragOrigin.current = {};
@@ -71,7 +65,6 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
     const boxH = maxY - minY;
     // 拖动手柄事件
     const handleGroupPointerDown = (e: React.PointerEvent) => {
-      console.log("[GroupDrag] PointerDown", e.clientX, e.clientY);
       e.stopPropagation();
       e.preventDefault();
       isGroupDraggingRef.current = true;
@@ -128,6 +121,16 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
     );
   }
 
+  // 新的 handleMouseDown，拖动多选组时不启动框选，且手柄拖动时不启动框选
+  const handleMouseDownWrapper = (e: React.MouseEvent) => {
+    // 如果事件来自手柄，直接 return
+    if ((e.target as HTMLElement).getAttribute("data-drag-handle") === "true") {
+      return;
+    }
+    if (isGroupDraggingRef.current) return;
+    handleMouseDown(e);
+  };
+
   return (
     <div
       style={{
@@ -140,7 +143,7 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
         zIndex: 10,
         background: "transparent",
       }}
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleMouseDownWrapper}
     >
       {/* 框选可视化 */}
       {selectRect && (
