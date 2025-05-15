@@ -51,6 +51,11 @@ export default function Canvas() {
   // 新增：最近一次操作类型标志位
   const lastActionRef = useRef<string>("");
 
+  // 多选拖动相关状态
+  const [isGroupDragging, setIsGroupDragging] = useState(false);
+  const groupDragStart = useRef<{ x: number; y: number } | null>(null);
+  const groupDragOrigin = useRef<Record<string, { x: number; y: number }>>({});
+
   // 用useCallback确保引用稳定
   const handleMouseMove = useCallback((e: MouseEvent) => {
     lastActionRef.current = "select"; // 标记为框选
@@ -217,6 +222,53 @@ export default function Canvas() {
     );
   };
 
+  // 多选拖动手柄事件
+  const handleGroupDragPointerDown = (e: React.PointerEvent) => {
+    if (selectedIds.length < 2) return; // 只在多选时生效
+    e.stopPropagation();
+    e.preventDefault();
+    setIsGroupDragging(true);
+    groupDragStart.current = { x: e.clientX, y: e.clientY };
+    // 记录所有选中组件的初始位置
+    const origin: Record<string, { x: number; y: number }> = {};
+    components.forEach((c) => {
+      if (selectedIds.includes(c.id)) {
+        origin[c.id] = { x: c.x, y: c.y };
+      }
+    });
+    groupDragOrigin.current = origin;
+    document.addEventListener("pointermove", handleGroupDragging);
+    document.addEventListener("pointerup", handleGroupDragPointerUp);
+  };
+
+  // 多选拖动中
+  const handleGroupDragging = (e: PointerEvent) => {
+    if (!isGroupDragging || !groupDragStart.current) return;
+    const dx = e.clientX - groupDragStart.current.x;
+    const dy = e.clientY - groupDragStart.current.y;
+    const updates: Record<string, Partial<ReportComponent>> = {};
+    Object.entries(groupDragOrigin.current).forEach(([id, pos]) => {
+      let newX = pos.x + dx;
+      let newY = pos.y + dy;
+      if (canvasConfig.allowSnapToGrid) {
+        const grid = canvasConfig.gridSize;
+        newX = Math.round(newX / grid) * grid;
+        newY = Math.round(newY / grid) * grid;
+      }
+      updates[id] = { x: newX, y: newY };
+    });
+    Object.entries(updates).forEach(([id, data]) => updateComponent(id, data));
+  };
+
+  // 多选拖动结束
+  const handleGroupDragPointerUp = () => {
+    setIsGroupDragging(false);
+    groupDragStart.current = null;
+    groupDragOrigin.current = {};
+    document.removeEventListener("pointermove", handleGroupDragging);
+    document.removeEventListener("pointerup", handleGroupDragPointerUp);
+  };
+
   return (
     <>
       <BatchToolbar
@@ -268,6 +320,8 @@ export default function Canvas() {
           selectRect={selectRect}
           handleMouseDown={handleMouseDown}
           onResize={(id, w, h) => updateComponent(id, { width: w, height: h })}
+          onMove={(id, x, y) => updateComponent(id, { x, y })}
+          onGroupDragPointerDown={handleGroupDragPointerDown}
         />
       </div>
     </>
