@@ -308,6 +308,26 @@ export default function ComponentItem({
             </div>
           )}
         </div>
+        {/* zIndex 右上角显示 */}
+        <span
+          style={{
+            position: "absolute",
+            right: 4,
+            top: 4,
+            background: "#ccc",
+            color: "#fff",
+            fontSize: 12,
+            borderRadius: 4,
+            padding: "0 6px",
+            zIndex: 101,
+            pointerEvents: "none",
+            opacity: 0.85,
+            fontWeight: 100,
+          }}
+          title="层级(zIndex)"
+        >
+          z: {comp.zindex ?? 1}
+        </span>
       </div>
       <Dropdown
         overlay={menu}
