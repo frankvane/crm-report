@@ -81,6 +81,17 @@ function renderField({ item, value, onChange }: any) {
           placeholder="请输入合法的 JSON 格式"
         />
       );
+    case "textarea":
+      return (
+        <Input.TextArea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          autoSize={{ minRows: 2, maxRows: 8 }}
+          style={{ width: 320 }}
+          disabled={item.disabled}
+          placeholder={item.placeholder}
+        />
+      );
     case "text":
       return <Input value={value} disabled style={{ width: 180 }} />;
     default:
@@ -107,12 +118,14 @@ export default function PropertyPanel() {
       },
     [selected]
   );
+
+  // 数据绑定区联动逻辑
   const selectedDataSource = selected?.props?.dataBinding?.dataSource;
-  const getFieldOptions = () => {
+  const fieldOptions = useMemo(() => {
     if (!selectedDataSource) return [];
     const ds = dataSources.find((d) => d.key === selectedDataSource);
     return (ds?.fields || []).map((f) => ({ label: f, value: f }));
-  };
+  }, [dataSources, selectedDataSource]);
 
   // 判断是否可旋转
   const isRotatable = !!selected?.rotatable;
@@ -186,7 +199,7 @@ export default function PropertyPanel() {
                       <span style={{ width: 80 }}>{item.label}：</span>
                       {renderField({
                         item: fieldItem,
-                        value: (selected as any)[item.key],
+                        value: (selected as any)[item.key] ?? item.default,
                         onChange: (val: any) => handleBaseChange(item.key, val),
                       })}
                     </div>
@@ -213,7 +226,7 @@ export default function PropertyPanel() {
                     <span style={{ width: 80 }}>{item.label}：</span>
                     {renderField({
                       item,
-                      value: selected.props?.[item.key],
+                      value: selected.props?.[item.key] ?? item.default,
                       onChange: (val: any) =>
                         handleStandardChange(item.key, val),
                     })}
@@ -227,28 +240,55 @@ export default function PropertyPanel() {
             label: "数据绑定",
             children: (
               <div>
-                {schema.dataBinding?.map((item: any) => (
-                  <div
-                    key={item.key}
-                    style={{
-                      marginBottom: 8,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span style={{ width: 80 }}>{item.label}：</span>
-                    {renderField({
-                      item:
-                        item.key === "field"
-                          ? { ...item, options: getFieldOptions() }
-                          : item,
-                      value: selected.props?.dataBinding?.[item.key],
-                      onChange: (val: any) =>
-                        handleDataBindingChange(item.key, val),
-                    })}
-                  </div>
-                ))}
+                {schema.dataBinding?.map((item: any) => {
+                  // 只在 format 为 custom 时显示 customFormat 字段
+                  if (item.key === "customFormat") {
+                    if (selected.props?.dataBinding?.format !== "custom")
+                      return null;
+                  }
+                  // 只在 format 不为 custom 时显示 formatPattern 字段
+                  if (item.key === "formatPattern") {
+                    if (
+                      !selected.props?.dataBinding?.format ||
+                      selected.props?.dataBinding?.format === "custom"
+                    )
+                      return null;
+                  }
+                  let fieldItem = item;
+                  if (item.key === "dataSource") {
+                    fieldItem = {
+                      ...item,
+                      options: dataSources.map((ds) => ({
+                        label: ds.name,
+                        value: ds.key,
+                      })),
+                    };
+                  }
+                  if (item.key === "field") {
+                    fieldItem = { ...item, options: fieldOptions };
+                  }
+                  return (
+                    <div
+                      key={item.key}
+                      style={{
+                        marginBottom: 8,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                      }}
+                    >
+                      <span style={{ width: 80 }}>{item.label}：</span>
+                      {renderField({
+                        item: fieldItem,
+                        value:
+                          selected.props?.dataBinding?.[item.key] ??
+                          item.default,
+                        onChange: (val: any) =>
+                          handleDataBindingChange(item.key, val),
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             ),
           },
