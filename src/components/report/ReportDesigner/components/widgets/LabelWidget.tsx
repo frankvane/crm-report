@@ -17,6 +17,7 @@ interface LabelWidgetProps {
     field?: string;
     format?: string;
     formatPattern?: string;
+    customFormat?: string;
     [key: string]: any;
   };
 }
@@ -69,6 +70,23 @@ const LabelWidget: React.FC<LabelWidgetProps> = ({
     } else if (format === "date" && pattern) {
       // 日期格式化，需 dayjs 支持
       displayText = dayjs(displayText).format(pattern);
+    } else if (format === "custom" && dataBinding?.customFormat) {
+      try {
+        let custom = dataBinding.customFormat.trim();
+        let fn;
+        if (custom.startsWith("function") || custom.startsWith("value =>")) {
+          // 函数体
+          // eslint-disable-next-line no-eval
+          fn = eval("(" + custom + ")");
+        } else {
+          // 表达式
+          // eslint-disable-next-line no-new-func
+          fn = new Function("value", "return " + custom + ";");
+        }
+        displayText = fn(displayText);
+      } catch (e) {
+        // 格式化失败，显示原始内容
+      }
     }
   }
   let justifyContent: React.CSSProperties["justifyContent"] = "flex-start";
