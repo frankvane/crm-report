@@ -6,3 +6,9 @@ import "./textSchema";
 // 其它组件schema...
 
 export * from "./schemaRegistry";
+
+export * from "./baseSchema";
+export * from "./labelSchema";
+export * from "./textSchema";
+export * from "./imageSchema";
+export * from "./tableSchema";

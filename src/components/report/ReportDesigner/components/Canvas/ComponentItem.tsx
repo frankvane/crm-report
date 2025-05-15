@@ -3,8 +3,10 @@
 import React, { useRef, useState } from "react";
 
 import { Dropdown } from "antd";
+import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
 import { LockOutlined } from "@ant-design/icons";
+import TableWidget from "../widgets/TableWidget";
 import TextWidget from "../widgets/TextWidget";
 import { useDraggable } from "@dnd-kit/core";
 
@@ -142,7 +144,8 @@ export default function ComponentItem({
   const componentMap: Record<string, React.FC<any>> = {
     label: LabelWidget,
     text: TextWidget,
-    // 未来可扩展 image: ImageComponent, table: TableComponent, ...
+    image: ImageWidget,
+    table: TableWidget,
   };
   const Comp =
     componentMap[comp.type] ||
