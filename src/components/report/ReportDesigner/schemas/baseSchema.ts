@@ -10,12 +10,8 @@ export const baseSchema = [
   { key: "locked", label: "锁定", type: "switch" },
   { key: "visible", label: "显示", type: "switch" },
   { key: "zindex", label: "层级", type: "number" },
-  { key: "groupId", label: "分组ID", type: "input" },
-  { key: "draggable", label: "可拖动", type: "switch" },
   { key: "resizable", label: "可缩放", type: "switch" },
   { key: "rotatable", label: "可旋转", type: "switch" },
   { key: "rotation", label: "旋转角度", type: "number" },
   { key: "opacity", label: "透明度", type: "number" },
-  { key: "createdAt", label: "创建时间", type: "text", disabled: true },
-  { key: "updatedAt", label: "更新时间", type: "text", disabled: true },
 ];

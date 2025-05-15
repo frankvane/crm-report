@@ -3,13 +3,10 @@
 import React, { useRef, useState } from "react";
 
 import { Dropdown } from "antd";
+import LabelWidget from "../widgets/LabelWidget";
 import { LockOutlined } from "@ant-design/icons";
+import TextWidget from "../widgets/TextWidget";
 import { useDraggable } from "@dnd-kit/core";
-
-// 示例：Label组件渲染（可根据实际注册表扩展）
-function LabelComponent({ text }: { text: string }) {
-  return <span>{text}</span>;
-}
 
 interface ComponentItemProps {
   comp: any;
@@ -113,7 +110,7 @@ export default function ComponentItem({
     width: comp.width,
     height: comp.height,
     background: comp.locked ? "#f5f5f5" : "#fff",
-    border: isSelected ? "2.5px solid #ff9800" : "1px solid #1976d2",
+    border: isSelected ? "2.5px solid #ff9800" : "none",
     borderRadius: 4,
     display: "flex",
     alignItems: "center",
@@ -130,13 +127,16 @@ export default function ComponentItem({
     pointerEvents: comp.locked ? "none" : "auto",
   };
 
-  // 根据类型渲染具体组件
-  let content = null;
-  if (comp.type === "label") {
-    content = <LabelComponent {...comp.props} />;
-  } else {
-    content = <span>未知组件类型: {comp.type}</span>;
-  }
+  // 组件类型到展示组件的映射
+  const componentMap: Record<string, React.FC<any>> = {
+    label: LabelWidget,
+    text: TextWidget,
+    // 未来可扩展 image: ImageComponent, table: TableComponent, ...
+  };
+  const Comp =
+    componentMap[comp.type] ||
+    (() => <span style={{ color: "red" }}>未知组件类型: {comp.type}</span>);
+  const content = <Comp {...comp.props} />;
 
   return (
     <>
