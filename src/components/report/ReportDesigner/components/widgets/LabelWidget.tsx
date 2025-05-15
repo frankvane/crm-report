@@ -17,24 +17,35 @@ const LabelWidget: React.FC<LabelWidgetProps> = ({
   align = "left",
   style = {},
 }) => {
+  let justifyContent: React.CSSProperties["justifyContent"] = "flex-start";
+  if (align === "center") justifyContent = "center";
+  if (align === "right") justifyContent = "flex-end";
+
   return (
-    <span
+    <div
       style={{
-        display: "inline-block",
-        color,
-        fontSize,
+        display: "flex",
+        justifyContent,
+        width: "100%",
         background,
-        textAlign: align,
-        padding: "2px 8px",
-        borderRadius: 4,
-        fontWeight: 500,
         ...style,
         transform: style.transform,
         opacity: style.opacity,
       }}
     >
-      {text}
-    </span>
+      <span
+        style={{
+          color,
+          fontSize,
+          padding: "2px 8px",
+          borderRadius: 4,
+          fontWeight: 500,
+          background: "transparent",
+        }}
+      >
+        {text}
+      </span>
+    </div>
   );
 };
 

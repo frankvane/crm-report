@@ -21,3 +21,43 @@
 - **工程规范**：遵循团队代码规范、注重文档和注释。
 
 ---
+
+# 报表设计器
+
+## 主要特性
+
+- 画布区域支持多选、框选、拖拽、缩放、旋转等操作
+- 属性面板支持基础属性、标准属性、数据绑定等多种配置
+- 组件支持自动生成唯一 name
+- 支持 Ant Design、Zustand 等主流技术栈
+
+## JSON 字段编辑说明
+
+属性面板中如表格（table）等组件的 `columns`、`dataSource` 等 json 类型字段，现已采用多行文本框（Input.TextArea）进行编辑：
+
+- 支持直接粘贴、编辑合法的 JSON 内容
+- 输入内容会自动尝试解析为 JSON，只有合法 JSON 才会生效
+- 如需切换为可视化 JSON 编辑器，可参考注释或将 renderField 方法中的 json case 替换为 json-edit-react 或 jsoneditor 组件
+
+## 开发与提交
+
+1. 安装依赖：
+   ```bash
+   npm install
+   # 或 yarn install
+   ```
+2. 启动开发环境：
+   ```bash
+   npm start
+   # 或 yarn start
+   ```
+3. 代码提交与推送：
+   ```bash
+   git add .
+   git commit -m "feat: 属性面板json字段支持多行文本编辑"
+   git push
+   ```
+
+---
+
+如需更多自定义或集成第三方 JSON 编辑器，请参考 `src/components/report/ReportDesigner/components/PropertyPanel/index.tsx` 中 renderField 方法的实现。

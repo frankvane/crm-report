@@ -28,6 +28,18 @@ export const useReportDesignerStore = create(
           }),
         addComponent: (component: ReportComponent) =>
           set((state) => {
+            // 自动生成 name
+            if (!component.name) {
+              const type = component.type || "Component";
+              const sameType = state.components.filter((c) => c.type === type);
+              // 匹配类似 Text1、Text2 的 name，找最大序号
+              const maxIndex = sameType.reduce((max, c) => {
+                const match =
+                  c.name && c.name.match(new RegExp(`^${type}(\\d+)$`));
+                return match ? Math.max(max, parseInt(match[1], 10)) : max;
+              }, 0);
+              component.name = `${type}${maxIndex + 1}`;
+            }
             const maxZ =
               state.components.length > 0
                 ? Math.max(...state.components.map((c) => c.zindex ?? 1))

@@ -33,6 +33,7 @@ interface BatchToolbarProps {
   onBatchOpacity: (opacity: number) => void;
   selectedCount?: number;
   canDistribute?: boolean;
+  allRotatable?: boolean;
 }
 
 const iconBtnProps = {
@@ -55,6 +56,7 @@ const BatchToolbar: React.FC<BatchToolbarProps> = ({
   onBatchOpacity,
   selectedCount = 0,
   canDistribute = false,
+  allRotatable = false,
 }) => {
   const disabled = selectedCount === 0;
 
@@ -236,7 +238,7 @@ const BatchToolbar: React.FC<BatchToolbarProps> = ({
         defaultValue={0}
         onChange={(v) => typeof v === "number" && onBatchRotation(v)}
         size="small"
-        disabled={disabled}
+        disabled={disabled || !allRotatable}
         style={{ width: 60 }}
       />
       <span style={{ fontWeight: 400, color: "#888" }}>透明度</span>

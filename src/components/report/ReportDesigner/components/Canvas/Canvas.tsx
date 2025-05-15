@@ -89,11 +89,20 @@ export default function Canvas() {
     setSelectedIds,
   });
 
+  // 计算所有选中组件是否都可旋转
+  const allRotatable =
+    selectedIds.length > 0 &&
+    selectedIds.every((id) => {
+      const comp = components.find((c) => c.id === id);
+      return comp && comp.rotatable;
+    });
+
   return (
     <>
       <BatchToolbar
         selectedCount={selectedIds.length}
         canDistribute={selectedIds.length >= 3}
+        allRotatable={allRotatable}
         onDeleteSelected={batchActions.handleDeleteSelected}
         onBatchLock={batchActions.handleBatchLock}
         onBatchVisible={batchActions.handleBatchVisible}

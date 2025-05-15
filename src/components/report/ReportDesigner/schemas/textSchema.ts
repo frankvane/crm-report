@@ -12,7 +12,7 @@ const textSchema = {
   ],
   dataBinding: [
     { key: "dataSource", label: "数据源", type: "select", options: [] },
-    { key: "field", label: "字段", type: "input" },
+    { key: "field", label: "字段", type: "select", options: [] },
     { key: "format", label: "格式化", type: "input" },
     { key: "expression", label: "表达式", type: "input" },
     { key: "mock", label: "模拟数据", type: "input" },
