@@ -179,6 +179,7 @@ const CanvasContent: React.FC<CanvasContentProps> = ({
         {components.map((comp) => (
           <ComponentItem
             key={comp.id}
+            componentId={comp.id}
             comp={comp}
             isSelected={selectedIds.includes(comp.id)}
             onSelect={() => setSelectedIds([comp.id])}

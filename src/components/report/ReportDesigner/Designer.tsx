@@ -32,7 +32,7 @@ const Designer: React.FC = () => (
           <Canvas />
         </Content>
         <Sider
-          width={400}
+          width={600}
           style={{ background: "#fafbfc", borderLeft: "1px solid #eee" }}
         >
           <PropertyPanel />

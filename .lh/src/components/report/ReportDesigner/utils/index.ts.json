@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747052831767,
@@ -16,6 +16,10 @@
                 {
                     "date": 1747228003851,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,1 @@\n- \n\\ No newline at end of file\n+// 工具函数定义\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747355350269,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,4 @@\n // 工具函数定义\r\n+\r\n+export { formatLabelValue } from \"./formatLabelValue\";\r\n+export { getJustifyContent } from \"./getJustifyContent\";\r\n"
                 }
             ],
             "date": 1747052831767,

@@ -6,6 +6,7 @@ export interface DataSource {
   url: string; // API 地址
   fields: string[]; // 字段名列表
   sample?: any; // 示例数据
+  data?: any[]; // 全量数据
 }
 
 interface DataSourceStoreState {
@@ -15,7 +16,7 @@ interface DataSourceStoreState {
   fetchFields: (key: string) => Promise<void>;
 }
 
-const initialDataSources: Omit<DataSource, "fields">[] = [
+const initialDataSources: Omit<DataSource, "fields" | "data">[] = [
   {
     key: "posts",
     name: "文章",
@@ -49,7 +50,11 @@ const initialDataSources: Omit<DataSource, "fields">[] = [
 ];
 
 export const useDataSourceStore = create<DataSourceStoreState>((set, get) => ({
-  dataSources: initialDataSources.map((ds) => ({ ...ds, fields: [] })),
+  dataSources: initialDataSources.map((ds) => ({
+    ...ds,
+    fields: [],
+    data: [],
+  })),
   addDataSource: (ds) =>
     set((state) => ({
       dataSources: [...state.dataSources, ds],
@@ -62,12 +67,19 @@ export const useDataSourceStore = create<DataSourceStoreState>((set, get) => ({
     const ds = get().dataSources.find((d) => d.key === key);
     if (!ds) return;
     try {
+      // 拉取一条示例
       const resp = await fetch(`${ds.url}/1`);
       const sample = await resp.json();
       const fields = sample ? Object.keys(sample) : [];
+      // 拉取全部数据
+      let data: any[] = [];
+      try {
+        const respAll = await fetch(ds.url);
+        data = await respAll.json();
+      } catch {}
       set((state) => ({
         dataSources: state.dataSources.map((d) =>
-          d.key === key ? { ...d, fields, sample } : d
+          d.key === key ? { ...d, fields, sample, data } : d
         ),
       }));
     } catch {

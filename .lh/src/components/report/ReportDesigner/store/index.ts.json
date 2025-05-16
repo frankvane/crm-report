@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 10,
+            "activePatchIndex": 11,
             "patches": [
                 {
                     "date": 1747228066107,
@@ -48,6 +48,10 @@
                 {
                     "date": 1747293516871,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -59,13 +59,8 @@\n               get().selectedIds\n             );\n           }, 0);\n         },\n-        isSelecting: false,\n-        setIsSelecting: (flag: boolean) =>\n-          set((state) => {\n-            state.isSelecting = flag;\n-          }),\n         setCanvasConfig: (config) =>\n           set((state) => {\n             state.canvasConfig = { ...state.canvasConfig, ...config };\n           }),\n"
+                },
+                {
+                    "date": 1747359012707,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -58,20 +58,20 @@\n             state.selectedIds = state.selectedIds.filter((sid) => sid !== id);\n           }),\n         setSelectedIds: (ids: string[]) => {\n           if (ids.length === 0) {\n-            console.trace(\"[store] setSelectedIds([]) 被调用\");\n+            // console.trace(\"[store] setSelectedIds([]) 被调用\");\n           }\n-          console.log(\"[store] setSelectedIds调用，参数:\", ids);\n+          // console.log(\"[store] setSelectedIds调用，参数:\", ids);\n           set((state) => {\n             state.selectedIds = ids;\n           });\n-          setTimeout(() => {\n-            console.log(\n-              \"[store] setSelectedIds后，store.selectedIds:\",\n-              get().selectedIds\n-            );\n-          }, 0);\n+          // setTimeout(() => {\n+          //   console.log(\n+          //     \"[store] setSelectedIds后，store.selectedIds:\",\n+          //     get().selectedIds\n+          //   );\n+          // }, 0);\n         },\n         setCanvasConfig: (config) =>\n           set((state) => {\n             state.canvasConfig = { ...state.canvasConfig, ...config };\n"
                 }
             ],
             "date": 1747228066107,

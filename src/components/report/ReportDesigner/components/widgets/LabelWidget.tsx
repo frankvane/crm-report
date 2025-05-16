@@ -1,12 +1,16 @@
+import {
+  formatLabelValue,
+  getJustifyContent,
+} from "@report/ReportDesigner/utils";
+
 import React from "react";
 import dayjs from "dayjs";
-import { formatLabelValue } from "./formatLabelValue";
-import { getJustifyContent } from "./getJustifyContent";
-// @ts-expect-error: numeral 没有类型声明文件，需忽略类型检查
 import numeral from "numeral";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
+import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface LabelWidgetProps {
+  componentId?: string;
   text?: string;
   color?: string;
   fontSize?: number;
@@ -23,15 +27,24 @@ interface LabelWidgetProps {
   };
 }
 
-const LabelWidget: React.FC<LabelWidgetProps> = ({
-  text = "标签",
-  color = "#1976d2",
-  fontSize = 16,
-  background = "#fff",
-  align = "left",
-  style = {},
-  dataBinding,
-}) => {
+const LabelWidget: React.FC<LabelWidgetProps> = (props) => {
+  // 支持 componentId 响应式获取配置
+  const allComponents = useReportDesignerStore((s) => s.components);
+  const comp = props.componentId
+    ? allComponents.find((c) => c.id === props.componentId)
+    : undefined;
+  const effectiveProps = comp ? { ...props, ...comp.props } : props;
+
+  const {
+    text = "标签",
+    color = "#1976d2",
+    fontSize = 16,
+    background = "#fff",
+    align = "left",
+    style = {},
+    dataBinding,
+  } = effectiveProps;
+
   const dataSources = useDataSourceStore((s) => s.dataSources);
   let displayText = text;
   if (dataBinding?.dataSource && dataBinding?.field) {

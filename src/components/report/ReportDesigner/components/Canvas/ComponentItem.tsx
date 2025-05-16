@@ -9,8 +9,10 @@ import { LockOutlined } from "@ant-design/icons";
 import TableWidget from "../widgets/TableWidget";
 import TextWidget from "../widgets/TextWidget";
 import { useDraggable } from "@dnd-kit/core";
+import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface ComponentItemProps {
+  componentId?: string;
   comp: any;
   isSelected: boolean;
   onSelect: () => void;
@@ -20,7 +22,8 @@ interface ComponentItemProps {
 }
 
 export default function ComponentItem({
-  comp,
+  componentId,
+  comp: compProp,
   isSelected,
   onSelect,
   onResize,
@@ -28,7 +31,7 @@ export default function ComponentItem({
   onGroupDragPointerDown,
 }: ComponentItemProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: comp.id });
+    useDraggable({ id: compProp.id });
   const resizing = useRef(false);
   const start = useRef({ x: 0, y: 0, width: 0, height: 0 });
 
@@ -44,9 +47,16 @@ export default function ComponentItem({
     { key: "delete", label: "删除" },
     { key: "copy", label: "复制" },
     { type: "divider" as const },
-    { key: "lock", label: comp.locked ? "解锁" : "锁定" },
-    { key: "visible", label: comp.visible ? "隐藏" : "显示" },
+    { key: "lock", label: compProp.locked ? "解锁" : "锁定" },
+    { key: "visible", label: compProp.visible ? "隐藏" : "显示" },
   ];
+
+  // 始终在顶层调用 Hook，避免条件调用
+  const allComponents = useReportDesignerStore((s) => s.components);
+  const globalComp = componentId
+    ? allComponents.find((c) => c.id === componentId)
+    : undefined;
+  const comp = globalComp || compProp;
 
   // 隐藏：visible为false直接不渲染（必须在Hooks之后）
   if (comp.visible === false) return null;
@@ -150,7 +160,10 @@ export default function ComponentItem({
   const Comp =
     componentMap[comp.type] ||
     (() => <span style={{ color: "red" }}>未知组件类型: {comp.type}</span>);
-  const content = <Comp {...comp.props} style={{ opacity: style.opacity }} />;
+  // 只传 componentId，Widget 内部自动查全局配置
+  const content = (
+    <Comp componentId={comp.id} style={{ opacity: style.opacity }} />
+  );
 
   return (
     <>

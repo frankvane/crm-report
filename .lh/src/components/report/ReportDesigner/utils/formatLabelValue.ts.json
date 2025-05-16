@@ -1,24 +1,20 @@
 {
-    "sourceFile": "src/components/report/ReportDesigner/components/widgets/formatLabelValue.ts",
+    "sourceFile": "src/components/report/ReportDesigner/utils/formatLabelValue.ts",
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 1,
             "patches": [
                 {
-                    "date": 1747351237893,
+                    "date": 1747355330870,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
                 },
                 {
-                    "date": 1747351277047,
+                    "date": 1747355368706,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,5 +49,5 @@\n       }\r\n     }\r\n   }\r\n   return displayText;\r\n-}\n\\ No newline at end of file\n+}\r\n"
-                },
-                {
-                    "date": 1747355311118,
-                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,53 +1,1 @@\n-export function formatLabelValue(\r\n-  value: any,\r\n-  dataBinding: any,\r\n-  numeral: any,\r\n-  dayjs: any\r\n-) {\r\n-  let displayText = value;\r\n-  const format = dataBinding?.format;\r\n-  const pattern = dataBinding?.formatPattern;\r\n-  if (displayText !== undefined && displayText !== null) {\r\n-    if (format === \"number\" && pattern && !isNaN(Number(displayText))) {\r\n-      displayText = numeral(displayText).format(pattern);\r\n-    } else if (format === \"percent\") {\r\n-      if (pattern && pattern.includes(\"%\")) {\r\n-        displayText = numeral(displayText).format(pattern);\r\n-      } else {\r\n-        const num = Number(displayText);\r\n-        if (!isNaN(num)) {\r\n-          displayText =\r\n-            (num * 100).toFixed(\r\n-              pattern ? parseInt(pattern.replace(/[^0-9]/g, \"\")) || 0 : 2\r\n-            ) + \"%\";\r\n-        }\r\n-      }\r\n-    } else if (format === \"currency\") {\r\n-      const symbol = pattern && pattern.includes(\"$\") ? \"$\" : \"￥\";\r\n-      if (pattern) {\r\n-        displayText =\r\n-          symbol + numeral(displayText).format(pattern.replace(/^[￥$]/, \"\"));\r\n-      } else {\r\n-        displayText = symbol + numeral(displayText).format(\"0,0.00\");\r\n-      }\r\n-    } else if (format === \"date\" && pattern) {\r\n-      displayText = dayjs(displayText).format(pattern);\r\n-    } else if (format === \"custom\" && dataBinding?.customFormat) {\r\n-      try {\r\n-        const custom = dataBinding.customFormat.trim();\r\n-        let fn;\r\n-        if (custom.startsWith(\"function\") || custom.startsWith(\"value =>\")) {\r\n-          // eslint-disable-next-line no-eval\r\n-          fn = eval(\"(\" + custom + \")\");\r\n-        } else {\r\n-          // eslint-disable-next-line no-new-func\r\n-          fn = new Function(\"value\", \"return \" + custom + \";\");\r\n-        }\r\n-        displayText = fn(displayText);\r\n-      } catch {\r\n-        // 格式化失败，显示原始内容\r\n-      }\r\n-    }\r\n-  }\r\n-  return displayText;\r\n-}\r\n+ \n\\ No newline at end of file\n"
                 }
             ],
-            "date": 1747351237893,
+            "date": 1747355330870,
             "name": "Commit-0",
             "content": "export function formatLabelValue(\r\n  value: any,\r\n  dataBinding: any,\r\n  numeral: any,\r\n  dayjs: any\r\n) {\r\n  let displayText = value;\r\n  const format = dataBinding?.format;\r\n  const pattern = dataBinding?.formatPattern;\r\n  if (displayText !== undefined && displayText !== null) {\r\n    if (format === \"number\" && pattern && !isNaN(Number(displayText))) {\r\n      displayText = numeral(displayText).format(pattern);\r\n    } else if (format === \"percent\") {\r\n      if (pattern && pattern.includes(\"%\")) {\r\n        displayText = numeral(displayText).format(pattern);\r\n      } else {\r\n        const num = Number(displayText);\r\n        if (!isNaN(num)) {\r\n          displayText =\r\n            (num * 100).toFixed(\r\n              pattern ? parseInt(pattern.replace(/[^0-9]/g, \"\")) || 0 : 2\r\n            ) + \"%\";\r\n        }\r\n      }\r\n    } else if (format === \"currency\") {\r\n      const symbol = pattern && pattern.includes(\"$\") ? \"$\" : \"￥\";\r\n      if (pattern) {\r\n        displayText =\r\n          symbol + numeral(displayText).format(pattern.replace(/^[￥$]/, \"\"));\r\n      } else {\r\n        displayText = symbol + numeral(displayText).format(\"0,0.00\");\r\n      }\r\n    } else if (format === \"date\" && pattern) {\r\n      displayText = dayjs(displayText).format(pattern);\r\n    } else if (format === \"custom\" && dataBinding?.customFormat) {\r\n      try {\r\n        const custom = dataBinding.customFormat.trim();\r\n        let fn;\r\n        if (custom.startsWith(\"function\") || custom.startsWith(\"value =>\")) {\r\n          // eslint-disable-next-line no-eval\r\n          fn = eval(\"(\" + custom + \")\");\r\n        } else {\r\n          // eslint-disable-next-line no-new-func\r\n          fn = new Function(\"value\", \"return \" + custom + \";\");\r\n        }\r\n        displayText = fn(displayText);\r\n      } catch {\r\n        // 格式化失败，显示原始内容\r\n      }\r\n    }\r\n  }\r\n  return displayText;\r\n}"
         }

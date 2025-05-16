@@ -1,38 +1,84 @@
-import type { ColumnsType } from "antd/es/table";
 import React from "react";
 import { Table } from "antd";
+import dayjs from "dayjs";
+import { formatLabelValue } from "@report/ReportDesigner/utils";
+import numeral from "numeral";
+import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
+import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface TableWidgetProps {
-  columns?: ColumnsType<any>;
+  componentId?: string;
+  columns?: any[];
   dataSource?: any[];
+  dataSourceKey?: string;
+  pagination?: boolean;
+  bordered?: boolean;
+  size?: "middle" | "small";
   style?: React.CSSProperties;
 }
 
-const defaultColumns: ColumnsType<any> = [
-  { title: "姓名", dataIndex: "name", key: "name" },
-  { title: "年龄", dataIndex: "age", key: "age" },
-  { title: "地址", dataIndex: "address", key: "address" },
-];
+const TableWidget: React.FC<TableWidgetProps> = (props) => {
+  // 支持 componentId 响应式获取配置
+  const allComponents = useReportDesignerStore((s) => s.components);
+  const comp = props.componentId
+    ? allComponents.find((c) => c.id === props.componentId)
+    : undefined;
+  // 以全局配置为主，props 兜底
+  const dataBinding = comp?.props?.dataBinding || {};
+  const columns = dataBinding.columns || props.columns || [];
+  const dataSourceKey = dataBinding.dataSource || props.dataSourceKey;
+  console.log("dataSourceKey", dataSourceKey);
+  const pagination = props.pagination ?? false;
+  const bordered = props.bordered ?? false;
+  const size = props.size;
+  const style = props.style || {};
 
-const defaultData = [
-  { key: 1, name: "张三", age: 28, address: "北京" },
-  { key: 2, name: "李四", age: 32, address: "上海" },
-];
+  // 获取数据源
+  const dataSources = useDataSourceStore((s) => s.dataSources);
+  const dataSource =
+    (dataSources.find((ds) => ds.key === dataSourceKey) as any)?.data ||
+    props.dataSource ||
+    [];
 
-const TableWidget: React.FC<TableWidgetProps> = ({
-  columns = defaultColumns,
-  dataSource = defaultData,
-  style = {},
-}) => {
+  // 只保留 visible 的列，并转换为 antd columns
+  const antdColumns = columns
+    .filter((col: any) => col.visible !== false)
+    .map((col: any) => ({
+      title: col.label,
+      dataIndex: col.field,
+      key: col.field,
+      align: col.align,
+      width: col.width,
+      render: (value: any, record: any) => {
+        let displayValue = value;
+        if (col.expression) {
+          try {
+            // eslint-disable-next-line no-new-func
+            const fn = new Function("record", "value", col.expression);
+            displayValue = fn(record, value);
+          } catch {
+            // 表达式错误，显示原值
+          }
+        }
+        displayValue = formatLabelValue(displayValue, col, numeral, dayjs);
+        return displayValue;
+      },
+    }));
+
+  console.log("antdColumns", antdColumns);
+  console.log("dataSource", dataSource);
   return (
     <Table
-      columns={columns}
+      columns={antdColumns}
       dataSource={dataSource}
-      pagination={false}
-      bordered
-      size="small"
+      pagination={pagination ? undefined : false}
+      bordered={bordered}
+      size={size}
       style={{ width: "100%", ...style, borderRadius: 4 }}
       scroll={{ x: true }}
+      rowKey={(record: any) =>
+        record.key || record.id || (columns[0] && record[columns[0].field])
+      }
     />
   );
 };

@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/store/dataSourceStore.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747364203184,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747364212683,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -75,9 +75,11 @@\n       let data: any[] = [];\r\n       try {\r\n         const respAll = await fetch(ds.url);\r\n         data = await respAll.json();\r\n-      } catch {}\r\n+      } catch (e) {\r\n+        // ignore\r\n+      }\r\n       set((state) => ({\r\n         dataSources: state.dataSources.map((d) =>\r\n           d.key === key ? { ...d, fields, sample, data } : d\r\n         ),\r\n"
+                },
+                {
+                    "date": 1747364225688,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -75,11 +75,9 @@\n       let data: any[] = [];\r\n       try {\r\n         const respAll = await fetch(ds.url);\r\n         data = await respAll.json();\r\n-      } catch (e) {\r\n-        // ignore\r\n-      }\r\n+      } catch {}\r\n       set((state) => ({\r\n         dataSources: state.dataSources.map((d) =>\r\n           d.key === key ? { ...d, fields, sample, data } : d\r\n         ),\r\n"
+                },
+                {
+                    "date": 1747364294291,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,9 +49,13 @@\n   },\r\n ];\r\n \r\n export const useDataSourceStore = create<DataSourceStoreState>((set, get) => ({\r\n-  dataSources: initialDataSources.map((ds) => ({ ...ds, fields: [], data: [] })),\r\n+  dataSources: initialDataSources.map((ds) => ({\r\n+    ...ds,\r\n+    fields: [],\r\n+    data: [],\r\n+  })),\r\n   addDataSource: (ds) =>\r\n     set((state) => ({\r\n       dataSources: [...state.dataSources, ds],\r\n     })),\r\n"
+                }
+            ],
+            "date": 1747364203184,
+            "name": "Commit-0",
+            "content": "import { create } from \"zustand\";\r\n\r\nexport interface DataSource {\r\n  key: string; // 唯一标识，如 'posts'\r\n  name: string; // 显示名，如 '文章'\r\n  url: string; // API 地址\r\n  fields: string[]; // 字段名列表\r\n  sample?: any; // 示例数据\r\n  data?: any[]; // 全量数据\r\n}\r\n\r\ninterface DataSourceStoreState {\r\n  dataSources: DataSource[];\r\n  addDataSource: (ds: DataSource) => void;\r\n  removeDataSource: (key: string) => void;\r\n  fetchFields: (key: string) => Promise<void>;\r\n}\r\n\r\nconst initialDataSources: Omit<DataSource, \"fields\" | \"data\">[] = [\r\n  {\r\n    key: \"posts\",\r\n    name: \"文章\",\r\n    url: \"https://jsonplaceholder.typicode.com/posts\",\r\n  },\r\n  {\r\n    key: \"comments\",\r\n    name: \"评论\",\r\n    url: \"https://jsonplaceholder.typicode.com/comments\",\r\n  },\r\n  {\r\n    key: \"albums\",\r\n    name: \"相册\",\r\n    url: \"https://jsonplaceholder.typicode.com/albums\",\r\n  },\r\n  {\r\n    key: \"photos\",\r\n    name: \"照片\",\r\n    url: \"https://jsonplaceholder.typicode.com/photos\",\r\n  },\r\n  {\r\n    key: \"todos\",\r\n    name: \"待办\",\r\n    url: \"https://jsonplaceholder.typicode.com/todos\",\r\n  },\r\n  {\r\n    key: \"users\",\r\n    name: \"用户\",\r\n    url: \"https://jsonplaceholder.typicode.com/users\",\r\n  },\r\n];\r\n\r\nexport const useDataSourceStore = create<DataSourceStoreState>((set, get) => ({\r\n  dataSources: initialDataSources.map((ds) => ({ ...ds, fields: [], data: [] })),\r\n  addDataSource: (ds) =>\r\n    set((state) => ({\r\n      dataSources: [...state.dataSources, ds],\r\n    })),\r\n  removeDataSource: (key) =>\r\n    set((state) => ({\r\n      dataSources: state.dataSources.filter((ds) => ds.key !== key),\r\n    })),\r\n  fetchFields: async (key) => {\r\n    const ds = get().dataSources.find((d) => d.key === key);\r\n    if (!ds) return;\r\n    try {\r\n      // 拉取一条示例\r\n      const resp = await fetch(`${ds.url}/1`);\r\n      const sample = await resp.json();\r\n      const fields = sample ? Object.keys(sample) : [];\r\n      // 拉取全部数据\r\n      let data: any[] = [];\r\n      try {\r\n        const respAll = await fetch(ds.url);\r\n        data = await respAll.json();\r\n      } catch {}\r\n      set((state) => ({\r\n        dataSources: state.dataSources.map((d) =>\r\n          d.key === key ? { ...d, fields, sample, data } : d\r\n        ),\r\n      }));\r\n    } catch {\r\n      // ignore\r\n    }\r\n  },\r\n}));\r\n\r\n// 启动时自动拉取所有字段结构\r\n(async () => {\r\n  for (const ds of initialDataSources) {\r\n    await useDataSourceStore.getState().fetchFields(ds.key);\r\n  }\r\n})();\r\n"
+        }
+    ]
+}
