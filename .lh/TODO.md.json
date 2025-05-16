@@ -1,0 +1,26 @@
+{
+    "sourceFile": "TODO.md",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747407509176,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747407546552,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,3 @@\n # 数据相关\r\n+\r\n+## 打印预览\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747407618854,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,3 +1,5 @@\n # 数据相关\r\n \r\n ## 打印预览\r\n+\r\n+- [ ] 打印预览时处理了widgets组件，labelWidget，TextWidget，ImageWidget，TableWidget，应该是写死了mockData的user等信息，需要修改，应该是动态的\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747407509176,
+            "name": "Commit-0",
+            "content": "# 数据相关"
+        }
+    ]
+}
