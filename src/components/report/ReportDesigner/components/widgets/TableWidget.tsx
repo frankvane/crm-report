@@ -120,8 +120,6 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
     itemRender: showPagination ? undefined : () => null, // 不显示分页控件
   };
 
-  console.log(dataSource);
-
   return (
     <Table
       columns={antdColumns}

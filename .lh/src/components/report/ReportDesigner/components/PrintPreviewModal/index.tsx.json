@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 9,
+            "activePatchIndex": 11,
             "patches": [
                 {
                     "date": 1747403688628,
@@ -44,6 +44,14 @@
                 {
                     "date": 1747405033860,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,15 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{\r\n-        background: \"#fff\",\r\n-        minHeight: 600,\r\n-        overflow: \"auto\",\r\n-        padding: 0,\r\n-      }}\r\n-      destroyOnClose\r\n+\r\n     >\r\n       <div\r\n         ref={printRef}\r\n         style={{\r\n"
+                },
+                {
+                    "date": 1747406236205,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,22 +49,19 @@\n   };\r\n \r\n   return (\r\n     <Modal\r\n-      title=\"打印预览\"\r\n+      title={null}\r\n       open={visible}\r\n       onCancel={onClose}\r\n       width={modalWidth}\r\n-      footer={[\r\n-        <Button key=\"print\" type=\"primary\" onClick={handlePrint}>\r\n-          打印\r\n-        </Button>,\r\n-        <Button key=\"close\" onClick={onClose}>\r\n-          关闭\r\n-        </Button>,\r\n-      ]}\r\n+      footer={null}\r\n       style={{ top: 32 }}\r\n     >\r\n+      <div style={{ textAlign: 'right', marginBottom: 16 }}>\r\n+        <Button type=\"primary\" onClick={handlePrint}>打印</Button>\r\n+        <Button onClick={onClose} style={{ marginLeft: 8 }}>关闭</Button>\r\n+      </div>\r\n       <div\r\n         ref={printRef}\r\n         style={{\r\n           width: canvasConfig.width,\r\n"
+                },
+                {
+                    "date": 1747406530012,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -49,23 +49,22 @@\n   };\n \n   return (\n     <Modal\n-      title={null}\n+      title=\"打印预览\"\n       open={visible}\n       onCancel={onClose}\n       width={modalWidth}\n-      footer={null}\n+      footer={[\n+        <Button key=\"print\" type=\"primary\" onClick={handlePrint}>\n+          打印\n+        </Button>,\n+        <Button key=\"close\" onClick={onClose}>\n+          关闭\n+        </Button>,\n+      ]}\n       style={{ top: 32 }}\n     >\n-      <div style={{ textAlign: \"right\", marginBottom: 16 }}>\n-        <Button type=\"primary\" onClick={handlePrint}>\n-          打印\n-        </Button>\n-        <Button onClick={onClose} style={{ marginLeft: 8 }}>\n-          关闭\n-        </Button>\n-      </div>\n       <div\n         ref={printRef}\n         style={{\n           width: canvasConfig.width,\n"
                 }
             ],
             "date": 1747403688628,
