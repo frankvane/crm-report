@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/schemas/imageSchema.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747376184951,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747376205116,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,8 +11,35 @@\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n     { key: \"field\", label: \"字段\", type: \"select\", options: [] },\n+    {\n+      key: \"format\",\n+      label: \"格式化\",\n+      type: \"select\",\n+      options: [\n+        { label: \"数字\", value: \"number\" },\n+        { label: \"日期\", value: \"date\" },\n+        { label: \"百分比\", value: \"percent\" },\n+        { label: \"货币\", value: \"currency\" },\n+        { label: \"自定义\", value: \"custom\" },\n+      ],\n+      default: \"number\",\n+    },\n+    {\n+      key: \"customFormat\",\n+      label: \"自定义格式化\",\n+      type: \"textarea\",\n+      default: \"\",\n+    },\n+    { key: \"expression\", label: \"表达式\", type: \"textarea\" },\n+    { key: \"mock\", label: \"模拟数据\", type: \"json\" },\n+    {\n+      key: \"formatPattern\",\n+      label: \"格式字符串\",\n+      type: \"input\",\n+      default: \"\",\n+    },\n   ],\n };\n \n registerComponentSchema(\"image\", imageSchema);\n"
+                },
+                {
+                    "date": 1747376308888,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,35 +11,9 @@\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n     { key: \"field\", label: \"字段\", type: \"select\", options: [] },\n-    {\n-      key: \"format\",\n-      label: \"格式化\",\n-      type: \"select\",\n-      options: [\n-        { label: \"数字\", value: \"number\" },\n-        { label: \"日期\", value: \"date\" },\n-        { label: \"百分比\", value: \"percent\" },\n-        { label: \"货币\", value: \"currency\" },\n-        { label: \"自定义\", value: \"custom\" },\n-      ],\n-      default: \"number\",\n-    },\n-    {\n-      key: \"customFormat\",\n-      label: \"自定义格式化\",\n-      type: \"textarea\",\n-      default: \"\",\n-    },\n-    { key: \"expression\", label: \"表达式\", type: \"textarea\" },\n-    { key: \"mock\", label: \"模拟数据\", type: \"json\" },\n-    {\n-      key: \"formatPattern\",\n-      label: \"格式字符串\",\n-      type: \"input\",\n-      default: \"\",\n-    },\n+\n   ],\n };\n \n registerComponentSchema(\"image\", imageSchema);\n"
+                }
+            ],
+            "date": 1747376184951,
+            "name": "Commit-0",
+            "content": "import { baseSchema } from \"./baseSchema\";\nimport { registerComponentSchema } from \"./schemaRegistry\";\n\nconst imageSchema = {\n  base: baseSchema,\n  standard: [\n    { key: \"src\", label: \"图片地址\", type: \"input\" },\n    { key: \"width\", label: \"宽度\", type: \"number\" },\n    { key: \"height\", label: \"高度\", type: \"number\" },\n    { key: \"alt\", label: \"替代文本\", type: \"input\" },\n  ],\n  dataBinding: [\n    { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n    { key: \"field\", label: \"字段\", type: \"select\", options: [] },\n   \n  ],\n};\n\nregisterComponentSchema(\"image\", imageSchema);\n\nexport default imageSchema;\n"
+        }
+    ]
+}

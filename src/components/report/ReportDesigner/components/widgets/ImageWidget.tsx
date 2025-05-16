@@ -1,21 +1,50 @@
 import { Image } from "antd";
 import React from "react";
+import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
+import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface ImageWidgetProps {
-  src?: string;
+  componentId?: string;
   width?: number | string;
   height?: number | string;
   alt?: string;
   style?: React.CSSProperties;
+  dataBinding?: {
+    dataSource?: string;
+    field?: string;
+  };
 }
 
-const ImageWidget: React.FC<ImageWidgetProps> = ({
-  src = "https://via.placeholder.com/120x40?text=图片",
-  width = 120,
-  height = 40,
-  alt = "图片",
-  style = {},
-}) => {
+const ImageWidget: React.FC<ImageWidgetProps> = (props) => {
+  // 支持 componentId 响应式获取配置
+  const allComponents = useReportDesignerStore((s) => s.components);
+  const comp = props.componentId
+    ? allComponents.find((c) => c.id === props.componentId)
+    : undefined;
+  const effectiveProps = comp ? { ...props, ...comp.props } : props;
+
+  const {
+    width = 120,
+    height = 40,
+    alt = "图片",
+    style = {},
+    dataBinding,
+  } = effectiveProps;
+
+  // 获取全局数据源
+  const dataSources = useDataSourceStore((s) => s.dataSources);
+
+  let src = "https://via.placeholder.com/120x40?text=图片";
+  if (dataBinding?.dataSource && dataBinding?.field) {
+    const ds = dataSources.find((d) => d.key === dataBinding.dataSource);
+    if (ds && ds.sample) {
+      const val = ds.sample[dataBinding.field];
+      if (typeof val === "string" && val.trim()) {
+        src = val;
+      }
+    }
+  }
+
   return (
     <Image
       src={src}

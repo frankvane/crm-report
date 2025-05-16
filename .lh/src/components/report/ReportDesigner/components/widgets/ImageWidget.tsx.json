@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/widgets/ImageWidget.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747375882973,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747376073648,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,8 +14,10 @@\n   style?: React.CSSProperties;\r\n }\r\n \r\n const getValueFromData = (data: any, dataBinding: any) => {\r\n+  console.log(\"dataBinding\", dataBinding);\r\n+  console.log(\"data\", data);\r\n   if (!dataBinding) return \"\";\r\n   // 优先expression\r\n   if (dataBinding.expression) {\r\n     try {\r\n"
+                },
+                {
+                    "date": 1747376091780,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,8 @@\n }\r\n \r\n const getValueFromData = (data: any, dataBinding: any) => {\r\n   console.log(\"dataBinding\", dataBinding);\r\n-  console.log(\"data\", data);\r\n   if (!dataBinding) return \"\";\r\n   // 优先expression\r\n   if (dataBinding.expression) {\r\n     try {\r\n"
+                }
+            ],
+            "date": 1747375882972,
+            "name": "Commit-0",
+            "content": "import { Image } from \"antd\";\r\nimport React from \"react\";\r\n\r\ninterface ImageWidgetProps {\r\n  data?: any; // 传入的数据对象\r\n  dataBinding: {\r\n    dataSource?: string;\r\n    field?: string;\r\n    expression?: string;\r\n  };\r\n  width?: number | string;\r\n  height?: number | string;\r\n  alt?: string;\r\n  style?: React.CSSProperties;\r\n}\r\n\r\nconst getValueFromData = (data: any, dataBinding: any) => {\r\n  if (!dataBinding) return '';\r\n  // 优先expression\r\n  if (dataBinding.expression) {\r\n    try {\r\n      // eslint-disable-next-line no-new-func\r\n      return new Function('data', `return (${dataBinding.expression})`)(data) || '';\r\n    } catch {\r\n      return '';\r\n    }\r\n  }\r\n  // 其次field\r\n  if (dataBinding.field && data) {\r\n    return data[dataBinding.field] || '';\r\n  }\r\n  return '';\r\n};\r\n\r\nconst ImageWidget: React.FC<ImageWidgetProps> = ({\r\n  data = {},\r\n  dataBinding = {},\r\n  width = 120,\r\n  height = 40,\r\n  alt = \"图片\",\r\n  style = {},\r\n}) => {\r\n  const src = getValueFromData(data, dataBinding) || \"https://via.placeholder.com/120x40?text=图片\";\r\n  return (\r\n    <Image\r\n      src={src}\r\n      width={width}\r\n      height={height}\r\n      alt={alt}\r\n      style={{ ...style, objectFit: \"contain\", borderRadius: 4 }}\r\n      preview={false}\r\n      fallback=\"https://via.placeholder.com/120x40?text=图片\"\r\n    />\r\n  );\r\n};\r\n\r\nexport default ImageWidget;\r\n"
+        }
+    ]
+}

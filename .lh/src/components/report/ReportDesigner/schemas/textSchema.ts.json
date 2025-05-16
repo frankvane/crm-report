@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1747230234143,
@@ -20,6 +20,14 @@
                 {
                     "date": 1747230647380,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import { registerComponentSchema } from './schemaRegistry';\r\n+import { registerComponentSchema } from \"./schemaRegistry\";\r\n \r\n const textSchema = {\r\n   base: [\r\n     { key: \"id\", label: \"ID\", type: \"text\", disabled: true },\r\n@@ -36,5 +36,5 @@\n     { key: \"mock\", label: \"模拟数据\", type: \"input\" },\r\n   ],\r\n };\r\n \r\n-registerComponentSchema('text', textSchema);\r\n+registerComponentSchema(\"text\", textSchema);\r\n"
+                },
+                {
+                    "date": 1747376314694,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,11 +12,35 @@\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n     { key: \"field\", label: \"字段\", type: \"select\", options: [] },\n-    { key: \"format\", label: \"格式化\", type: \"input\" },\n-    { key: \"expression\", label: \"表达式\", type: \"input\" },\n-    { key: \"mock\", label: \"模拟数据\", type: \"input\" },\n+    {\n+      key: \"format\",\n+      label: \"格式化\",\n+      type: \"select\",\n+      options: [\n+        { label: \"数字\", value: \"number\" },\n+        { label: \"日期\", value: \"date\" },\n+        { label: \"百分比\", value: \"percent\" },\n+        { label: \"货币\", value: \"currency\" },\n+        { label: \"自定义\", value: \"custom\" },\n+      ],\n+      default: \"number\",\n+    },\n+    {\n+      key: \"customFormat\",\n+      label: \"自定义格式化\",\n+      type: \"textarea\",\n+      default: \"\",\n+    },\n+    { key: \"expression\", label: \"表达式\", type: \"textarea\" },\n+    { key: \"mock\", label: \"模拟数据\", type: \"json\" },\n+    {\n+      key: \"formatPattern\",\n+      label: \"格式字符串\",\n+      type: \"input\",\n+      default: \"\",\n+    },\n   ],\n };\n \n registerComponentSchema(\"text\", textSchema);\n"
+                },
+                {
+                    "date": 1747376344005,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,35 +12,11 @@\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n     { key: \"field\", label: \"字段\", type: \"select\", options: [] },\n-    {\n-      key: \"format\",\n-      label: \"格式化\",\n-      type: \"select\",\n-      options: [\n-        { label: \"数字\", value: \"number\" },\n-        { label: \"日期\", value: \"date\" },\n-        { label: \"百分比\", value: \"percent\" },\n-        { label: \"货币\", value: \"currency\" },\n-        { label: \"自定义\", value: \"custom\" },\n-      ],\n-      default: \"number\",\n-    },\n-    {\n-      key: \"customFormat\",\n-      label: \"自定义格式化\",\n-      type: \"textarea\",\n-      default: \"\",\n-    },\n-    { key: \"expression\", label: \"表达式\", type: \"textarea\" },\n-    { key: \"mock\", label: \"模拟数据\", type: \"json\" },\n-    {\n-      key: \"formatPattern\",\n-      label: \"格式字符串\",\n-      type: \"input\",\n-      default: \"\",\n-    },\n+    { key: \"format\", label: \"格式化\", type: \"input\" },\n+    { key: \"expression\", label: \"表达式\", type: \"input\" },\n+    { key: \"mock\", label: \"模拟数据\", type: \"input\" },\n   ],\n };\n \n registerComponentSchema(\"text\", textSchema);\n"
                 }
             ],
             "date": 1747230234143,
