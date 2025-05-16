@@ -25,6 +25,8 @@ interface LabelWidgetProps {
     customFormat?: string;
     [key: string]: any;
   };
+  user?: any;
+  data?: any;
 }
 
 const LabelWidget: React.FC<LabelWidgetProps> = (props) => {
@@ -47,7 +49,11 @@ const LabelWidget: React.FC<LabelWidgetProps> = (props) => {
 
   const dataSources = useDataSourceStore((s) => s.dataSources);
   let displayText = text;
-  if (dataBinding?.dataSource && dataBinding?.field) {
+  if (effectiveProps.user && dataBinding?.field) {
+    displayText = effectiveProps.user[dataBinding.field] ?? text;
+  } else if (effectiveProps.data && dataBinding?.field) {
+    displayText = effectiveProps.data[dataBinding.field] ?? text;
+  } else if (dataBinding?.dataSource && dataBinding?.field) {
     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);
     if (ds && ds.sample) {
       displayText = ds.sample[dataBinding.field] ?? text;

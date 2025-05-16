@@ -13,6 +13,8 @@ interface ImageWidgetProps {
     dataSource?: string;
     field?: string;
   };
+  user?: any;
+  data?: any;
 }
 
 const ImageWidget: React.FC<ImageWidgetProps> = (props) => {
@@ -29,13 +31,27 @@ const ImageWidget: React.FC<ImageWidgetProps> = (props) => {
     alt = "图片",
     style = {},
     dataBinding,
+    user,
+    data,
   } = effectiveProps;
 
   // 获取全局数据源
   const dataSources = useDataSourceStore((s) => s.dataSources);
 
   let src = "https://via.placeholder.com/120x40?text=图片";
-  if (dataBinding?.dataSource && dataBinding?.field) {
+  // 优先使用 props.user 或 props.data
+  if (user && dataBinding?.field) {
+    const val = user[dataBinding.field];
+    if (typeof val === "string" && val.trim()) {
+      src = val;
+    }
+  } else if (data && dataBinding?.field) {
+    const val = data[dataBinding.field];
+    if (typeof val === "string" && val.trim()) {
+      src = val;
+    }
+  } else if (dataBinding?.dataSource && dataBinding?.field) {
+    // 回退到 store 数据源
     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);
     if (ds && ds.sample) {
       const val = ds.sample[dataBinding.field];

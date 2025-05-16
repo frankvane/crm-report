@@ -23,40 +23,56 @@ export default function PrintPreview() {
   // 只取第一个用户（如张三）
   const usersDS = dataSources.find((ds) => ds.key === "users");
   const users = usersDS?.data || [];
-  const currentUser = users[0];
 
-  // 明细表分页
-  const orders = currentUser?.orders || [];
-  const orderPageSize = 5;
-  const orderTotalPages = Math.ceil(orders.length / orderPageSize) || 1;
-
-  // 纵向渲染所有分页内容
-  const pages = Array.from({ length: orderTotalPages }, (_, i) => {
-    // 为每一页的orders加唯一_rowKey
-    const pageOrders = orders.slice(i * orderPageSize, (i + 1) * orderPageSize);
-    return (
-      <div
-        key={i}
-        style={{
-          width: canvasConfig.width,
-          height: canvasConfig.height,
-          background: "#fff",
-          margin: "0 auto 32px auto",
-          position: "relative",
-          overflow: "hidden",
-          pageBreakAfter: "always",
-          boxShadow: "0 0 8px #ccc",
-        }}
-      >
-        {components
-          .filter((c) => c.visible !== false)
-          .map((comp) => {
-            const Comp = widgetMap[comp.type];
-            if (!Comp) return null;
-            if (comp.type === "table") {
+  // 多用户分页，每个用户的订单也分页
+  const pages = users.flatMap((user, userIdx) => {
+    const orders = user?.orders || [];
+    const orderPageSize = 5;
+    const orderTotalPages = Math.ceil(orders.length / orderPageSize) || 1;
+    return Array.from({ length: orderTotalPages }, (_, i) => {
+      const pageOrders = orders.slice(
+        i * orderPageSize,
+        (i + 1) * orderPageSize
+      );
+      return (
+        <div
+          key={`user${userIdx}-page${i}`}
+          style={{
+            width: canvasConfig.width,
+            height: canvasConfig.height,
+            background: "#fff",
+            margin: "0 auto 32px auto",
+            position: "relative",
+            overflow: "hidden",
+            pageBreakAfter: "always",
+            boxShadow: "0 0 8px #ccc",
+          }}
+        >
+          {components
+            .filter((c) => c.visible !== false)
+            .map((comp) => {
+              const Comp = widgetMap[comp.type];
+              if (!Comp) return null;
+              if (comp.type === "table") {
+                return (
+                  <div
+                    key={`${comp.id}-user${userIdx}-page${i}`}
+                    style={{
+                      position: "absolute",
+                      left: comp.x,
+                      top: comp.y,
+                      width: comp.width,
+                      height: comp.height,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <Comp componentId={comp.id} dataSource={pageOrders} />
+                  </div>
+                );
+              }
               return (
                 <div
-                  key={`${comp.id}-page${i}`}
+                  key={comp.id}
                   style={{
                     position: "absolute",
                     left: comp.x,
@@ -66,28 +82,13 @@ export default function PrintPreview() {
                     pointerEvents: "none",
                   }}
                 >
-                  <Comp componentId={comp.id} dataSource={pageOrders} />
+                  <Comp componentId={comp.id} user={user} />
                 </div>
               );
-            }
-            return (
-              <div
-                key={comp.id}
-                style={{
-                  position: "absolute",
-                  left: comp.x,
-                  top: comp.y,
-                  width: comp.width,
-                  height: comp.height,
-                  pointerEvents: "none",
-                }}
-              >
-                <Comp componentId={comp.id} user={currentUser} />
-              </div>
-            );
-          })}
-      </div>
-    );
+            })}
+        </div>
+      );
+    });
   });
 
   return <div>{pages}</div>;

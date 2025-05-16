@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1747351259549,
@@ -24,6 +24,18 @@
                 {
                     "date": 1747362323468,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,10 +6,12 @@\n import React from \"react\";\n import dayjs from \"dayjs\";\n import numeral from \"numeral\";\n import { useDataSourceStore } from \"@/components/report/ReportDesigner/store/dataSourceStore\";\n+import { useReportDesignerStore } from \"@/components/report/ReportDesigner/store\";\n \n interface LabelWidgetProps {\n+  componentId?: string;\n   text?: string;\n   color?: string;\n   fontSize?: number;\n   background?: string;\n@@ -24,17 +26,26 @@\n     [key: string]: any;\n   };\n }\n \n-const LabelWidget: React.FC<LabelWidgetProps> = ({\n-  text = \"标签\",\n-  color = \"#1976d2\",\n-  fontSize = 16,\n-  background = \"#fff\",\n-  align = \"left\",\n-  style = {},\n-  dataBinding,\n-}) => {\n+const LabelWidget: React.FC<LabelWidgetProps> = (props) => {\n+  // 支持 componentId 响应式获取配置\n+  const allComponents = useReportDesignerStore((s) => s.components);\n+  const comp = props.componentId\n+    ? allComponents.find((c) => c.id === props.componentId)\n+    : undefined;\n+  const effectiveProps = comp ? { ...props, ...comp.props } : props;\n+\n+  const {\n+    text = \"标签\",\n+    color = \"#1976d2\",\n+    fontSize = 16,\n+    background = \"#fff\",\n+    align = \"left\",\n+    style = {},\n+    dataBinding,\n+  } = effectiveProps;\n+\n   const dataSources = useDataSourceStore((s) => s.dataSources);\n   let displayText = text;\n   if (dataBinding?.dataSource && dataBinding?.field) {\n     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\n"
+                },
+                {
+                    "date": 1747407187268,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,8 +44,9 @@\n     style = {},\n     dataBinding,\n   } = effectiveProps;\n \n+  console.log(props)\n   const dataSources = useDataSourceStore((s) => s.dataSources);\n   let displayText = text;\n   if (dataBinding?.dataSource && dataBinding?.field) {\n     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\n"
+                },
+                {
+                    "date": 1747407206399,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,9 +44,8 @@\n     style = {},\n     dataBinding,\n   } = effectiveProps;\n \n-  console.log(props);\n   const dataSources = useDataSourceStore((s) => s.dataSources);\n   let displayText = text;\n   if (dataBinding?.dataSource && dataBinding?.field) {\n     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\n"
+                },
+                {
+                    "date": 1747407340407,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,8 +24,10 @@\n     formatPattern?: string;\n     customFormat?: string;\n     [key: string]: any;\n   };\n+  user?: any;\n+  data?: any;\n }\n \n const LabelWidget: React.FC<LabelWidgetProps> = (props) => {\n   // 支持 componentId 响应式获取配置\n@@ -42,13 +44,19 @@\n     background = \"#fff\",\n     align = \"left\",\n     style = {},\n     dataBinding,\n+    user,\n+    data,\n   } = effectiveProps;\n \n   const dataSources = useDataSourceStore((s) => s.dataSources);\n   let displayText = text;\n-  if (dataBinding?.dataSource && dataBinding?.field) {\n+  if (effectiveProps.user && dataBinding?.field) {\n+    displayText = effectiveProps.user[dataBinding.field] ?? text;\n+  } else if (effectiveProps.data && dataBinding?.field) {\n+    displayText = effectiveProps.data[dataBinding.field] ?? text;\n+  } else if (dataBinding?.dataSource && dataBinding?.field) {\n     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\n     if (ds && ds.sample) {\n       displayText = ds.sample[dataBinding.field] ?? text;\n     }\n"
                 }
             ],
             "date": 1747351259549,

@@ -26,6 +26,8 @@ interface TextWidgetProps {
     expression?: string;
     mock?: string;
   };
+  user?: any;
+  data?: any;
 }
 
 const TextWidget: React.FC<TextWidgetProps> = (props) => {
@@ -48,11 +50,17 @@ const TextWidget: React.FC<TextWidgetProps> = (props) => {
     style = {},
     placeholder = "请输入内容",
     dataBinding,
+    user,
+    data,
   } = effectiveProps;
 
   const dataSources = useDataSourceStore((s) => s.dataSources);
   let displayText = text || placeholder;
-  if (dataBinding?.dataSource && dataBinding?.field) {
+  if (effectiveProps.user && dataBinding?.field) {
+    displayText = effectiveProps.user[dataBinding.field] ?? displayText;
+  } else if (effectiveProps.data && dataBinding?.field) {
+    displayText = effectiveProps.data[dataBinding.field] ?? displayText;
+  } else if (dataBinding?.dataSource && dataBinding?.field) {
     const ds = dataSources.find((d) => d.key === dataBinding.dataSource);
     if (ds && ds.sample) {
       displayText = ds.sample[dataBinding.field] ?? displayText;
