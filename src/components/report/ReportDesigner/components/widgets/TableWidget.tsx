@@ -19,6 +19,23 @@ interface TableWidgetProps {
   showPagination?: boolean;
 }
 
+// 嵌套路径解析工具，支持 a.b.c 形式，且遇到数组时合并所有元素的 key 字段
+function getNestedDataSource(rootData: any, path: string): any[] {
+  if (!path) return [];
+  const keys = path.split(".");
+  let result = rootData;
+  for (const key of keys) {
+    if (Array.isArray(result)) {
+      // 合并所有元素的 key 字段
+      result = result.flatMap((item) => item?.[key] || []);
+    } else {
+      result = result?.[key];
+    }
+    if (!result) break;
+  }
+  return Array.isArray(result) ? result : [];
+}
+
 const TableWidget: React.FC<TableWidgetProps> = (props) => {
   // 支持 componentId 响应式获取配置
   const allComponents = useReportDesignerStore((s) => s.components);
@@ -28,8 +45,9 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
   // 以全局配置为主，props 兜底
   const dataBinding = comp?.props?.dataBinding || {};
   const columns = dataBinding.columns || props.columns || [];
-  const dataSourceKey = dataBinding.dataSource || props.dataSourceKey;
-  console.log("dataSourceKey", dataSourceKey);
+  // 分开处理 dataSourceKey 和 dataNode
+  const dataSourceKey = dataBinding.dataSource || props.dataSourceKey || "";
+  const dataNode = dataBinding.dataNode;
   const paginationEnabled = comp?.props?.pagination ?? props.pagination ?? true;
   const showPagination =
     comp?.props?.showPagination ?? props.showPagination ?? false;
@@ -38,23 +56,27 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
   const size = props.size;
   const style = props.style || {};
 
-  // 获取数据源
   const dataSources = useDataSourceStore((s) => s.dataSources);
-  const dataSource =
-    (dataSources.find((ds) => ds.key === dataSourceKey) as any)?.data ||
-    props.dataSource ||
-    [];
+
+  // 先找到主数据源
+  const rootData = (dataSources.find((ds) => ds.key === dataSourceKey) as any)
+    ?.data;
+  // 用 dataNode 递归找明细
+  let dataSource: any[] = [];
+  if (rootData && dataNode) {
+    dataSource = getNestedDataSource(rootData, dataNode);
+  } else if (rootData) {
+    dataSource = Array.isArray(rootData) ? rootData : [];
+  } else {
+    dataSource = props.dataSource || [];
+  }
 
   // 只保留 visible 的列，并转换为 antd columns
   const antdColumns = columns
     .filter((col: any) => col.visible !== false)
-    .map((col: any) => ({
-      title: col.label,
-      dataIndex: col.field,
-      key: col.field,
-      align: col.align,
-      width: col.width,
-      render: (value: any, record: any) => {
+    .map((col: any) => {
+      // 处理单元格内容
+      const render = (value: any, record: any) => {
         let displayValue = value;
         if (col.expression) {
           try {
@@ -67,8 +89,26 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
         }
         displayValue = formatLabelValue(displayValue, col, numeral, dayjs);
         return displayValue;
-      },
-    }));
+      };
+      // 处理单元格props（如样式、事件）
+      const onCell = () => {
+        const cellProps: any = {};
+        if (col.align) cellProps.style = { textAlign: col.align };
+        if (col.width)
+          cellProps.style = { ...(cellProps.style || {}), width: col.width };
+        // 其它props可在此扩展
+        return cellProps;
+      };
+      return {
+        title: col.label,
+        dataIndex: col.field,
+        key: col.field,
+        align: col.align,
+        width: col.width,
+        render, // 只返回内容，不返回props
+        onCell, // 所有props通过onCell返回
+      };
+    });
 
   const paginationConfig = {
     pageSize,

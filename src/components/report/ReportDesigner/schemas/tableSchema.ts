@@ -28,6 +28,7 @@ const tableSchema = {
   ],
   dataBinding: [
     { key: "dataSource", label: "数据源", type: "select", options: [] },
+    { key: "dataNode", label: "数据节点", type: "select", options: [] },
     {
       key: "columns",
       label: "字段映射",

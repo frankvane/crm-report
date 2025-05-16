@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 7,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1747356254199,
@@ -36,6 +36,14 @@
                 {
                     "date": 1747366579632,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,14 @@\n   base: baseSchema,\n   standard: [\n     // 只放结构/样式相关属性\n     { key: \"pagination\", label: \"分页\", type: \"switch\" },\n-    { key: \"showPagination\", label: \"显示分页控件\", type: \"switch\", default: true },\n+    {\n+      key: \"showPagination\",\n+      label: \"显示分页控件\",\n+      type: \"switch\",\n+      default: true,\n+    },\n     { key: \"bordered\", label: \"边框\", type: \"switch\" },\n     {\n       key: \"size\",\n       label: \"尺寸\",\n"
+                },
+                {
+                    "date": 1747389951749,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,8 +27,9 @@\n     { key: \"pageSize\", label: \"每页条数\", type: \"number\", default: 10 },\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n+    { key: \"dataNode\", label: \"数据节点\", type: \"select\", options: [] },\n     {\n       key: \"columns\",\n       label: \"字段映射\",\n       type: \"columns\", // 自定义类型，专为表格字段配置设计\n"
+                },
+                {
+                    "date": 1747396649040,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n     {\n       key: \"showPagination\",\n       label: \"显示分页控件\",\n       type: \"switch\",\n-      default: true,\n+      default: false,\n     },\n     { key: \"bordered\", label: \"边框\", type: \"switch\" },\n     {\n       key: \"size\",\n"
                 }
             ],
             "date": 1747356254199,

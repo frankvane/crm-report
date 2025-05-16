@@ -23,6 +23,22 @@ export function useCanvasDnd({
       if (over?.id === "canvas" && active.data?.current?.type) {
         const type = active.data.current.type;
         const id = `${type}_${Date.now()}`;
+        let props: any = {};
+        if (type === "label") {
+          props = { text: "新标签" };
+        } else if (type === "text") {
+          props = { text: "新文本" };
+        } else if (type === "image") {
+          props = { src: "" };
+        } else if (type === "table") {
+          props = {
+            dataBinding: {
+              dataSource: "users",
+              dataNode: "orders",
+              columns: [],
+            },
+          };
+        }
         addComponent({
           id,
           type,
@@ -33,7 +49,7 @@ export function useCanvasDnd({
           locked: false,
           visible: true,
           zindex: 1,
-          props: { text: type === "label" ? "新标签" : "新文本" },
+          props,
           resizable: true,
           rotatable: false,
           rotation: 0,

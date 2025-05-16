@@ -75,7 +75,7 @@ function ColumnsField({
       );
     if (item.type === "select") {
       const options =
-        item.key === "field" && dataSourceFields.length > 0
+        item.key === "field" && dataSourceFields && dataSourceFields.length > 0
           ? dataSourceFields
           : item.options || [];
       return (
