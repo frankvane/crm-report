@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1747356254199,
@@ -24,6 +24,18 @@
                 {
                     "date": 1747356864714,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,12 +11,13 @@\n       key: \"size\",\n       label: \"尺寸\",\n       type: \"select\",\n       options: [\n-        { label: \"默认\", value: \"default\" },\n         { label: \"中等\", value: \"middle\" },\n         { label: \"紧凑\", value: \"small\" },\n+        // 不再提供 default，保持与antd一致\n       ],\n+      // 说明：不选时为undefined，等同于antd的默认尺寸\n     },\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n"
+                },
+                {
+                    "date": 1747366097320,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,9 @@\n         // 不再提供 default，保持与antd一致\n       ],\n       // 说明：不选时为undefined，等同于antd的默认尺寸\n     },\n+    { key: \"pageSize\", label: \"每页条数\", type: \"number\", default: 10 },\n   ],\n   dataBinding: [\n     { key: \"dataSource\", label: \"数据源\", type: \"select\", options: [] },\n     {\n"
+                },
+                {
+                    "date": 1747366571521,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,8 +5,9 @@\n   base: baseSchema,\n   standard: [\n     // 只放结构/样式相关属性\n     { key: \"pagination\", label: \"分页\", type: \"switch\" },\n+    { key: \"showPagination\", label: \"显示分页控件\", type: \"switch\", default: true },\n     { key: \"bordered\", label: \"边框\", type: \"switch\" },\n     {\n       key: \"size\",\n       label: \"尺寸\",\n"
+                },
+                {
+                    "date": 1747366579632,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,14 @@\n   base: baseSchema,\n   standard: [\n     // 只放结构/样式相关属性\n     { key: \"pagination\", label: \"分页\", type: \"switch\" },\n-    { key: \"showPagination\", label: \"显示分页控件\", type: \"switch\", default: true },\n+    {\n+      key: \"showPagination\",\n+      label: \"显示分页控件\",\n+      type: \"switch\",\n+      default: true,\n+    },\n     { key: \"bordered\", label: \"边框\", type: \"switch\" },\n     {\n       key: \"size\",\n       label: \"尺寸\",\n"
                 }
             ],
             "date": 1747356254199,

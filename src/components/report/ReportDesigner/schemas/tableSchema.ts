@@ -6,6 +6,12 @@ const tableSchema = {
   standard: [
     // 只放结构/样式相关属性
     { key: "pagination", label: "分页", type: "switch" },
+    {
+      key: "showPagination",
+      label: "显示分页控件",
+      type: "switch",
+      default: false,
+    },
     { key: "bordered", label: "边框", type: "switch" },
     {
       key: "size",
@@ -18,6 +24,7 @@ const tableSchema = {
       ],
       // 说明：不选时为undefined，等同于antd的默认尺寸
     },
+    { key: "pageSize", label: "每页条数", type: "number", default: 10 },
   ],
   dataBinding: [
     { key: "dataSource", label: "数据源", type: "select", options: [] },

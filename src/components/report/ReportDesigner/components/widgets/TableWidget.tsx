@@ -15,6 +15,8 @@ interface TableWidgetProps {
   bordered?: boolean;
   size?: "middle" | "small";
   style?: React.CSSProperties;
+  pageSize?: number;
+  showPagination?: boolean;
 }
 
 const TableWidget: React.FC<TableWidgetProps> = (props) => {
@@ -28,7 +30,10 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
   const columns = dataBinding.columns || props.columns || [];
   const dataSourceKey = dataBinding.dataSource || props.dataSourceKey;
   console.log("dataSourceKey", dataSourceKey);
-  const pagination = props.pagination ?? false;
+  const paginationEnabled = comp?.props?.pagination ?? props.pagination ?? true;
+  const showPagination =
+    comp?.props?.showPagination ?? props.showPagination ?? false;
+  const pageSize = comp?.props?.pageSize ?? props.pageSize ?? 10;
   const bordered = props.bordered ?? false;
   const size = props.size;
   const style = props.style || {};
@@ -65,13 +70,19 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
       },
     }));
 
-  console.log("antdColumns", antdColumns);
-  console.log("dataSource", dataSource);
+  const paginationConfig = {
+    pageSize,
+    showSizeChanger: false,
+    showQuickJumper: false,
+    // 只控制分页控件的显示
+    itemRender: showPagination ? undefined : () => null, // 不显示分页控件
+  };
+
   return (
     <Table
       columns={antdColumns}
       dataSource={dataSource}
-      pagination={pagination ? undefined : false}
+      pagination={paginationEnabled ? paginationConfig : false}
       bordered={bordered}
       size={size}
       style={{ width: "100%", ...style, borderRadius: 4 }}

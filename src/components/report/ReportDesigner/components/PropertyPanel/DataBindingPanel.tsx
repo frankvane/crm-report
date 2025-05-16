@@ -27,6 +27,17 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
     (item: any) => item.key === "columns"
   );
 
+  // 封装变更处理，dataSource 变更时重置 columns
+  const handleChange = (key: string, value: any) => {
+    if (key === "dataSource") {
+      // 先重置字段映射，再切换数据源，避免状态覆盖
+      handleDataBindingChange("columns", []);
+      handleDataBindingChange("dataSource", value);
+      return;
+    }
+    handleDataBindingChange(key, value);
+  };
+
   return (
     <div>
       {schema.dataBinding?.map((item: any) => {
@@ -108,9 +119,7 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
                 <FieldRenderer
                   item={columnsSchema}
                   value={columnsValue}
-                  onChange={(val: any) =>
-                    handleDataBindingChange("columns", val)
-                  }
+                  onChange={(val: any) => handleChange("columns", val)}
                   dataSourceFields={fieldOptions}
                 />
                 <div style={{ textAlign: "right", marginTop: 16 }}>
@@ -153,7 +162,7 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
             <FieldRenderer
               item={fieldItem}
               value={selected.props?.dataBinding?.[item.key] ?? item.default}
-              onChange={(val: any) => handleDataBindingChange(item.key, val)}
+              onChange={(val: any) => handleChange(item.key, val)}
               dataSourceFields={
                 item.type === "columns" ? fieldOptions : undefined
               }
