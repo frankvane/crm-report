@@ -63,13 +63,6 @@ const PrintPreviewModal: React.FC<PrintPreviewModalProps> = ({
         </Button>,
       ]}
       style={{ top: 32 }}
-      bodyStyle={{
-        background: "#fff",
-        minHeight: 600,
-        overflow: "auto",
-        padding: 0,
-      }}
-      destroyOnClose
     >
       <div
         ref={printRef}

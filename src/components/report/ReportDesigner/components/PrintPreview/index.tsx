@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-
 import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
-import { Pagination } from "antd";
+import React from "react";
 import TableWidget from "../widgets/TableWidget";
 import TextWidget from "../widgets/TextWidget";
 import { useDataSourceStore } from "@report/ReportDesigner/store/dataSourceStore";
@@ -22,37 +20,43 @@ export default function PrintPreview() {
   const components = useReportDesignerStore((s) => s.components);
   const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
   const dataSources = useDataSourceStore((s) => s.dataSources);
-  // 假设主数据源为"users"
+  // 只取第一个用户（如张三）
   const usersDS = dataSources.find((ds) => ds.key === "users");
   const users = usersDS?.data || [];
-  const [current, setCurrent] = useState(1);
-  const pageSize = 1; // 每页1个用户，可扩展
-  const total = users.length;
-  const currentUser = users[(current - 1) * pageSize];
+  const currentUser = users[0];
 
-  // 只渲染当前用户的所有控件
-  return (
-    <div
-      style={{
-        width: canvasConfig.width,
-        height: canvasConfig.height,
-        background: "#fff",
-        position: "relative",
-        margin: "0 auto",
-        overflow: "hidden",
-      }}
-    >
-      {currentUser &&
-        components
+  // 明细表分页
+  const orders = currentUser?.orders || [];
+  const orderPageSize = 5;
+  const orderTotalPages = Math.ceil(orders.length / orderPageSize) || 1;
+
+  // 纵向渲染所有分页内容
+  const pages = Array.from({ length: orderTotalPages }, (_, i) => {
+    // 为每一页的orders加唯一_rowKey
+    const pageOrders = orders.slice(i * orderPageSize, (i + 1) * orderPageSize);
+    return (
+      <div
+        key={i}
+        style={{
+          width: canvasConfig.width,
+          height: canvasConfig.height,
+          background: "#fff",
+          margin: "0 auto 32px auto",
+          position: "relative",
+          overflow: "hidden",
+          pageBreakAfter: "always",
+          boxShadow: "0 0 8px #ccc",
+        }}
+      >
+        {components
           .filter((c) => c.visible !== false)
           .map((comp) => {
             const Comp = widgetMap[comp.type];
             if (!Comp) return null;
-            // 如果是TableWidget，自动传递当前用户orders作为dataSource
             if (comp.type === "table") {
               return (
                 <div
-                  key={comp.id}
+                  key={`${comp.id}-page${i}`}
                   style={{
                     position: "absolute",
                     left: comp.x,
@@ -62,14 +66,10 @@ export default function PrintPreview() {
                     pointerEvents: "none",
                   }}
                 >
-                  <Comp
-                    componentId={comp.id}
-                    dataSource={currentUser.orders || []}
-                  />
+                  <Comp componentId={comp.id} dataSource={pageOrders} />
                 </div>
               );
             }
-            // 其它控件保持原props
             return (
               <div
                 key={comp.id}
@@ -86,24 +86,9 @@ export default function PrintPreview() {
               </div>
             );
           })}
-      {/* 分页控件 */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 16,
-          left: 0,
-          width: "100%",
-          textAlign: "center",
-        }}
-      >
-        <Pagination
-          current={current}
-          pageSize={pageSize}
-          total={total}
-          onChange={setCurrent}
-          showSizeChanger={false}
-        />
       </div>
-    </div>
-  );
+    );
+  });
+
+  return <div>{pages}</div>;
 }

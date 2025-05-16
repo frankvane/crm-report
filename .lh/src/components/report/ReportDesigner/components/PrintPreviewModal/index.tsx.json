@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 8,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1747403688628,
@@ -40,6 +40,10 @@
                 {
                     "date": 1747403960747,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,14 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 600, overflow: \"auto\", padding: 0 }}\r\n+      bodyStyle={{\r\n+        background: \"#fff\",\r\n+        minHeight: 600,\r\n+        overflow: \"auto\",\r\n+        padding: 0,\r\n+      }}\r\n       destroyOnClose\r\n     >\r\n       <div\r\n         ref={printRef}\r\n"
+                },
+                {
+                    "date": 1747405033860,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,15 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{\r\n-        background: \"#fff\",\r\n-        minHeight: 600,\r\n-        overflow: \"auto\",\r\n-        padding: 0,\r\n-      }}\r\n-      destroyOnClose\r\n+\r\n     >\r\n       <div\r\n         ref={printRef}\r\n         style={{\r\n"
                 }
             ],
             "date": 1747403688628,

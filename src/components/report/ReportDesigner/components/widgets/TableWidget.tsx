@@ -58,17 +58,19 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
 
   const dataSources = useDataSourceStore((s) => s.dataSources);
 
-  // 先找到主数据源
-  const rootData = (dataSources.find((ds) => ds.key === dataSourceKey) as any)
-    ?.data;
-  // 用 dataNode 递归找明细
   let dataSource: any[] = [];
-  if (rootData && dataNode) {
-    dataSource = getNestedDataSource(rootData, dataNode);
-  } else if (rootData) {
-    dataSource = Array.isArray(rootData) ? rootData : [];
+  if (Array.isArray(props.dataSource) && props.dataSource.length > 0) {
+    dataSource = props.dataSource;
   } else {
-    dataSource = props.dataSource || [];
+    const rootData = (dataSources.find((ds) => ds.key === dataSourceKey) as any)
+      ?.data;
+    if (rootData && dataNode) {
+      dataSource = getNestedDataSource(rootData, dataNode);
+    } else if (rootData) {
+      dataSource = Array.isArray(rootData) ? rootData : [];
+    } else {
+      dataSource = [];
+    }
   }
 
   // 只保留 visible 的列，并转换为 antd columns
@@ -117,6 +119,8 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
     // 只控制分页控件的显示
     itemRender: showPagination ? undefined : () => null, // 不显示分页控件
   };
+
+  console.log(dataSource);
 
   return (
     <Table
