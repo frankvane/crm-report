@@ -1,7 +1,11 @@
 // 工具栏组件
 
-import { InputNumber, Select, Switch } from "antd";
+import { Button, InputNumber, Select, Switch } from "antd";
+import React, { useState } from "react";
 
+import PrintPreview from "../PrintPreview";
+import PrintPreviewModal from "../PrintPreviewModal";
+import { PrinterOutlined } from "@ant-design/icons";
 import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 const CANVAS_SIZES = [
@@ -14,6 +18,7 @@ const CANVAS_SIZES = [
 export default function Toolbar() {
   const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
   const setCanvasConfig = useReportDesignerStore((s) => s.setCanvasConfig);
+  const [previewVisible, setPreviewVisible] = useState(false);
 
   const handleSizeChange = (value: string) => {
     const size = CANVAS_SIZES.find((s) => s.value === value);
@@ -45,55 +50,75 @@ export default function Toolbar() {
   };
 
   return (
-    <div
-      style={{
-        padding: 12,
-        fontWeight: 600,
-        color: "#f57c00",
-        background: "#fff3e0",
-        border: "2px solid #f57c00",
-        borderRadius: 6,
-        display: "flex",
-        alignItems: "center",
-        gap: 16,
-      }}
-    >
-      <span>工具栏</span>
-      <span style={{ fontWeight: 400, color: "#888" }}>| 画布尺寸：</span>
-      <Select
-        value={canvasConfig.sizeType}
-        style={{ width: 140 }}
-        onChange={handleSizeChange}
-        options={CANVAS_SIZES.map((s) => ({ label: s.label, value: s.value }))}
-      />
-      <span style={{ fontWeight: 400, color: "#888" }}>| 网格：</span>
-      <Switch
-        checked={canvasConfig.showGrid}
-        onChange={handleGridSwitch}
-        size="small"
-      />
-      <span style={{ fontWeight: 400, color: "#888" }}>间距</span>
-      <InputNumber
-        min={5}
-        max={200}
-        step={1}
-        value={canvasConfig.gridSize}
-        onChange={handleGridSizeChange}
-        style={{ width: 60 }}
-        size="small"
-      />
-      <span style={{ fontWeight: 400, color: "#888" }}>| 标尺：</span>
-      <Switch
-        checked={canvasConfig.showRuler}
-        onChange={handleRulerSwitch}
-        size="small"
-      />
-      <span style={{ fontWeight: 400, color: "#888" }}>| 吸附网格：</span>
-      <Switch
-        checked={canvasConfig.allowSnapToGrid}
-        onChange={handleSnapSwitch}
-        size="small"
-      />
-    </div>
+    <>
+      <div
+        style={{
+          padding: 12,
+          fontWeight: 600,
+          color: "#f57c00",
+          background: "#fff3e0",
+          border: "2px solid #f57c00",
+          borderRadius: 6,
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <span>工具栏</span>
+        <span style={{ fontWeight: 400, color: "#888" }}>| 画布尺寸：</span>
+        <Select
+          value={canvasConfig.sizeType}
+          style={{ width: 140 }}
+          onChange={handleSizeChange}
+          options={CANVAS_SIZES.map((s) => ({
+            label: s.label,
+            value: s.value,
+          }))}
+        />
+        <span style={{ fontWeight: 400, color: "#888" }}>| 网格：</span>
+        <Switch
+          checked={canvasConfig.showGrid}
+          onChange={handleGridSwitch}
+          size="small"
+        />
+        <span style={{ fontWeight: 400, color: "#888" }}>间距</span>
+        <InputNumber
+          min={5}
+          max={200}
+          step={1}
+          value={canvasConfig.gridSize}
+          onChange={handleGridSizeChange}
+          style={{ width: 60 }}
+          size="small"
+        />
+        <span style={{ fontWeight: 400, color: "#888" }}>| 标尺：</span>
+        <Switch
+          checked={canvasConfig.showRuler}
+          onChange={handleRulerSwitch}
+          size="small"
+        />
+        <span style={{ fontWeight: 400, color: "#888" }}>| 吸附网格：</span>
+        <Switch
+          checked={canvasConfig.allowSnapToGrid}
+          onChange={handleSnapSwitch}
+          size="small"
+        />
+        {/* 打印预览按钮 */}
+        <div style={{ flex: 1 }} />
+        <Button
+          type="primary"
+          icon={<PrinterOutlined />}
+          onClick={() => setPreviewVisible(true)}
+        >
+          打印预览
+        </Button>
+      </div>
+      <PrintPreviewModal
+        visible={previewVisible}
+        onClose={() => setPreviewVisible(false)}
+      >
+        <PrintPreview />
+      </PrintPreviewModal>
+    </>
   );
 }

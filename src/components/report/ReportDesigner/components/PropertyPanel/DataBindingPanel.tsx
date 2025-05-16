@@ -92,17 +92,6 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
     .filter((k) => typeof mergedMock[k] !== "object")
     .map((k) => ({ label: k, value: k }));
 
-  console.log(
-    "【DataBindingPanel调试】type:",
-    type,
-    "dataSource:",
-    currentDataSourceKey,
-    "mergedMock:",
-    mergedMock,
-    "simpleFieldOptions:",
-    simpleFieldOptions
-  );
-
   // ========== 修改：表格字段选项由当前节点决定 ==========
   let tableFieldOptions: { label: string; value: string }[] = [];
   let arrayNodes: any[] = [];

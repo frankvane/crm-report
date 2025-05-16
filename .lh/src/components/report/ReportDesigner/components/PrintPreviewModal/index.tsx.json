@@ -1,0 +1,50 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/PrintPreviewModal/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1747403688628,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747403762368,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,9 @@\n import { Button, Modal } from \"antd\";\r\n import React, { useRef } from \"react\";\r\n \r\n+import { useReportDesignerStore } from \"@report/ReportDesigner/store\";\r\n+\r\n interface PrintPreviewModalProps {\r\n   visible: boolean;\r\n   onClose: () => void;\r\n   children: React.ReactNode;\r\n@@ -12,13 +14,15 @@\n   onClose,\r\n   children,\r\n }) => {\r\n   const printRef = useRef<HTMLDivElement>(null);\r\n+  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);\r\n+  const modalWidth = (canvasConfig?.width || 1200) + 64; // 32px padding左右\r\n \r\n   const handlePrint = () => {\r\n     if (printRef.current) {\r\n       const printContents = printRef.current.innerHTML;\r\n-      const win = window.open(\"\", \"\", \"width=900,height=600\");\r\n+      const win = window.open(\"\", \"\", `width=${modalWidth},height=900`);\r\n       if (win) {\r\n         win.document.write(`\r\n           <html>\r\n             <head>\r\n@@ -48,9 +52,9 @@\n     <Modal\r\n       title=\"打印预览\"\r\n       open={visible}\r\n       onCancel={onClose}\r\n-      width={900}\r\n+      width={modalWidth}\r\n       footer={[\r\n         <Button key=\"print\" type=\"primary\" onClick={handlePrint}>\r\n           打印\r\n         </Button>,\r\n@@ -58,9 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 800 }}\r\n+      bodyStyle={{ background: \"#fff\", minHeight: 900, overflow: 'auto' }}\r\n       destroyOnClose\r\n     >\r\n       <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n         {children}\r\n"
+                },
+                {
+                    "date": 1747403770711,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 900, overflow: 'auto' }}\r\n+      bodyStyle={{ background: \"#fff\", minHeight: 900, overflow: \"auto\" }}\r\n       destroyOnClose\r\n     >\r\n       <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n         {children}\r\n"
+                },
+                {
+                    "date": 1747403787008,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 900, overflow: \"auto\" }}\r\n+      bodyStyle={{ background: \"#fff\", minHeight: 800, overflow: \"auto\" }}\r\n       destroyOnClose\r\n     >\r\n       <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n         {children}\r\n"
+                },
+                {
+                    "date": 1747403793133,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,9 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 800, overflow: \"auto\" }}\r\n+      bodyStyle={{ background: \"#fff\", minHeight: 600, overflow: \"auto\" }}\r\n       destroyOnClose\r\n     >\r\n       <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n         {children}\r\n"
+                },
+                {
+                    "date": 1747403809061,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \r\n   const handlePrint = () => {\r\n     if (printRef.current) {\r\n       const printContents = printRef.current.innerHTML;\r\n-      const win = window.open(\"\", \"\", `width=${modalWidth},height=900`);\r\n+      const win = window.open(\"\", \"\", `width=${modalWidth},height=800`);\r\n       if (win) {\r\n         win.document.write(`\r\n           <html>\r\n             <head>\r\n"
+                },
+                {
+                    "date": 1747403819054,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,9 +20,9 @@\n \r\n   const handlePrint = () => {\r\n     if (printRef.current) {\r\n       const printContents = printRef.current.innerHTML;\r\n-      const win = window.open(\"\", \"\", `width=${modalWidth},height=800`);\r\n+      const win = window.open(\"\", \"\", `width=${modalWidth},height=600`);\r\n       if (win) {\r\n         win.document.write(`\r\n           <html>\r\n             <head>\r\n"
+                },
+                {
+                    "date": 1747403927902,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,12 +62,19 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 600, overflow: \"auto\" }}\r\n+      bodyStyle={{ background: \"#fff\", minHeight: 600, overflow: \"auto\", padding: 0 }}\r\n       destroyOnClose\r\n     >\r\n-      <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n+      <div\r\n+        ref={printRef}\r\n+        style={{\r\n+          width: canvasConfig.width,\r\n+          margin: \"0 auto\",\r\n+          background: \"#fff\",\r\n+        }}\r\n+      >\r\n         {children}\r\n       </div>\r\n     </Modal>\r\n   );\r\n"
+                },
+                {
+                    "date": 1747403960747,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -62,9 +62,14 @@\n           关闭\r\n         </Button>,\r\n       ]}\r\n       style={{ top: 32 }}\r\n-      bodyStyle={{ background: \"#fff\", minHeight: 600, overflow: \"auto\", padding: 0 }}\r\n+      bodyStyle={{\r\n+        background: \"#fff\",\r\n+        minHeight: 600,\r\n+        overflow: \"auto\",\r\n+        padding: 0,\r\n+      }}\r\n       destroyOnClose\r\n     >\r\n       <div\r\n         ref={printRef}\r\n"
+                }
+            ],
+            "date": 1747403688628,
+            "name": "Commit-0",
+            "content": "import { Button, Modal } from \"antd\";\r\nimport React, { useRef } from \"react\";\r\n\r\ninterface PrintPreviewModalProps {\r\n  visible: boolean;\r\n  onClose: () => void;\r\n  children: React.ReactNode;\r\n}\r\n\r\nconst PrintPreviewModal: React.FC<PrintPreviewModalProps> = ({\r\n  visible,\r\n  onClose,\r\n  children,\r\n}) => {\r\n  const printRef = useRef<HTMLDivElement>(null);\r\n\r\n  const handlePrint = () => {\r\n    if (printRef.current) {\r\n      const printContents = printRef.current.innerHTML;\r\n      const win = window.open(\"\", \"\", \"width=900,height=600\");\r\n      if (win) {\r\n        win.document.write(`\r\n          <html>\r\n            <head>\r\n              <title>打印预览</title>\r\n              <style>\r\n                @media print {\r\n                  body { margin: 0; }\r\n                }\r\n              </style>\r\n            </head>\r\n            <body>\r\n              <div>${printContents}</div>\r\n            </body>\r\n          </html>\r\n        `);\r\n        win.document.close();\r\n        win.focus();\r\n        setTimeout(() => {\r\n          win.print();\r\n          win.close();\r\n        }, 300);\r\n      }\r\n    }\r\n  };\r\n\r\n  return (\r\n    <Modal\r\n      title=\"打印预览\"\r\n      open={visible}\r\n      onCancel={onClose}\r\n      width={900}\r\n      footer={[\r\n        <Button key=\"print\" type=\"primary\" onClick={handlePrint}>\r\n          打印\r\n        </Button>,\r\n        <Button key=\"close\" onClick={onClose}>\r\n          关闭\r\n        </Button>,\r\n      ]}\r\n      style={{ top: 32 }}\r\n      bodyStyle={{ background: \"#fff\", minHeight: 800 }}\r\n      destroyOnClose\r\n    >\r\n      <div ref={printRef} style={{ background: \"#fff\", padding: 24 }}>\r\n        {children}\r\n      </div>\r\n    </Modal>\r\n  );\r\n};\r\n\r\nexport default PrintPreviewModal;\r\n"
+        }
+    ]
+}
