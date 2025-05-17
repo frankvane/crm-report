@@ -1,5 +1,6 @@
+import { mockProducts, mockUsers } from "./mockData";
+
 import { create } from "zustand";
-import { mockUsers } from "./mockData";
 
 export interface DataSource {
   key: string; // 唯一标识，如 'users'
@@ -19,9 +20,32 @@ const initialDataSources: DataSource[] = [
   {
     key: "users",
     name: "用户",
-    fields: ["id", "name", "phone", "address", "orders", "photo"],
+    fields: [
+      "id",
+      "name",
+      "phone",
+      "address",
+      "orders",
+      "photo",
+      "favoritesList",
+    ],
     sample: mockUsers[0],
     data: mockUsers,
+  },
+  {
+    key: "products",
+    name: "产品",
+    fields: [
+      "id",
+      "name",
+      "price",
+      "stock",
+      "category",
+      "image",
+      "relatedProducts",
+    ],
+    sample: mockProducts[0],
+    data: mockProducts,
   },
   // 你可以继续添加其它mock数据源
 ];

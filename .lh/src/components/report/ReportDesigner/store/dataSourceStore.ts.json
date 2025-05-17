@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 8,
             "patches": [
                 {
                     "date": 1747364203184,
@@ -28,6 +28,18 @@
                 {
                     "date": 1747379373277,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n const initialDataSources: DataSource[] = [\r\n   {\r\n     key: \"users\",\r\n     name: \"用户\",\r\n-    fields: [\"id\", \"name\", \"phone\", \"address\", \"orders\"],\r\n+    fields: [\"id\", \"name\", \"phone\", \"address\", \"orders\", \"photo\"],\r\n     sample: mockUsers[0],\r\n     data: mockUsers,\r\n   },\r\n   // 你可以继续添加其它mock数据源\r\n"
+                },
+                {
+                    "date": 1747497618005,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,9 +18,9 @@\n const initialDataSources: DataSource[] = [\r\n   {\r\n     key: \"users\",\r\n     name: \"用户\",\r\n-    fields: [\"id\", \"name\", \"phone\", \"address\", \"orders\", \"photo\"],\r\n+    fields: [\"id\", \"name\", \"phone\", \"address\", \"orders\", \"photo\",\"favoritesList\"],\r\n     sample: mockUsers[0],\r\n     data: mockUsers,\r\n   },\r\n   // 你可以继续添加其它mock数据源\r\n"
+                },
+                {
+                    "date": 1747497625809,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,8 +30,23 @@\n     ],\r\n     sample: mockUsers[0],\r\n     data: mockUsers,\r\n   },\r\n+  {\r\n+    key: \"products\",\r\n+    name: \"产品\",\r\n+    fields: [\r\n+      \"id\",\r\n+      \"name\",\r\n+      \"price\",\r\n+      \"stock\",\r\n+      \"category\",\r\n+      \"image\",\r\n+      \"relatedProducts\",\r\n+    ],\r\n+    sample: mockUsers[0],\r\n+    data: mockUsers,\r\n+  },\r\n   // 你可以继续添加其它mock数据源\r\n ];\r\n \r\n export const useDataSourceStore = create<DataSourceStoreState>((set) => ({\r\n"
+                },
+                {
+                    "date": 1747497660022,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,7 @@\n+import { mockProducts, mockUsers } from \"./mockData\";\r\n+\r\n import { create } from \"zustand\";\r\n-import { mockUsers } from \"./mockData\";\r\n \r\n export interface DataSource {\r\n   key: string; // 唯一标识，如 'users'\r\n   name: string; // 显示名，如 '用户'\r\n"
                 }
             ],
             "date": 1747364203184,
