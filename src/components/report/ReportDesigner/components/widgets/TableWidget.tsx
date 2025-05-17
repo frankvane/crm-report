@@ -59,7 +59,7 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
   const dataSources = useDataSourceStore((s) => s.dataSources);
 
   let dataSource: any[] = [];
-  if (Array.isArray(props.dataSource) && props.dataSource.length > 0) {
+  if (props.dataSource !== undefined) {
     dataSource = props.dataSource;
   } else {
     const rootData = (dataSources.find((ds) => ds.key === dataSourceKey) as any)

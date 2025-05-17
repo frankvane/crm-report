@@ -72,7 +72,7 @@ export default function PrintPreview() {
               }
               return (
                 <div
-                  key={comp.id}
+                  key={`${comp.id}-user${userIdx}-page${i}`}
                   style={{
                     position: "absolute",
                     left: comp.x,
