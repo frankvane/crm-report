@@ -121,26 +121,26 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
       tableFieldOptions = Object.keys(sample)
         .filter((k) => {
           const v = sample[k];
-          return (
+          const isPrimitive =
             typeof v === "string" ||
             typeof v === "number" ||
             typeof v === "boolean" ||
             v === null ||
-            v === undefined
-          );
+            v === undefined;
+          if (!isPrimitive) {
+            console.warn(
+              `[DataBindingPanel] 字段 ${k} 被过滤，类型为:`,
+              typeof v,
+              v
+            );
+          }
+          return isPrimitive;
         })
         .map((k) => ({
           label: k,
           value: k,
         }));
     }
-    // ====== 新增调试日志 ======
-    console.log(
-      "[DataBindingPanel] 当前selected.props?.dataBinding?.dataNode:",
-      selected.props?.dataBinding?.dataNode
-    );
-    console.log("[DataBindingPanel] 当前selectedNodePath:", selectedNodePath);
-    console.log("[DataBindingPanel] arrayNodes:", arrayNodes);
   }
   // ========== END ==========
 

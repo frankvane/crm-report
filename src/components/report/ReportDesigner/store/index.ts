@@ -49,11 +49,6 @@ export const useReportDesignerStore = create(
           }),
         updateComponent: (id: string, data: Partial<ReportComponent>) =>
           set((state) => {
-            console.log(
-              "[updateComponent] 更新组件",
-              id,
-              JSON.stringify(data, null, 2)
-            );
             const idx = state.components.findIndex((c) => c.id === id);
             if (idx !== -1) {
               // 新建对象，确保引用变化

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1747350701319,
@@ -20,6 +20,10 @@
                 {
                     "date": 1747459882742,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,8 +28,21 @@\n   const handleDataBindingChange = useCallback(\r\n     (key: string, value: any) => {\r\n       if (!selected) return;\r\n       console.log(\"[handleDataBindingChange]\", key, value, selected);\r\n+      if (key === \"dataNodeAndColumns\") {\r\n+        updateComponent(selected.id, {\r\n+          props: {\r\n+            ...selected.props,\r\n+            dataBinding: {\r\n+              ...selected.props.dataBinding,\r\n+              dataNode: value.dataNode,\r\n+              columns: value.columns,\r\n+            },\r\n+          },\r\n+        });\r\n+        return;\r\n+      }\r\n       updateComponent(selected.id, {\r\n         props: {\r\n           ...selected.props,\r\n           dataBinding: { ...selected.props.dataBinding, [key]: value },\r\n"
+                },
+                {
+                    "date": 1747461694480,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -27,9 +27,8 @@\n   // 处理数据绑定属性（props.dataBinding）\r\n   const handleDataBindingChange = useCallback(\r\n     (key: string, value: any) => {\r\n       if (!selected) return;\r\n-      console.log(\"[handleDataBindingChange]\", key, value, selected);\r\n       if (key === \"dataNodeAndColumns\") {\r\n         updateComponent(selected.id, {\r\n           props: {\r\n             ...selected.props,\r\n"
                 }
             ],
             "date": 1747350701319,

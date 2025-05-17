@@ -102,9 +102,9 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
         return cellProps;
       };
       return {
-        title: col.label,
-        dataIndex: col.field,
-        key: col.field,
+        title: col.label || "-", // 使用 '-' 作为默认占位符
+        dataIndex: col.field || "_placeholder_data_index", // 使用一个唯一的占位符 dataIndex
+        key: col.field || `col_${Math.random().toString(36).slice(2)}`,
         align: col.align,
         width: col.width,
         render, // 只返回内容，不返回props
@@ -120,6 +120,16 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
     itemRender: showPagination ? undefined : () => null, // 不显示分页控件
   };
 
+  // rowKey 兼容无数据时的key警告
+  const getRowKey = (record: any): string | number => {
+    return (
+      record?.key ||
+      record?.id ||
+      (columns[0] && record?.[columns[0].field]) ||
+      `empty_${Math.random().toString(36).slice(2)}`
+    );
+  };
+
   return (
     <Table
       columns={antdColumns}
@@ -129,9 +139,7 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
       size={size}
       style={{ width: "100%", ...style, borderRadius: 4 }}
       scroll={{ x: true }}
-      rowKey={(record: any) =>
-        record.key || record.id || (columns[0] && record[columns[0].field])
-      }
+      rowKey={getRowKey}
     />
   );
 };

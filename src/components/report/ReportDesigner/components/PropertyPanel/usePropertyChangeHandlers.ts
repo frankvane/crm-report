@@ -28,7 +28,6 @@ export function usePropertyChangeHandlers(selected: any) {
   const handleDataBindingChange = useCallback(
     (key: string, value: any) => {
       if (!selected) return;
-      console.log("[handleDataBindingChange]", key, value, selected);
       if (key === "dataNodeAndColumns") {
         updateComponent(selected.id, {
           props: {

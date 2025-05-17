@@ -53,10 +53,6 @@ export default function PropertyPanel() {
     );
   }
 
-  // ====== 新增调试日志 ======
-  console.log("[PropertyPanel] selected", selected);
-  // ====== END ======
-
   return (
     <div style={{ padding: 16, overflowY: "auto", maxHeight: "100vh" }}>
       <div style={{ fontWeight: 600, marginBottom: 12 }}>属性面板</div>
