@@ -43,3 +43,11 @@
 
 - 支持直接粘贴、编辑合法的 JSON 内容
 - 输入内容会自动尝试解析为 JSON，只有合法 JSON 才会生效
+
+```bash
+
+```
+
+```bash
+sloc ./config ./controllers ./middlewares ./models ./routes ./services ./utils/ app.js
+```

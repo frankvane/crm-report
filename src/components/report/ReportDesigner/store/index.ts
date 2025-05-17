@@ -8,7 +8,7 @@ import { persist } from "zustand/middleware";
 export const useReportDesignerStore = create(
   devtools(
     persist(
-      immer<ReportDesignerState>((set, get) => ({
+      immer<ReportDesignerState>((set) => ({
         components: [],
         selectedIds: [],
         canvasConfig: {
@@ -49,8 +49,16 @@ export const useReportDesignerStore = create(
           }),
         updateComponent: (id: string, data: Partial<ReportComponent>) =>
           set((state) => {
-            const comp = state.components.find((c) => c.id === id);
-            if (comp) Object.assign(comp, data);
+            console.log(
+              "[updateComponent] 更新组件",
+              id,
+              JSON.stringify(data, null, 2)
+            );
+            const idx = state.components.findIndex((c) => c.id === id);
+            if (idx !== -1) {
+              // 新建对象，确保引用变化
+              state.components[idx] = { ...state.components[idx], ...data };
+            }
           }),
         removeComponent: (id: string) =>
           set((state) => {

@@ -30,14 +30,6 @@ export default function PropertyPanel() {
     [selected]
   );
 
-  // 数据绑定区联动逻辑
-  const selectedDataSource = selected?.props?.dataBinding?.dataSource;
-  const fieldOptions = useMemo(() => {
-    if (!selectedDataSource) return [];
-    const ds = dataSources.find((d) => d.key === selectedDataSource);
-    return (ds?.fields || []).map((f) => ({ label: f, value: f }));
-  }, [dataSources, selectedDataSource]);
-
   // 判断是否可旋转
   const isRotatable = !!selected?.rotatable;
 
@@ -60,6 +52,10 @@ export default function PropertyPanel() {
       </div>
     );
   }
+
+  // ====== 新增调试日志 ======
+  console.log("[PropertyPanel] selected", selected);
+  // ====== END ======
 
   return (
     <div style={{ padding: 16, overflowY: "auto", maxHeight: "100vh" }}>
@@ -100,7 +96,6 @@ export default function PropertyPanel() {
                 schema={schema}
                 selected={selected}
                 dataSources={dataSources}
-                fieldOptions={fieldOptions}
                 handleDataBindingChange={handleDataBindingChange}
               />
             ),

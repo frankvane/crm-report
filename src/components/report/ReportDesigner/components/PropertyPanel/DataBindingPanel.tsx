@@ -117,11 +117,30 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
       currentNodeSample &&
       typeof currentNodeSample === "object"
     ) {
-      tableFieldOptions = Object.keys(currentNodeSample).map((k) => ({
-        label: k,
-        value: k,
-      }));
+      const sample: any = currentNodeSample;
+      tableFieldOptions = Object.keys(sample)
+        .filter((k) => {
+          const v = sample[k];
+          return (
+            typeof v === "string" ||
+            typeof v === "number" ||
+            typeof v === "boolean" ||
+            v === null ||
+            v === undefined
+          );
+        })
+        .map((k) => ({
+          label: k,
+          value: k,
+        }));
     }
+    // ====== 新增调试日志 ======
+    console.log(
+      "[DataBindingPanel] 当前selected.props?.dataBinding?.dataNode:",
+      selected.props?.dataBinding?.dataNode
+    );
+    console.log("[DataBindingPanel] 当前selectedNodePath:", selectedNodePath);
+    console.log("[DataBindingPanel] arrayNodes:", arrayNodes);
   }
   // ========== END ==========
 
@@ -135,7 +154,7 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
       handleDataBindingChange("dataNode", arrayNodes[0].value);
     }
     // eslint-disable-next-line
-  }, [selected.props?.dataBinding?.dataSource, arrayNodes.length]);
+  }, [selected.props?.dataBinding?.dataSource]);
 
   return (
     <div>
@@ -171,9 +190,10 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
                 value={selectedNodePath}
                 options={arrayNodes}
                 onChange={(val) => {
-                  handleDataBindingChange("dataNode", val);
-                  // 节点切换时重置 columns
-                  handleDataBindingChange("columns", []);
+                  handleDataBindingChange("dataNodeAndColumns", {
+                    dataNode: val,
+                    columns: [],
+                  });
                 }}
               />
             </div>
@@ -251,8 +271,10 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
                       value={selectedNodePath}
                       options={arrayNodes}
                       onChange={(val) => {
-                        handleDataBindingChange("dataNode", val);
-                        handleDataBindingChange("columns", []);
+                        handleDataBindingChange("dataNodeAndColumns", {
+                          dataNode: val,
+                          columns: [],
+                        });
                       }}
                     />
                   </div>
