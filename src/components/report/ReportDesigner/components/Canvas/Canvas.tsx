@@ -3,6 +3,7 @@
 // 方案二：全局变量标记本次是否刚刚框选/多选
 let justSelectedByBox = false;
 
+import React, { useEffect } from "react";
 import { getAlignUpdates, getDistributeUpdates } from "../../utils/align";
 import {
   useCanvasStore,
@@ -95,6 +96,27 @@ export default function Canvas() {
       const comp = components.find((c) => c.id === id);
       return comp && comp.rotatable;
     });
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+      if (
+        tag === "input" ||
+        tag === "textarea" ||
+        (e.target as HTMLElement)?.isContentEditable
+      )
+        return;
+      if (
+        (e.key === "Delete" || e.key === "Backspace") &&
+        selectedIds.length > 0
+      ) {
+        e.preventDefault();
+        batchRemoveComponent(selectedIds);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedIds, batchRemoveComponent]);
 
   return (
     <>
