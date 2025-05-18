@@ -1,5 +1,6 @@
+import { devtools, persist } from "zustand/middleware";
+
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 interface SelectionState {
@@ -8,10 +9,15 @@ interface SelectionState {
 }
 
 export const useSelectionStore = create<SelectionState>()(
-  devtools(
-    immer((set) => ({
-      selectedIds: [],
-      setSelectedIds: (ids) => set({ selectedIds: ids }),
-    }))
+  persist(
+    devtools(
+      immer((set) => ({
+        selectedIds: [],
+        setSelectedIds: (ids) => set({ selectedIds: ids }),
+      }))
+    ),
+    {
+      name: "selection-storage",
+    }
   )
 );

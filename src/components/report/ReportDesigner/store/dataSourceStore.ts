@@ -1,6 +1,8 @@
+import { devtools, persist } from "zustand/middleware";
 import { mockProducts, mockUsers } from "./mockData";
 
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 export interface DataSource {
   key: string; // 唯一标识，如 'users'
@@ -8,6 +10,8 @@ export interface DataSource {
   fields: string[]; // 字段名列表
   sample?: any; // 示例数据
   data?: any[]; // 全量数据
+  dataNodes?: string[]; // 添加 dataNodes 属性
+  dataNodeFields?: { [key: string]: string[] }; // 添加 dataNodeFields 属性
 }
 
 interface DataSourceStoreState {
@@ -45,14 +49,23 @@ const initialDataSources: DataSource[] = [
   // 你可以继续添加其它mock数据源
 ];
 
-export const useDataSourceStore = create<DataSourceStoreState>((set) => ({
-  dataSources: initialDataSources,
-  addDataSource: (ds) =>
-    set((state) => ({
-      dataSources: [...state.dataSources, ds],
-    })),
-  removeDataSource: (key) =>
-    set((state) => ({
-      dataSources: state.dataSources.filter((ds) => ds.key !== key),
-    })),
-}));
+export const useDataSourceStore = create<DataSourceStoreState>()(
+  persist(
+    devtools(
+      immer((set) => ({
+        dataSources: initialDataSources,
+        addDataSource: (ds) =>
+          set((state) => ({
+            dataSources: [...state.dataSources, ds],
+          })),
+        removeDataSource: (key) =>
+          set((state) => ({
+            dataSources: state.dataSources.filter((ds) => ds.key !== key),
+          })),
+      }))
+    ),
+    {
+      name: "dataSource-storage", // 在 localStorage 中存储的名称
+    }
+  )
+);

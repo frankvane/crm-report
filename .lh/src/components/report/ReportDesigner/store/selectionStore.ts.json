@@ -3,11 +3,19 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1747498282595,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747537243542,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,23 @@\n+import { devtools, persist } from \"zustand/middleware\";\r\n+\r\n import { create } from \"zustand\";\r\n-import { devtools } from \"zustand/middleware\";\r\n import { immer } from \"zustand/middleware/immer\";\r\n \r\n interface SelectionState {\r\n   selectedIds: string[];\r\n   setSelectedIds: (ids: string[]) => void;\r\n }\r\n \r\n export const useSelectionStore = create<SelectionState>()(\r\n-  devtools(\r\n-    immer((set) => ({\r\n-      selectedIds: [],\r\n-      setSelectedIds: (ids) => set({ selectedIds: ids }),\r\n-    }))\r\n+  persist(\r\n+    devtools(\r\n+      immer((set) => ({\r\n+        selectedIds: [],\r\n+        setSelectedIds: (ids) => set({ selectedIds: ids }),\r\n+      }))\r\n+    ),\r\n+    {\r\n+      name: 'selection-storage',\r\n+    }\r\n   )\r\n );\r\n"
+                },
+                {
+                    "date": 1747537269612,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,8 @@\n         setSelectedIds: (ids) => set({ selectedIds: ids }),\r\n       }))\r\n     ),\r\n     {\r\n-      name: 'selection-storage',\r\n+      name: \"selection-storage\",\r\n     }\r\n   )\r\n );\r\n"
                 }
             ],
             "date": 1747498282595,

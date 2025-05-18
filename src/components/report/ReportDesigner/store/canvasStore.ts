@@ -1,5 +1,6 @@
+import { devtools, persist } from "zustand/middleware";
+
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 interface CanvasConfig {
@@ -32,13 +33,18 @@ const defaultConfig: CanvasConfig = {
 };
 
 export const useCanvasStore = create<CanvasState>()(
-  devtools(
-    immer((set) => ({
-      canvasConfig: defaultConfig,
-      setCanvasConfig: (config) =>
-        set((state) => {
-          state.canvasConfig = { ...state.canvasConfig, ...config };
-        }),
-    }))
+  persist(
+    devtools(
+      immer((set) => ({
+        canvasConfig: defaultConfig,
+        setCanvasConfig: (config) =>
+          set((state) => {
+            state.canvasConfig = { ...state.canvasConfig, ...config };
+          }),
+      }))
+    ),
+    {
+      name: "canvas-storage",
+    }
   )
 );

@@ -3,11 +3,23 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747498291015,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747537225645,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,8 @@\n+import { devtools, persist } from \"zustand/middleware\";\r\n+\r\n+import type { CanvasComponent } from \"../components/report/ReportDesigner/types\";\r\n import { create } from \"zustand\";\r\n-import { devtools } from \"zustand/middleware\";\r\n import { immer } from \"zustand/middleware/immer\";\r\n \r\n interface CanvasConfig {\r\n   gridSize: number;\r\n@@ -31,14 +33,19 @@\n   sizeType: \"A4-landscape\",\r\n };\r\n \r\n export const useCanvasStore = create<CanvasState>()(\r\n-  devtools(\r\n-    immer((set) => ({\r\n-      canvasConfig: defaultConfig,\r\n-      setCanvasConfig: (config) =>\r\n-        set((state) => {\r\n-          state.canvasConfig = { ...state.canvasConfig, ...config };\r\n-        }),\r\n-    }))\r\n+  persist(\r\n+    devtools(\r\n+      immer((set) => ({\r\n+        canvasConfig: defaultConfig,\r\n+        setCanvasConfig: (config) =>\r\n+          set((state) => {\r\n+            state.canvasConfig = { ...state.canvasConfig, ...config };\r\n+          }),\r\n+      }))\r\n+    ),\r\n+    {\r\n+      name: 'canvas-storage',\r\n+    }\r\n   )\r\n );\r\n"
+                },
+                {
+                    "date": 1747537236455,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,6 @@\n import { devtools, persist } from \"zustand/middleware\";\r\n \r\n-import type { CanvasComponent } from \"../components/report/ReportDesigner/types\";\r\n import { create } from \"zustand\";\r\n import { immer } from \"zustand/middleware/immer\";\r\n \r\n interface CanvasConfig {\r\n"
+                },
+                {
+                    "date": 1747537269610,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -43,8 +43,8 @@\n           }),\r\n       }))\r\n     ),\r\n     {\r\n-      name: 'canvas-storage',\r\n+      name: \"canvas-storage\",\r\n     }\r\n   )\r\n );\r\n"
                 }
             ],
             "date": 1747498291015,
