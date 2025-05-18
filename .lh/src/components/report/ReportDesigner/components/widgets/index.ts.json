@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/widgets/index.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1747568084144,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747568675064,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,12 +1,9 @@\n-import { ImageWidgetMeta } from './ImageWidget';\r\n-import { LabelWidgetMeta } from './LabelWidget';\r\n-import { QRCodeWidgetMeta } from './QRCodeWidget';\r\n-import { TableWidgetMeta } from './TableWidget';\r\n-import { registerComponent } from '../../componentRegistry';\r\n+import { ImageWidgetMeta } from \"./ImageWidget\";\r\n+import { LabelWidgetMeta } from \"./LabelWidget\";\r\n+import { QRCodeWidgetMeta } from \"./QRCodeWidget\";\r\n+import { TableWidgetMeta } from \"./TableWidget\";\r\n+import { registerComponent } from \"../../componentRegistry\";\r\n \r\n-[\r\n\\ No newline at end of file\n-  TableWidgetMeta,\r\n-  LabelWidgetMeta,\r\n-  ImageWidgetMeta,\r\n-  QRCodeWidgetMeta,\r\n-].forEach(registerComponent);\n+[TableWidgetMeta, LabelWidgetMeta, ImageWidgetMeta, QRCodeWidgetMeta].forEach(\r\n+  registerComponent\r\n+);\r\n"
+                }
+            ],
+            "date": 1747568084144,
+            "name": "Commit-0",
+            "content": "import { ImageWidgetMeta } from './ImageWidget';\r\nimport { LabelWidgetMeta } from './LabelWidget';\r\nimport { QRCodeWidgetMeta } from './QRCodeWidget';\r\nimport { TableWidgetMeta } from './TableWidget';\r\nimport { registerComponent } from '../../componentRegistry';\r\n\r\n[\r\n  TableWidgetMeta,\r\n  LabelWidgetMeta,\r\n  ImageWidgetMeta,\r\n  QRCodeWidgetMeta,\r\n].forEach(registerComponent);"
+        }
+    ]
+}

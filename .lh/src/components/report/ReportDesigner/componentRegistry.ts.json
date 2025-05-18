@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1747150628175,
@@ -16,6 +16,10 @@
                 {
                     "date": 1747227921502,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,2 @@\n- \n\\ No newline at end of file\n+// 组件注册表\r\n+export const componentRegistry = {};\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747568029911,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,2 +1,9 @@\n // 组件注册表\r\n export const componentRegistry = {};\r\n+\r\n+export interface IReportComponent {\r\n+  type: string;\r\n+  displayName: string;\r\n+  icon?: React.ReactNode;\r\n+  Component: React.ComponentType<any>;\r\n+}\r\n"
                 }
             ],
             "date": 1747150628175,

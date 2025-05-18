@@ -1,4 +1,7 @@
+// import { IReportComponent } from '../../componentRegistry';
+
 import { QRCode } from "antd";
+import { QrcodeOutlined } from "@ant-design/icons";
 import React from "react";
 import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
@@ -78,6 +81,13 @@ const QRCodeWidget: React.FC<QRCodeWidgetProps> = (props) => {
       />
     </div>
   );
+};
+
+export const QRCodeWidgetMeta = {
+  type: "qrcode",
+  displayName: "二维码",
+  Component: QRCodeWidget,
+  icon: <QrcodeOutlined />,
 };
 
 export default QRCodeWidget;

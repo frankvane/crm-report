@@ -1,3 +1,5 @@
+import "./components/widgets"; // 自动注册所有 Widget 组件
+
 import Canvas from "@report/ReportDesigner/components/Canvas/Canvas";
 import ComponentLibrary from "@report/ReportDesigner/components/ComponentLibrary";
 import { DndContext } from "@dnd-kit/core";

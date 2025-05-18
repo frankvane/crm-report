@@ -3,11 +3,8 @@
 import React, { useRef, useState } from "react";
 
 import { Dropdown } from "antd";
-import ImageWidget from "../widgets/ImageWidget";
-import LabelWidget from "../widgets/LabelWidget";
 import { LockOutlined } from "@ant-design/icons";
-import QRCodeWidget from "../widgets/QRCodeWidget";
-import TableWidget from "../widgets/TableWidget";
+import { componentRegistry } from "../../componentRegistry";
 import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDraggable } from "@dnd-kit/core";
 
@@ -151,14 +148,14 @@ export default function ComponentItem({
   };
 
   // 组件类型到展示组件的映射
-  const componentMap: Record<string, React.FC<any>> = {
-    label: LabelWidget,
-    image: ImageWidget,
-    table: TableWidget,
-    qrcode: QRCodeWidget,
-  };
+  // const componentMap: Record<string, React.FC<any>> = {
+  //   label: LabelWidget,
+  //   image: ImageWidget,
+  //   table: TableWidget,
+  //   qrcode: QRCodeWidget,
+  // };
   const Comp =
-    componentMap[comp.type] ||
+    componentRegistry[comp.type]?.Component ||
     (() => <span style={{ color: "red" }}>未知组件类型: {comp.type}</span>);
   // 只传 componentId，Widget 内部自动查全局配置
   const content = (

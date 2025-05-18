@@ -1,4 +1,6 @@
+import { IReportComponent } from "../../componentRegistry";
 import { Image } from "antd";
+import { PictureOutlined } from "@ant-design/icons";
 import React from "react";
 import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
@@ -63,6 +65,13 @@ const ImageWidget: React.FC<ImageWidgetProps> = (props) => {
       fallback="https://via.placeholder.com/120x40?text=图片"
     />
   );
+};
+
+export const ImageWidgetMeta: IReportComponent = {
+  type: "image",
+  displayName: "图片",
+  Component: ImageWidget,
+  icon: <PictureOutlined />,
 };
 
 export default ImageWidget;

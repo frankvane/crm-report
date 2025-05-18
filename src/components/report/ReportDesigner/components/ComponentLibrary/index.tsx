@@ -1,21 +1,29 @@
 // 组件库组件
 
-import {
-  PictureOutlined,
-  QrcodeOutlined,
-  TableOutlined,
-  TagOutlined,
-} from "@ant-design/icons";
+// import {
+//   PictureOutlined,
+//   QrcodeOutlined,
+//   TableOutlined,
+//   TagOutlined,
+// } from "@ant-design/icons";
 
 import React from "react";
+import { componentRegistry } from "../../componentRegistry";
 import { useDraggable } from "@dnd-kit/core";
 
-const COMPONENTS = [
-  { type: "label", name: "标签", icon: <TagOutlined /> },
-  { type: "image", name: "图片", icon: <PictureOutlined /> },
-  { type: "table", name: "表格", icon: <TableOutlined /> },
-  { type: "qrcode", name: "二维码", icon: <QrcodeOutlined /> },
-];
+// const defaultIcons: Record<string, React.ReactNode> = {
+//   label: <TagOutlined />,
+//   image: <PictureOutlined />,
+//   table: <TableOutlined />,
+//   qrcode: <QrcodeOutlined />,
+//   // ...根据需要添加更多默认图标
+// };
+
+const COMPONENTS = Object.values(componentRegistry).map((meta) => ({
+  type: meta.type,
+  name: meta.displayName,
+  icon: meta.icon, // 直接使用注册的 icon
+}));
 
 function DraggableItem({
   type,

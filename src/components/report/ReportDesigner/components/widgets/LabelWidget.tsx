@@ -3,7 +3,9 @@ import {
   getJustifyContent,
 } from "@report/ReportDesigner/utils";
 
+import { IReportComponent } from "../../componentRegistry";
 import React from "react";
+import { TagOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import numeral from "numeral";
 import { useComponentsStore } from "@/components/report/ReportDesigner/store";
@@ -91,3 +93,10 @@ const LabelWidget: React.FC<LabelWidgetProps> = (props) => {
 };
 
 export default LabelWidget;
+
+export const LabelWidgetMeta: IReportComponent = {
+  type: "label",
+  displayName: "标签",
+  Component: LabelWidget,
+  icon: <TagOutlined />,
+};

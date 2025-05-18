@@ -1,5 +1,7 @@
+import { IReportComponent } from "../../componentRegistry";
 import React from "react";
 import { Table } from "antd";
+import { TableOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { formatLabelValue } from "@report/ReportDesigner/utils";
 import numeral from "numeral";
@@ -152,6 +154,13 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
       }
     />
   );
+};
+
+export const TableWidgetMeta: IReportComponent = {
+  type: "table",
+  displayName: "表格",
+  Component: TableWidget,
+  icon: <TableOutlined />,
 };
 
 export default TableWidget;

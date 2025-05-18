@@ -3,22 +3,9 @@ import {
   useComponentsStore,
 } from "@report/ReportDesigner/store";
 
-import ImageWidget from "../widgets/ImageWidget";
-import LabelWidget from "../widgets/LabelWidget";
-import QRCodeWidget from "../widgets/QRCodeWidget";
 import React from "react";
-import TableWidget from "../widgets/TableWidget";
+import { componentRegistry } from "../../componentRegistry";
 import { useDataSourceStore } from "@report/ReportDesigner/store/dataSourceStore";
-
-// 如有其它控件类型可继续引入
-
-const widgetMap: Record<string, any> = {
-  label: LabelWidget,
-  image: ImageWidget,
-  table: TableWidget,
-  qrcode: QRCodeWidget,
-  // ...其它类型
-};
 
 // 临时设定 Table 组件的子数据分页大小 (后续应从组件配置或画布配置中获取)
 const TABLE_PAGE_SIZE = 5; // 示例：每页显示 5 条订单
@@ -87,7 +74,7 @@ export default function PrintPreview() {
           {components
             .filter((c) => c.visible !== false) // 过滤掉隐藏的组件
             .map((comp) => {
-              const Comp = widgetMap[comp.type];
+              const Comp = componentRegistry[comp.type]?.Component;
               if (!Comp) return null;
 
               // 根据组件的 dataBinding 和当前页面数据上下文提取数据
