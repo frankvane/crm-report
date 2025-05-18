@@ -26,8 +26,6 @@ export function useCanvasDnd({
         let props: any = {};
         if (type === "label") {
           props = { text: "新标签" };
-        } else if (type === "text") {
-          props = { text: "新文本" };
         } else if (type === "image") {
           props = { src: "" };
         } else if (type === "table") {
