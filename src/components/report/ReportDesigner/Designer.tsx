@@ -30,11 +30,20 @@ const Designer: React.FC = () => (
         >
           <ComponentLibrary />
         </Sider>
-        <Content style={{ background: "#fff", position: "relative" }}>
+        <Content
+          style={{
+            background: "#fff",
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
           <Canvas />
         </Content>
         <Sider
-          width={600}
+          width={500}
           style={{ background: "#fafbfc", borderLeft: "1px solid #eee" }}
         >
           <PropertyPanel />

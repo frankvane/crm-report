@@ -1,6 +1,3 @@
-// 画布主组件
-
-// 方案二：全局变量标记本次是否刚刚框选/多选
 let justSelectedByBox = false;
 
 import React, { useEffect } from "react";
@@ -120,67 +117,81 @@ export default function Canvas() {
 
   return (
     <>
-      <BatchToolbar
-        selectedCount={selectedIds.length}
-        canDistribute={selectedIds.length >= 3}
-        allRotatable={allRotatable}
-        onDeleteSelected={batchActions.handleDeleteSelected}
-        onBatchLock={batchActions.handleBatchLock}
-        onBatchVisible={batchActions.handleBatchVisible}
-        onShowAll={batchActions.handleShowAll}
-        onAlign={batchActions.handleAlign}
-        onDistribute={batchActions.handleDistribute}
-        onBatchResizable={(resizable) => {
-          selectedIds.forEach((id) => updateComponent(id, { resizable }));
-        }}
-        onBatchRotatable={(rotatable) => {
-          selectedIds.forEach((id) => updateComponent(id, { rotatable }));
-        }}
-        onBatchRotation={(rotation) => {
-          selectedIds.forEach((id) => updateComponent(id, { rotation }));
-        }}
-        onBatchOpacity={(opacity) => {
-          selectedIds.forEach((id) => updateComponent(id, { opacity }));
-        }}
-      />
+      {/* 新增的容器 div */}
       <div
-        ref={setNodeRef}
-        id="report-canvas-main"
         style={{
-          minHeight: canvasConfig.height + 16,
-          minWidth: canvasConfig.width + 16,
-          width: canvasConfig.width + 16,
-          height: canvasConfig.height + 16,
-          padding: 0,
-          fontWeight: 600,
-          color: isOver ? "#fff" : "#1976d2",
-          background: isOver ? "#1976d2" : "#e3f2fd",
-          border: "2px solid #1976d2",
-          borderRadius: 6,
-          transition: "all 0.2s",
-          position: "relative",
-          overflow: "visible",
-        }}
-        onClick={() => {
-          if (justSelectedByBox) return;
-          setSelectedIds([]);
+          display: "flex",
+          flexDirection: "column", // 垂直堆叠
+          alignItems: "center", // 水平居中（相对于此容器）
+          width: "100%", // 填充父容器宽度
+          height: "100%", // 填充父容器高度
+          margin: "auto",
         }}
       >
-        {/* 标尺 */}
-        <Ruler canvasConfig={canvasConfig} />
-        {/* 网格 */}
-        <Grid canvasConfig={canvasConfig} />
-        {/* 画布内容区（标准结构，支持框选和组件交互） */}
-        <CanvasContent
-          components={components}
-          selectedIds={selectedIds}
-          setSelectedIds={setSelectedIds}
-          isSelecting={isSelecting}
-          selectRect={selectRect}
-          handleMouseDown={handleMouseDown}
-          onResize={(id, w, h) => updateComponent(id, { width: w, height: h })}
-          onMove={(id, x, y) => updateComponent(id, { x, y })}
+        <BatchToolbar
+          selectedCount={selectedIds.length}
+          canDistribute={selectedIds.length >= 3}
+          allRotatable={allRotatable}
+          onDeleteSelected={batchActions.handleDeleteSelected}
+          onBatchLock={batchActions.handleBatchLock}
+          onBatchVisible={batchActions.handleBatchVisible}
+          onShowAll={batchActions.handleShowAll}
+          onAlign={batchActions.handleAlign}
+          onDistribute={batchActions.handleDistribute}
+          onBatchResizable={(resizable) => {
+            selectedIds.forEach((id) => updateComponent(id, { resizable }));
+          }}
+          onBatchRotatable={(rotatable) => {
+            selectedIds.forEach((id) => updateComponent(id, { rotatable }));
+          }}
+          onBatchRotation={(rotation) => {
+            selectedIds.forEach((id) => updateComponent(id, { rotation }));
+          }}
+          onBatchOpacity={(opacity) => {
+            selectedIds.forEach((id) => updateComponent(id, { opacity }));
+          }}
         />
+        <div
+          ref={setNodeRef}
+          id="report-canvas-main"
+          style={{
+            minHeight: canvasConfig.height + 16,
+            minWidth: canvasConfig.width + 16,
+            width: canvasConfig.width + 16,
+            height: canvasConfig.height + 16,
+            padding: 0,
+            fontWeight: 600,
+            color: isOver ? "#fff" : "#1976d2",
+            background: isOver ? "#1976d2" : "#e3f2fd",
+            border: "2px solid #1976d2",
+            borderRadius: 6,
+            transition: "all 0.2s",
+            position: "relative",
+            overflow: "visible",
+          }}
+          onClick={() => {
+            if (justSelectedByBox) return;
+            setSelectedIds([]);
+          }}
+        >
+          {/* 标尺 */}
+          <Ruler canvasConfig={canvasConfig} />
+          {/* 网格 */}
+          <Grid canvasConfig={canvasConfig} />
+          {/* 画布内容区（标准结构，支持框选和组件交互） */}
+          <CanvasContent
+            components={components}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            isSelecting={isSelecting}
+            selectRect={selectRect}
+            handleMouseDown={handleMouseDown}
+            onResize={(id, w, h) =>
+              updateComponent(id, { width: w, height: h })
+            }
+            onMove={(id, x, y) => updateComponent(id, { x, y })}
+          />
+        </div>
       </div>
     </>
   );
