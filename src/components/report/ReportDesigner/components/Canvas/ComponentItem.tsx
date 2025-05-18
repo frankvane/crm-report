@@ -6,6 +6,7 @@ import { Dropdown } from "antd";
 import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
 import { LockOutlined } from "@ant-design/icons";
+import QRCodeWidget from "../widgets/QRCodeWidget";
 import TableWidget from "../widgets/TableWidget";
 import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDraggable } from "@dnd-kit/core";
@@ -154,6 +155,7 @@ export default function ComponentItem({
     label: LabelWidget,
     image: ImageWidget,
     table: TableWidget,
+    qrcode: QRCodeWidget,
   };
   const Comp =
     componentMap[comp.type] ||

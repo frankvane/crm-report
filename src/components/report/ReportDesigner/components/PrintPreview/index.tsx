@@ -5,6 +5,7 @@ import {
 
 import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
+import QRCodeWidget from "../widgets/QRCodeWidget";
 import React from "react";
 import TableWidget from "../widgets/TableWidget";
 import { useDataSourceStore } from "@report/ReportDesigner/store/dataSourceStore";
@@ -15,6 +16,7 @@ const widgetMap: Record<string, any> = {
   label: LabelWidget,
   image: ImageWidget,
   table: TableWidget,
+  qrcode: QRCodeWidget,
   // ...其它类型
 };
 

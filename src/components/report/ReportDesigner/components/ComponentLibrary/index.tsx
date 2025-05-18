@@ -1,6 +1,11 @@
 // 组件库组件
 
-import { PictureOutlined, TableOutlined, TagOutlined } from "@ant-design/icons";
+import {
+  PictureOutlined,
+  QrcodeOutlined,
+  TableOutlined,
+  TagOutlined,
+} from "@ant-design/icons";
 
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
@@ -9,6 +14,7 @@ const COMPONENTS = [
   { type: "label", name: "标签", icon: <TagOutlined /> },
   { type: "image", name: "图片", icon: <PictureOutlined /> },
   { type: "table", name: "表格", icon: <TableOutlined /> },
+  { type: "qrcode", name: "二维码", icon: <QrcodeOutlined /> },
 ];
 
 function DraggableItem({

@@ -26,8 +26,6 @@ interface LabelWidgetProps {
     [key: string]: any;
   };
   bindingData?: any;
-  user?: any;
-  data?: any;
 }
 
 const LabelWidget: React.FC<LabelWidgetProps> = (props) => {

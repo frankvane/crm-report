@@ -14,8 +14,6 @@ interface ImageWidgetProps {
     field?: string;
   };
   bindingData?: any;
-  user?: any;
-  data?: any;
 }
 
 const ImageWidget: React.FC<ImageWidgetProps> = (props) => {

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1747230244393,
@@ -20,6 +20,14 @@
                 {
                     "date": 1747230647305,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n // 只需导入所有schema文件，确保注册生效\r\n \r\n-import './labelSchema';\r\n-import './textSchema';\r\n+import \"./labelSchema\";\r\n+import \"./textSchema\";\r\n \r\n // 其它组件schema...\r\n \r\n-export * from './schemaRegistry';\r\n+export * from \"./schemaRegistry\";\r\n"
+                },
+                {
+                    "date": 1747564916317,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,12 @@\n // 只需导入所有schema文件，确保注册生效\r\n \r\n import \"./labelSchema\";\r\n-import \"./textSchema\";\r\n \r\n // 其它组件schema...\r\n \r\n export * from \"./schemaRegistry\";\r\n \r\n export * from \"./baseSchema\";\r\n export * from \"./labelSchema\";\r\n-export * from \"./textSchema\";\r\n export * from \"./imageSchema\";\r\n export * from \"./tableSchema\";\r\n"
+                },
+                {
+                    "date": 1747565264361,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,4 +9,5 @@\n export * from \"./baseSchema\";\r\n export * from \"./labelSchema\";\r\n export * from \"./imageSchema\";\r\n export * from \"./tableSchema\";\r\n+export * from \"./qrcodeSchema\";\r\n"
                 }
             ],
             "date": 1747230244393,

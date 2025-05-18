@@ -1,0 +1,30 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/components/widgets/QRCodeWidget.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1747564422489,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747564450948,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import QRCode from \"qrcode.react\";\r\n+import { QRCodeSVG } from \"qrcode.react\";\r\n import React from \"react\";\r\n import { useComponentsStore } from \"@/components/report/ReportDesigner/store\";\r\n import { useDataSourceStore } from \"@/components/report/ReportDesigner/store/dataSourceStore\";\r\n \r\n@@ -66,9 +66,9 @@\n         background: bgColor,\r\n         ...style,\r\n       }}\r\n     >\r\n-      <QRCode value={qrValue} size={size} fgColor={fgColor} bgColor={bgColor} />\r\n+      <QRCodeSVG value={qrValue} size={size} fgColor={fgColor} bgColor={bgColor} />\r\n     </div>\r\n   );\r\n };\r\n \r\n"
+                },
+                {
+                    "date": 1747564500138,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,14 @@\n-import { QRCodeSVG } from \"qrcode.react\";\r\n+import { QRCode } from \"antd\";\r\n import React from \"react\";\r\n import { useComponentsStore } from \"@/components/report/ReportDesigner/store\";\r\n import { useDataSourceStore } from \"@/components/report/ReportDesigner/store/dataSourceStore\";\r\n \r\n interface QRCodeWidgetProps {\r\n   componentId?: string;\r\n   size?: number;\r\n-  fgColor?: string;\r\n-  bgColor?: string;\r\n+  color?: string;      // antd 用 color\r\n+  bgColor?: string;    // antd 用 bgColor\r\n   style?: React.CSSProperties;\r\n   dataBinding?: {\r\n     dataSource?: string;\r\n     field?: string;\r\n@@ -28,9 +28,9 @@\n   const effectiveProps = comp ? { ...props, ...comp.props } : props;\r\n \r\n   const {\r\n     size = 120,\r\n-    fgColor = \"#1976d2\",\r\n+    color = \"#1976d2\",\r\n     bgColor = \"#fff\",\r\n     style = {},\r\n     dataBinding,\r\n   } = effectiveProps;\r\n@@ -66,15 +66,15 @@\n         background: bgColor,\r\n         ...style,\r\n       }}\r\n     >\r\n-      <QRCodeSVG\r\n+      <QRCode\r\n         value={qrValue}\r\n         size={size}\r\n-        fgColor={fgColor}\r\n+        color={color}\r\n         bgColor={bgColor}\r\n       />\r\n     </div>\r\n   );\r\n };\r\n \r\n-export default QRCodeWidget;\r\n+export default QRCodeWidget;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1747565544963,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -31,8 +31,10 @@\n     size = 120,\r\n     color = \"#1976d2\",\r\n     bgColor = \"#fff\",\r\n     style = {},\r\n+    qrValue = \"\",\r\n+    bordered = true,\r\n     dataBinding,\r\n   } = effectiveProps;\r\n \r\n   // 获取全局数据源\r\n"
+                }
+            ],
+            "date": 1747564422489,
+            "name": "Commit-0",
+            "content": "import QRCode from \"qrcode.react\";\r\nimport React from \"react\";\r\nimport { useComponentsStore } from \"@/components/report/ReportDesigner/store\";\r\nimport { useDataSourceStore } from \"@/components/report/ReportDesigner/store/dataSourceStore\";\r\n\r\ninterface QRCodeWidgetProps {\r\n  componentId?: string;\r\n  size?: number;\r\n  fgColor?: string;\r\n  bgColor?: string;\r\n  style?: React.CSSProperties;\r\n  dataBinding?: {\r\n    dataSource?: string;\r\n    field?: string;\r\n    [key: string]: any;\r\n  };\r\n  bindingData?: any;\r\n  user?: any;\r\n  data?: any;\r\n}\r\n\r\nconst QRCodeWidget: React.FC<QRCodeWidgetProps> = (props) => {\r\n  // 支持 componentId 响应式获取配置\r\n  const allComponents = useComponentsStore((s) => s.components);\r\n  const comp = props.componentId\r\n    ? allComponents.find((c) => c.id === props.componentId)\r\n    : undefined;\r\n  const effectiveProps = comp ? { ...props, ...comp.props } : props;\r\n\r\n  const {\r\n    size = 120,\r\n    fgColor = \"#1976d2\",\r\n    bgColor = \"#fff\",\r\n    style = {},\r\n    dataBinding,\r\n  } = effectiveProps;\r\n\r\n  // 获取全局数据源\r\n  const dataSources = useDataSourceStore((s) => s.dataSources);\r\n\r\n  // 计算二维码内容\r\n  let qrValue = \"\";\r\n  if (props.bindingData) {\r\n    qrValue = String(props.bindingData);\r\n  } else if (dataBinding?.dataSource && dataBinding?.field) {\r\n    const ds = dataSources.find((d) => d.key === dataBinding.dataSource);\r\n    if (ds && ds.sample) {\r\n      const val = ds.sample[dataBinding.field];\r\n      if (val !== undefined && val !== null) {\r\n        qrValue = String(val);\r\n      }\r\n    }\r\n  }\r\n  if (!qrValue) {\r\n    qrValue = \"二维码内容\";\r\n  }\r\n\r\n  return (\r\n    <div\r\n      style={{\r\n        display: \"flex\",\r\n        alignItems: \"center\",\r\n        justifyContent: \"center\",\r\n        width: \"100%\",\r\n        height: \"100%\",\r\n        background: bgColor,\r\n        ...style,\r\n      }}\r\n    >\r\n      <QRCode value={qrValue} size={size} fgColor={fgColor} bgColor={bgColor} />\r\n    </div>\r\n  );\r\n};\r\n\r\nexport default QRCodeWidget; "
+        }
+    ]
+}
