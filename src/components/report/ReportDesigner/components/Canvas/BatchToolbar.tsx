@@ -72,7 +72,7 @@ const BatchToolbar: React.FC<BatchToolbarProps> = ({
         borderRadius: 8,
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         padding: "10px",
-        zIndex: 10001,
+        zIndex: 1000,
         width: "fit-content",
       }}
     >

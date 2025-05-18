@@ -83,7 +83,7 @@ export default function PrintPreview() {
 
               if (dataBinding) {
                 // 确保有数据绑定
-                const { dataSource, dataNode, field, columns } = dataBinding;
+                const { dataSource, dataNode, field } = dataBinding;
 
                 // 检查组件绑定的数据源是否是当前主数据源
                 if (dataSource === mainDataSourceKey) {
