@@ -49,6 +49,7 @@ export default function PropertyPanel() {
           background: "#e8f5e9",
           border: "2px solid #388e3c",
           borderRadius: 6,
+          marginRight: 16,
         }}
       >
         请选择画布上的组件
@@ -57,7 +58,16 @@ export default function PropertyPanel() {
   }
 
   return (
-    <div style={{ padding: 16, overflowY: "auto", maxHeight: "100vh" }}>
+    <div
+      style={{
+        padding: 16,
+        overflowY: "auto",
+        maxHeight: "100vh",
+        border: "2px solid #388e3c",
+        borderRadius: 6,
+        marginRight: 16,
+      }}
+    >
       <div style={{ fontWeight: 600, marginBottom: 12 }}>属性面板</div>
       <Tabs
         defaultActiveKey="base"

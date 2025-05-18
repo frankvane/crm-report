@@ -155,55 +155,70 @@ export default function Toolbar() {
     <>
       <div
         style={{
-          padding: 12,
-          fontWeight: 600,
+          height: 52,
+          padding: "0 16px",
+          fontSize: 15,
           color: "#f57c00",
           background: "#fff3e0",
-          border: "2px solid #f57c00",
+          border: "1px solid #f57c00",
           borderRadius: 6,
           display: "flex",
           alignItems: "center",
-          gap: 16,
+          gap: 12,
         }}
       >
-        <span>工具栏</span>
-        <span style={{ fontWeight: 400, color: "#888" }}>| 画布尺寸：</span>
+        <span style={{ fontWeight: 600 }}>工具栏</span>
+        <span style={{ fontWeight: 400, color: "#888", margin: "0 4px" }}>
+          | 画布尺寸：
+        </span>
         <Select
           value={canvasConfig.sizeType}
-          style={{ width: 140 }}
+          style={{ width: 120, marginRight: 8 }}
           onChange={handleSizeChange}
           options={CANVAS_SIZES.map((s) => ({
             label: s.label,
             value: s.value,
           }))}
+          size="small"
         />
-        <span style={{ fontWeight: 400, color: "#888" }}>| 网格：</span>
+        <span style={{ fontWeight: 400, color: "#888", margin: "0 4px" }}>
+          | 网格：
+        </span>
         <Switch
           checked={canvasConfig.showGrid}
           onChange={handleGridSwitch}
           size="small"
+          style={{ marginRight: 4 }}
         />
-        <span style={{ fontWeight: 400, color: "#888" }}>间距</span>
+        <span style={{ fontWeight: 400, color: "#888", margin: "0 4px" }}>
+          间距
+        </span>
         <InputNumber
           min={5}
           max={200}
           step={1}
           value={canvasConfig.gridSize}
           onChange={handleGridSizeChange}
-          style={{ width: 60 }}
+          style={{ width: 60, marginRight: 8 }}
           size="small"
         />
-        <span style={{ fontWeight: 400, color: "#888" }}>| 标尺：</span>
+        <span style={{ fontWeight: 400, color: "#888", margin: "0 4px" }}>
+          | 标尺：
+        </span>
         <Switch
           checked={canvasConfig.showRuler}
           onChange={handleRulerSwitch}
           size="small"
+          style={{ marginRight: 8 }}
         />
-        <span style={{ fontWeight: 400, color: "#888" }}>| 吸附网格：</span>
+        <span style={{ fontWeight: 400, color: "#888", margin: "0 4px" }}>
+          | 吸附网格：
+        </span>
         <Switch
           checked={canvasConfig.allowSnapToGrid}
           onChange={handleSnapSwitch}
           size="small"
+          style={{ marginRight: 8 }}
         />
 
         <div style={{ flex: 1 }} />
@@ -212,6 +227,7 @@ export default function Toolbar() {
           icon={<PlusOutlined />}
           onClick={handleNewReport}
           style={{ marginRight: 8 }}
+          size="small"
         >
           新建
         </Button>
@@ -219,14 +235,16 @@ export default function Toolbar() {
         <Button
           icon={<SaveOutlined />}
           onClick={handleSaveReport}
-          style={{ marginLeft: 8 }}
+          style={{ marginRight: 8 }}
+          size="small"
         >
           保存
         </Button>
         <Button
           icon={<FolderOpenOutlined />}
           onClick={handleOpenReport}
-          style={{ marginLeft: 8 }}
+          style={{ marginRight: 8 }}
+          size="small"
         >
           打开
         </Button>
@@ -235,6 +253,7 @@ export default function Toolbar() {
           type="primary"
           icon={<PrinterOutlined />}
           onClick={() => setPreviewVisible(true)}
+          size="small"
         >
           打印预览
         </Button>
