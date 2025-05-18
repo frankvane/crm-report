@@ -1,24 +1,26 @@
+import {
+  useCanvasStore,
+  useComponentsStore,
+} from "@report/ReportDesigner/store";
+
 import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
 import React from "react";
 import TableWidget from "../widgets/TableWidget";
-import TextWidget from "../widgets/TextWidget";
 import { useDataSourceStore } from "@report/ReportDesigner/store/dataSourceStore";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 // 如有其它控件类型可继续引入
 
 const widgetMap: Record<string, any> = {
   label: LabelWidget,
-  text: TextWidget,
   image: ImageWidget,
   table: TableWidget,
   // ...其它类型
 };
 
 export default function PrintPreview() {
-  const components = useReportDesignerStore((s) => s.components);
-  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
+  const components = useComponentsStore((s) => s.components);
+  const canvasConfig = useCanvasStore((s) => s.canvasConfig);
   const dataSources = useDataSourceStore((s) => s.dataSources);
   // 只取第一个用户（如张三）
   const usersDS = dataSources.find((ds) => ds.key === "users");

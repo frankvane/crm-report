@@ -7,9 +7,8 @@ import ImageWidget from "../widgets/ImageWidget";
 import LabelWidget from "../widgets/LabelWidget";
 import { LockOutlined } from "@ant-design/icons";
 import TableWidget from "../widgets/TableWidget";
-import TextWidget from "../widgets/TextWidget";
+import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDraggable } from "@dnd-kit/core";
-import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface ComponentItemProps {
   componentId?: string;
@@ -52,7 +51,7 @@ export default function ComponentItem({
   ];
 
   // 始终在顶层调用 Hook，避免条件调用
-  const allComponents = useReportDesignerStore((s) => s.components);
+  const allComponents = useComponentsStore((s) => s.components);
   const globalComp = componentId
     ? allComponents.find((c) => c.id === componentId)
     : undefined;
@@ -153,7 +152,6 @@ export default function ComponentItem({
   // 组件类型到展示组件的映射
   const componentMap: Record<string, React.FC<any>> = {
     label: LabelWidget,
-    text: TextWidget,
     image: ImageWidget,
     table: TableWidget,
   };

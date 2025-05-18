@@ -1,8 +1,8 @@
 import { Button, Modal } from "antd";
 import React, { useRef } from "react";
 
+import { useCanvasStore } from "@report/ReportDesigner/store";
 import { useReactToPrint } from "react-to-print";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 interface PrintPreviewModalProps {
   visible: boolean;
@@ -16,7 +16,7 @@ const PrintPreviewModal: React.FC<PrintPreviewModalProps> = ({
   children,
 }) => {
   const printRef = useRef<HTMLDivElement>(null);
-  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
+  const canvasConfig = useCanvasStore((s) => s.canvasConfig);
   const modalWidth = (canvasConfig?.width || 1200) + 64; // 32px padding左右
 
   // 使用 useReactToPrint 实现打印

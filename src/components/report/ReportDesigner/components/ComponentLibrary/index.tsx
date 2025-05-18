@@ -1,18 +1,12 @@
 // 组件库组件
 
-import {
-  FontSizeOutlined,
-  PictureOutlined,
-  TableOutlined,
-  TagOutlined,
-} from "@ant-design/icons";
+import { PictureOutlined, TableOutlined, TagOutlined } from "@ant-design/icons";
 
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 
 const COMPONENTS = [
   { type: "label", name: "标签", icon: <TagOutlined /> },
-  { type: "text", name: "文本", icon: <FontSizeOutlined /> },
   { type: "image", name: "图片", icon: <PictureOutlined /> },
   { type: "table", name: "表格", icon: <TableOutlined /> },
 ];

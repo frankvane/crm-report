@@ -1,7 +1,7 @@
 import { Image } from "antd";
 import React from "react";
+import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
-import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface ImageWidgetProps {
   componentId?: string;
@@ -19,7 +19,7 @@ interface ImageWidgetProps {
 
 const ImageWidget: React.FC<ImageWidgetProps> = (props) => {
   // 支持 componentId 响应式获取配置
-  const allComponents = useReportDesignerStore((s) => s.components);
+  const allComponents = useComponentsStore((s) => s.components);
   const comp = props.componentId
     ? allComponents.find((c) => c.id === props.componentId)
     : undefined;

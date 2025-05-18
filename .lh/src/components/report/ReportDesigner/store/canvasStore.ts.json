@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/report/ReportDesigner/store/canvasStore.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747498291015,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747498291015,
+            "name": "Commit-0",
+            "content": "import { create } from \"zustand\";\r\nimport { devtools } from \"zustand/middleware\";\r\nimport { immer } from \"zustand/middleware/immer\";\r\n\r\ninterface CanvasConfig {\r\n  gridSize: number;\r\n  showGrid: boolean;\r\n  showRuler: boolean;\r\n  rulerUnit: \"px\" | \"mm\";\r\n  allowSnapToGrid: boolean;\r\n  snapToGrid: boolean;\r\n  width: number;\r\n  height: number;\r\n  sizeType: string;\r\n}\r\n\r\ninterface CanvasState {\r\n  canvasConfig: CanvasConfig;\r\n  setCanvasConfig: (config: Partial<CanvasConfig>) => void;\r\n}\r\n\r\nconst defaultConfig: CanvasConfig = {\r\n  gridSize: 20,\r\n  showGrid: true,\r\n  showRuler: true,\r\n  rulerUnit: \"px\",\r\n  allowSnapToGrid: true,\r\n  snapToGrid: true,\r\n  width: 1123,\r\n  height: 794,\r\n  sizeType: \"A4-landscape\",\r\n};\r\n\r\nexport const useCanvasStore = create<CanvasState>()(\r\n  devtools(\r\n    immer((set) => ({\r\n      canvasConfig: defaultConfig,\r\n      setCanvasConfig: (config) =>\r\n        set((state) => {\r\n          state.canvasConfig = { ...state.canvasConfig, ...config };\r\n        }),\r\n    }))\r\n  )\r\n);\r\n"
+        }
+    ]
+}

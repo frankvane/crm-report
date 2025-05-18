@@ -1,6 +1,10 @@
 // 属性面板组件
 
 import React, { useMemo } from "react";
+import {
+  useComponentsStore,
+  useSelectionStore,
+} from "@report/ReportDesigner/store";
 
 import BasePropertyPanel from "./BasePropertyPanel";
 import DataBindingPanel from "./DataBindingPanel";
@@ -9,11 +13,10 @@ import { Tabs } from "antd";
 import { getComponentSchema } from "@report/ReportDesigner/schemas";
 import { useDataSourceStore } from "@report/ReportDesigner/store/dataSourceStore";
 import { usePropertyChangeHandlers } from "./usePropertyChangeHandlers";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
 
 export default function PropertyPanel() {
-  const selectedIds = useReportDesignerStore((s) => s.selectedIds);
-  const components = useReportDesignerStore((s) => s.components);
+  const selectedIds = useSelectionStore((s) => s.selectedIds);
+  const components = useComponentsStore((s) => s.components);
   const dataSources = useDataSourceStore((s) => s.dataSources);
 
   const selected = useMemo(

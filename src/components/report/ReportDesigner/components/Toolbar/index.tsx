@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import PrintPreview from "../PrintPreview";
 import PrintPreviewModal from "../PrintPreviewModal";
 import { PrinterOutlined } from "@ant-design/icons";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
+import { useCanvasStore } from "@report/ReportDesigner/store";
 
 const CANVAS_SIZES = [
   { label: "A4横向", value: "A4-landscape", width: 1123, height: 794 },
@@ -16,8 +16,8 @@ const CANVAS_SIZES = [
 ];
 
 export default function Toolbar() {
-  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
-  const setCanvasConfig = useReportDesignerStore((s) => s.setCanvasConfig);
+  const canvasConfig = useCanvasStore((s) => s.canvasConfig);
+  const setCanvasConfig = useCanvasStore((s) => s.setCanvasConfig);
   const [previewVisible, setPreviewVisible] = useState(false);
 
   const handleSizeChange = (value: string) => {

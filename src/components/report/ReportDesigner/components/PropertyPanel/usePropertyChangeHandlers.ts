@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
+import { useComponentsStore } from "@report/ReportDesigner/store";
 
 export function usePropertyChangeHandlers(selected: any) {
-  const updateComponent = useReportDesignerStore((s) => s.updateComponent);
+  const updateComponent = useComponentsStore((s) => s.updateComponent);
 
   // 处理主属性（baseSchema）
   const handleBaseChange = useCallback(

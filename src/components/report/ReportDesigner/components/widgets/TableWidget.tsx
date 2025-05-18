@@ -3,8 +3,8 @@ import { Table } from "antd";
 import dayjs from "dayjs";
 import { formatLabelValue } from "@report/ReportDesigner/utils";
 import numeral from "numeral";
+import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
-import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface TableWidgetProps {
   componentId?: string;
@@ -38,7 +38,7 @@ function getNestedDataSource(rootData: any, path: string): any[] {
 
 const TableWidget: React.FC<TableWidgetProps> = (props) => {
   // 支持 componentId 响应式获取配置
-  const allComponents = useReportDesignerStore((s) => s.components);
+  const allComponents = useComponentsStore((s) => s.components);
   const comp = props.componentId
     ? allComponents.find((c) => c.id === props.componentId)
     : undefined;

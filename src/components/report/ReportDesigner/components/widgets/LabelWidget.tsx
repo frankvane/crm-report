@@ -6,8 +6,8 @@ import {
 import React from "react";
 import dayjs from "dayjs";
 import numeral from "numeral";
+import { useComponentsStore } from "@/components/report/ReportDesigner/store";
 import { useDataSourceStore } from "@/components/report/ReportDesigner/store/dataSourceStore";
-import { useReportDesignerStore } from "@/components/report/ReportDesigner/store";
 
 interface LabelWidgetProps {
   componentId?: string;
@@ -31,7 +31,7 @@ interface LabelWidgetProps {
 
 const LabelWidget: React.FC<LabelWidgetProps> = (props) => {
   // 支持 componentId 响应式获取配置
-  const allComponents = useReportDesignerStore((s) => s.components);
+  const allComponents = useComponentsStore((s) => s.components);
   const comp = props.componentId
     ? allComponents.find((c) => c.id === props.componentId)
     : undefined;

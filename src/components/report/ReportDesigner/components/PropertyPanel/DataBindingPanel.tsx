@@ -73,14 +73,6 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
   const data = currentDataSource?.data || [];
   const type = selected.type || selected.props?.type;
 
-  // 自动选中第一个数据源（仅在 dataSource 未设置时）
-  React.useEffect(() => {
-    if (!currentDataSourceKey && dataSources.length > 0) {
-      handleDataBindingChange("dataSource", dataSources[0].key);
-    }
-    // eslint-disable-next-line
-  }, [currentDataSourceKey, dataSources.length]);
-
   // 只取第一条数据的字段，适用于label/text/image等
   const mergedMock: Record<string, any> =
     Array.isArray(data) && data.length > 0
@@ -302,10 +294,13 @@ const DataBindingPanel: React.FC<DataBindingPanelProps> = ({
         if (item.key === "dataSource") {
           fieldItem = {
             ...item,
-            options: dataSources.map((ds: any) => ({
-              label: ds.name,
-              value: ds.key,
-            })),
+            options: [
+              { label: "请选择数据源", value: "" },
+              ...dataSources.map((ds: any) => ({
+                label: ds.name,
+                value: ds.key,
+              })),
+            ],
           };
         }
         if (item.key === "field") {

@@ -4,6 +4,11 @@
 let justSelectedByBox = false;
 
 import { getAlignUpdates, getDistributeUpdates } from "../../utils/align";
+import {
+  useCanvasStore,
+  useComponentsStore,
+  useSelectionStore,
+} from "@report/ReportDesigner/store";
 
 import BatchToolbar from "./BatchToolbar";
 import CanvasContent from "./CanvasContent";
@@ -14,34 +19,29 @@ import { useBatchActions } from "../../hooks/useBatchActions";
 import { useCanvasDnd } from "../../hooks/useCanvasDnd";
 import { useComponentMenu } from "../../hooks/useComponentMenu";
 import { useDroppable } from "@dnd-kit/core";
-import { useReportDesignerStore } from "@report/ReportDesigner/store";
 import { useSelectionBox } from "../../hooks/useSelectionBox";
 
 export default function Canvas() {
   const { setNodeRef, isOver } = useDroppable({ id: "canvas" });
-  const addComponent = useReportDesignerStore((s) => s.addComponent);
-  const components = useReportDesignerStore((s) => s.components);
-  const selectedIds = useReportDesignerStore((s) => s.selectedIds);
-  const setSelectedIds = useReportDesignerStore((s) => s.setSelectedIds);
-  const updateComponent = useReportDesignerStore((s) => s.updateComponent);
-  const canvasConfig = useReportDesignerStore((s) => s.canvasConfig);
-  const batchUpdateComponent = useReportDesignerStore(
+  const addComponent = useComponentsStore((s) => s.addComponent);
+  const components = useComponentsStore((s) => s.components);
+  const selectedIds = useSelectionStore((s) => s.selectedIds);
+  const setSelectedIds = useSelectionStore((s) => s.setSelectedIds);
+  const updateComponent = useComponentsStore((s) => s.updateComponent);
+  const canvasConfig = useCanvasStore((s) => s.canvasConfig);
+  const batchUpdateComponent = useComponentsStore(
     (s) => s.batchUpdateComponent
   );
-  const batchRemoveComponent = useReportDesignerStore(
+  const batchRemoveComponent = useComponentsStore(
     (s) => s.batchRemoveComponent
   );
-  const batchLockComponent = useReportDesignerStore(
-    (s) => s.batchLockComponent
-  );
-  const batchVisibleComponent = useReportDesignerStore(
+  const batchLockComponent = useComponentsStore((s) => s.batchLockComponent);
+  const batchVisibleComponent = useComponentsStore(
     (s) => s.batchVisibleComponent
   );
-  const removeComponent = useReportDesignerStore((s) => s.removeComponent);
-  const copyComponent = useReportDesignerStore((s) => s.copyComponent);
-  const moveComponentZIndex = useReportDesignerStore(
-    (s) => s.moveComponentZIndex
-  );
+  const removeComponent = useComponentsStore((s) => s.removeComponent);
+  const copyComponent = useComponentsStore((s) => s.copyComponent);
+  const moveComponentZIndex = useComponentsStore((s) => s.moveComponentZIndex);
 
   // 框选相关
   const { selectRect, isSelecting, handleMouseDown } = useSelectionBox(
