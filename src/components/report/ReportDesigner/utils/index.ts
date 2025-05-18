@@ -2,3 +2,4 @@
 
 export { formatLabelValue } from "./formatLabelValue";
 export { getJustifyContent } from "./getJustifyContent";
+export { getAlignUpdates, getDistributeUpdates } from "./align";

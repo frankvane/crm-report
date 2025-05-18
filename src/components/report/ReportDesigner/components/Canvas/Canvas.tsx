@@ -4,7 +4,7 @@
 let justSelectedByBox = false;
 
 import React, { useEffect } from "react";
-import { getAlignUpdates, getDistributeUpdates } from "../../utils/align";
+import { getAlignUpdates, getDistributeUpdates } from "../../utils";
 import {
   useCanvasStore,
   useComponentsStore,
