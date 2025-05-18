@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1747498282595,
@@ -16,6 +16,14 @@
                 {
                     "date": 1747537269612,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,8 @@\n         setSelectedIds: (ids) => set({ selectedIds: ids }),\r\n       }))\r\n     ),\r\n     {\r\n-      name: 'selection-storage',\r\n+      name: \"selection-storage\",\r\n     }\r\n   )\r\n );\r\n"
+                },
+                {
+                    "date": 1747543642334,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,7 @@\n         selectedIds: [],\r\n         setSelectedIds: (ids) => set({ selectedIds: ids }),\r\n       }))\r\n     ),\r\n-    {\r\n-      name: \"selection-storage\",\r\n-    }\r\n+\r\n   )\r\n );\r\n"
+                },
+                {
+                    "date": 1747543649323,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,6 @@\n-import { devtools, persist } from \"zustand/middleware\";\r\n-\r\n import { create } from \"zustand\";\r\n+import { devtools } from \"zustand/middleware\";\r\n import { immer } from \"zustand/middleware/immer\";\r\n \r\n interface SelectionState {\r\n   selectedIds: string[];\r\n"
                 }
             ],
             "date": 1747498282595,
