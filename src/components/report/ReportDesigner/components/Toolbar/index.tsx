@@ -12,6 +12,7 @@ import {
 } from "antd";
 import {
   FolderOpenOutlined,
+  PlusOutlined,
   PrinterOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
@@ -24,6 +25,8 @@ import {
 
 import PrintPreview from "../PrintPreview";
 import PrintPreviewModal from "../PrintPreviewModal";
+import { defaultConfig } from "@report/ReportDesigner/store/canvasStore";
+import { initialDataSources } from "@report/ReportDesigner/store/dataSourceStore";
 
 const CANVAS_SIZES = [
   { label: "A4横向", value: "A4-landscape", width: 1123, height: 794 },
@@ -132,6 +135,22 @@ export default function Toolbar() {
     message.success(`已打开报表：${item.name}`);
   };
 
+  // 新建报表
+  const handleNewReport = () => {
+    Modal.confirm({
+      title: "新建报表",
+      content: "确定要新建报表吗？当前内容将被清空，无法恢复。",
+      okText: "确定",
+      cancelText: "取消",
+      onOk: () => {
+        setComponents([]);
+        setCanvasConfig({ ...defaultConfig });
+        setDataSources([...initialDataSources]);
+        message.success("已新建空白报表");
+      },
+    });
+  };
+
   return (
     <>
       <div
@@ -187,8 +206,15 @@ export default function Toolbar() {
           size="small"
         />
 
-        {/* 打印预览按钮 */}
         <div style={{ flex: 1 }} />
+        {/* 新建按钮 */}
+        <Button
+          icon={<PlusOutlined />}
+          onClick={handleNewReport}
+          style={{ marginRight: 8 }}
+        >
+          新建
+        </Button>
         {/* 保存按钮 */}
         <Button
           icon={<SaveOutlined />}
@@ -204,6 +230,7 @@ export default function Toolbar() {
         >
           打开
         </Button>
+        {/* 打印预览按钮 */}
         <Button
           type="primary"
           icon={<PrinterOutlined />}

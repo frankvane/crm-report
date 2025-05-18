@@ -20,7 +20,7 @@ interface DataSourceStoreState {
   removeDataSource: (key: string) => void;
 }
 
-const initialDataSources: DataSource[] = [
+export const initialDataSources: DataSource[] = [
   {
     key: "users",
     name: "用户",

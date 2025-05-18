@@ -20,7 +20,7 @@ interface CanvasState {
   setCanvasConfig: (config: Partial<CanvasConfig>) => void;
 }
 
-const defaultConfig: CanvasConfig = {
+export const defaultConfig: CanvasConfig = {
   gridSize: 20,
   showGrid: true,
   showRuler: true,

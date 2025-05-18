@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 5,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1747498291015,
@@ -28,6 +28,10 @@
                 {
                     "date": 1747538275341,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,10 +17,8 @@\n \r\n interface CanvasState {\r\n   canvasConfig: CanvasConfig;\r\n   setCanvasConfig: (config: Partial<CanvasConfig>) => void;\r\n-  _hasHydrated: boolean;\r\n-  _setHasHydrated: (hasHydrated: boolean) => void;\r\n }\r\n \r\n const defaultConfig: CanvasConfig = {\r\n   gridSize: 20,\r\n@@ -33,52 +31,20 @@\n   height: 794,\r\n   sizeType: \"A4-landscape\",\r\n };\r\n \r\n-const specificInitialConfig: CanvasConfig = {\r\n-  ...defaultConfig,\r\n-  width: 800,\r\n-  height: 600,\r\n-  sizeType: \"Custom\",\r\n-};\r\n-\r\n export const useCanvasStore = create<CanvasState>()(\r\n   persist(\r\n     devtools(\r\n       immer((set) => ({\r\n         canvasConfig: defaultConfig,\r\n-        _hasHydrated: false,\r\n         setCanvasConfig: (config) =>\r\n           set((state) => {\r\n             state.canvasConfig = { ...state.canvasConfig, ...config };\r\n           }),\r\n-        _setHasHydrated: (hasHydrated) => set({ _hasHydrated: hasHydrated }),\r\n       }))\r\n     ),\r\n     {\r\n       name: \"canvas-storage\",\r\n-      onHydrate: (state) => {\r\n-        console.log('Hydration started', state);\r\n-      },\r\n-      onRehydrated: (state, error) => {\r\n-        console.log('Hydration finished', state);\r\n-        if (error) {\r\n-          console.error('Hydration failed', error);\r\n-        } else {\r\n-          const isDefaultConfigLoaded = JSON.stringify(state?.canvasConfig) === JSON.stringify(defaultConfig);\r\n-\r\n-          if (isDefaultConfigLoaded) {\r\n-            console.log('Loaded default config (or storage was default). Applying specific initial config.');\r\n-            useCanvasStore.setState(prevState => ({\r\n-              canvasConfig: specificInitialConfig,\r\n-              _hasHydrated: true,\r\n-            }));\r\n-          } else {\r\n-            console.log('Loaded data from storage.');\r\n-            useCanvasStore.setState({ _hasHydrated: true });\r\n-          }\r\n-        }\r\n-      },\r\n-      partialize: (state) => ({ canvasConfig: state.canvasConfig })\r\n     }\r\n   )\r\n );\r\n"
+                },
+                {
+                    "date": 1747576720486,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,9 @@\n   canvasConfig: CanvasConfig;\r\n   setCanvasConfig: (config: Partial<CanvasConfig>) => void;\r\n }\r\n \r\n-const defaultConfig: CanvasConfig = {\r\n+export const defaultConfig: CanvasConfig = {\r\n   gridSize: 20,\r\n   showGrid: true,\r\n   showRuler: true,\r\n   rulerUnit: \"px\",\r\n"
                 }
             ],
             "date": 1747498291015,
