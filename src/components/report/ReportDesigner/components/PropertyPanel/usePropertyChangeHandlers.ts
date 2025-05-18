@@ -41,6 +41,19 @@ export function usePropertyChangeHandlers(selected: any) {
         });
         return;
       }
+      if (key === "all") {
+        // 批量更新 dataSource/columns/dataNode
+        updateComponent(selected.id, {
+          props: {
+            ...selected.props,
+            dataBinding: {
+              ...selected.props.dataBinding,
+              ...value,
+            },
+          },
+        });
+        return;
+      }
       updateComponent(selected.id, {
         props: {
           ...selected.props,

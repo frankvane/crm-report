@@ -120,15 +120,13 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
     itemRender: showPagination ? undefined : () => null, // 不显示分页控件
   };
 
-  // rowKey 兼容无数据时的key警告
-  const getRowKey = (record: any): string | number => {
+  if (!antdColumns.length) {
     return (
-      record?.key ||
-      record?.id ||
-      (columns[0] && record?.[columns[0].field]) ||
-      `empty_${Math.random().toString(36).slice(2)}`
+      <div style={{ color: "#bbb", textAlign: "center", padding: 16 }}>
+        请先配置字段映射
+      </div>
     );
-  };
+  }
 
   return (
     <Table
@@ -139,7 +137,19 @@ const TableWidget: React.FC<TableWidgetProps> = (props) => {
       size={size}
       style={{ width: "100%", ...style, borderRadius: 4 }}
       scroll={{ x: true }}
-      rowKey={getRowKey}
+      rowKey={
+        (record) =>
+          record?.id ||
+          record?.key ||
+          // 尝试使用第一个列字段的值，但不依赖 index
+          (columns.length > 0 &&
+          columns[0].field &&
+          record?.[columns[0].field] !== undefined
+            ? String(record[columns[0].field]) // 使用字段值转换为字符串作为 key
+            : undefined) ||
+          // 如果以上都不行，生成一个基于记录内容或随机值的唯一 key
+          `row_${JSON.stringify(record)}_${Math.random().toString(36).slice(2)}` // 增加随机值确保唯一性
+      }
     />
   );
 };

@@ -20,30 +20,25 @@ const initialDataSources: DataSource[] = [
   {
     key: "users",
     name: "用户",
-    fields: [
-      "id",
-      "name",
-      "phone",
-      "address",
-      "orders",
-      "photo",
-      "favoritesList",
-    ],
+    fields: ["id", "name", "phone", "address", "photo", "favoritesList"],
+    // 直接设置可选择的数据节点
+    dataNodes: ["orders", "favoritesList"],
+    // 直接设置好数据节点的字段映射
+    dataNodeFields: {
+      orders: ["orderId", "product", "amount", "date"],
+      favoritesList: ["listName", "createdAt"],
+    },
     sample: mockUsers[0],
     data: mockUsers,
   },
   {
     key: "products",
     name: "产品",
-    fields: [
-      "id",
-      "name",
-      "price",
-      "stock",
-      "category",
-      "image",
-      "relatedProducts",
-    ],
+    fields: ["id", "name", "price", "stock", "category", "image"],
+    dataNodes: ["relatedProducts"],
+    dataNodeFields: {
+      relatedProducts: ["id", "name", "price"],
+    },
     sample: mockProducts[0],
     data: mockProducts,
   },

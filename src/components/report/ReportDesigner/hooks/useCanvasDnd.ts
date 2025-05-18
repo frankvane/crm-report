@@ -33,8 +33,8 @@ export function useCanvasDnd({
         } else if (type === "table") {
           props = {
             dataBinding: {
-              dataSource: "users",
-              dataNode: "orders",
+              dataSource: "",
+              dataNode: "",
               columns: [],
             },
           };

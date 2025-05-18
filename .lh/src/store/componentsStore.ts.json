@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/store/componentsStore.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1747536191119,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1747536277169,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,17 +1,49 @@\n-import { v4 as uuidv4 } from \"uuid\";\r\n+import { create } from 'zustand';\r\n+import { devtools } from 'zustand/middleware';\r\n+import { v4 as uuidv4 } from 'uuid';\r\n \r\n-const state = {\r\n-  components: [],\r\n-};\r\n+// 定义组件的类型\r\n+interface ReportComponent {\r\n+  id: string;\r\n+  type: string;\r\n+  x: number;\r\n+  y: number;\r\n+  width: number;\r\n+  height: number;\r\n+  dataSource?: string; // 将 dataSource 定义为可选字符串类型\r\n+  [key: string]: any; // 允许其他属性\r\n+}\r\n \r\n-const actions = {\r\n-  addComponent: (component) => {\r\n-    state.components.push({\r\n-      ...component,\r\n-      id: uuidv4(),\r\n-      dataSource: \"\",\r\n-    });\r\n-  },\r\n-};\r\n+// 定义 Store 的状态类型\r\n+interface ComponentsState {\r\n+  components: ReportComponent[];\r\n+}\r\n \r\n-export default actions;\r\n+// 定义 Store 的 Action 类型\r\n+interface ComponentsActions {\r\n+  addComponent: (component: Omit<ReportComponent, 'id' | 'dataSource'> & { dataSource?: string }) => void;\r\n+  // 其他 actions...\r\n+}\r\n+\r\n+// 创建 Store\r\n+export const useComponentsStore = create<ComponentsState & ComponentsActions>()(\r\n+  devtools(\r\n+    (set, get) => ({\r\n+      components: [],\r\n+      addComponent: (component) => {\r\n+        set((state) => ({\r\n+          components: [\r\n+            ...state.components,\r\n+            {\r\n+              ...component,\r\n+              id: uuidv4(),\r\n+              dataSource: component.dataSource ?? \"\", // 确保新组件的 dataSource 默认为空字符串\r\n+            },\r\n+          ],\r\n+        }));\r\n+      },\r\n+      // 其他 actions 实现...\r\n+    }),\r\n+    { name: 'componentsStore' }\r\n+  )\r\n+);\r\n"
+                },
+                {
+                    "date": 1747536448016,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,74 @@\n- \n\\ No newline at end of file\n+import { create } from 'zustand';\r\n+import { devtools } from 'zustand/middleware';\r\n+import { v4 as uuidv4 } from 'uuid';\r\n+\r\n+// 定义组件的基础类型，包含您提到的必要属性\r\n+interface BaseComponent {\r\n+  type: string;\r\n+  x: number;\r\n+  y: number;\r\n+  width: number;\r\n+  height: number;\r\n+  [key: string]: any; // 允许其他任意属性，以包含 props 等\r\n+}\r\n+\r\n+// 定义 Store 中存储的组件类型\r\n+interface ReportComponent extends BaseComponent {\r\n+  id: string;\r\n+  dataSource?: string; // 数据源键，可选\r\n+}\r\n+\r\n+// 定义 Store 的状态类型\r\n+interface ComponentsState {\r\n+  components: ReportComponent[];\r\n+}\r\n+\r\n+// 定义 Store 的 Action 类型\r\n+interface ComponentsActions {\r\n+  addComponent: (component: BaseComponent & { dataSource?: string }) => void; // addComponent 接受基础组件属性和可选的 dataSource\r\n+  // 您可能需要添加其他 actions，例如更新组件属性、删除组件等\r\n+  updateComponentProps: (id: string, props: any) => void;\r\n+  deleteComponent: (id: string) => void;\r\n+}\r\n+\r\n+// 创建 Zustand Store\r\n+export const useComponentsStore = create<ComponentsState & ComponentsActions>()(\r\n+  devtools(\r\n+    (set, get) => ({\r\n+      // 初始状态\r\n+      components: [],\r\n+\r\n+      // Actions\r\n+      addComponent: (component) => {\r\n+        // 创建新的组件对象，生成唯一ID，并确保 dataSource 默认为空字符串\r\n+        const newComponent: ReportComponent = {\r\n+          ...component,\r\n+          id: uuidv4(),\r\n+          dataSource: component.dataSource ?? \"\", // 如果传入了 dataSource 则使用，否则默认为空字符串\r\n+        };\r\n+        set((state) => ({\r\n+          components: [...state.components, newComponent],\r\n+        }));\r\n+      },\r\n+\r\n+      // 示例：更新组件属性的 Action\r\n+      updateComponentProps: (id, props) => {\r\n+        set((state) => ({\r\n+          components: state.components.map(comp =>\r\n+            comp.id === id ? { ...comp, ...props } : comp\r\n+          ),\r\n+        }));\r\n+      },\r\n+\r\n+      // 示例：删除组件的 Action\r\n+      deleteComponent: (id) => {\r\n+        set((state) => ({\r\n+          components: state.components.filter(comp => comp.id !== id)\r\n+        }));\r\n+      },\r\n+\r\n+      // 其他 actions 实现...\r\n+    }),\r\n+    { name: 'componentsStore' }\r\n+  )\r\n+);\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1747536191119,
+            "name": "Commit-0",
+            "content": "import { v4 as uuidv4 } from 'uuid';\r\n\r\nconst state = {\r\n  components: [],\r\n};\r\n\r\nconst actions = {\r\n  addComponent: (component) => {\r\n    state.components.push({\r\n      ...component,\r\n      id: uuidv4(),\r\n      dataSource: \"\",\r\n    });\r\n  },\r\n};\r\n\r\nexport default actions;"
+        }
+    ]
+}

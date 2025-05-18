@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 6,
+            "activePatchIndex": 7,
             "patches": [
                 {
                     "date": 1747350701319,
@@ -32,6 +32,10 @@
                 {
                     "date": 1747498895113,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,10 @@\n import { useCallback } from \"react\";\r\n import { useComponentsStore } from \"@report/ReportDesigner/store\";\r\n \r\n-const updateComponent = useComponentsStore((s) => s.updateComponent);\r\n+export function usePropertyChangeHandlers(selected: any) {\r\n+  const updateComponent = useComponentsStore((s) => s.updateComponent);\r\n \r\n-export function usePropertyChangeHandlers(selected: any) {\r\n   // 处理主属性（baseSchema）\r\n   const handleBaseChange = useCallback(\r\n     (key: string, value: any) => {\r\n       if (!selected) return;\r\n"
+                },
+                {
+                    "date": 1747529482942,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -40,8 +40,21 @@\n           },\r\n         });\r\n         return;\r\n       }\r\n+      if (key === \"all\") {\r\n+        // 批量更新 dataSource/columns/dataNode\r\n+        updateComponent(selected.id, {\r\n+          props: {\r\n+            ...selected.props,\r\n+            dataBinding: {\r\n+              ...selected.props.dataBinding,\r\n+              ...value,\r\n+            },\r\n+          },\r\n+        });\r\n+        return;\r\n+      }\r\n       updateComponent(selected.id, {\r\n         props: {\r\n           ...selected.props,\r\n           dataBinding: { ...selected.props.dataBinding, [key]: value },\r\n"
                 }
             ],
             "date": 1747350701319,
