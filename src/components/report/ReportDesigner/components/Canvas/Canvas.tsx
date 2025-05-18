@@ -14,7 +14,6 @@ import BatchToolbar from "./BatchToolbar";
 import CanvasContent from "./CanvasContent";
 import Grid from "./Grid";
 import Ruler from "./Ruler";
-import styles from "./Canvas.module.css";
 import { useBatchActions } from "../../hooks/useBatchActions";
 import { useCanvasDnd } from "../../hooks/useCanvasDnd";
 import { useComponentMenu } from "../../hooks/useComponentMenu";
@@ -125,11 +124,21 @@ export default function Canvas() {
       <div
         ref={setNodeRef}
         id="report-canvas-main"
-        className={
-          isOver
-            ? `${styles.canvasMain} ${styles.canvasMainOver}`
-            : styles.canvasMain
-        }
+        style={{
+          minHeight: canvasConfig.height + 16,
+          minWidth: canvasConfig.width + 16,
+          width: canvasConfig.width + 16,
+          height: canvasConfig.height + 16,
+          padding: 0,
+          fontWeight: 600,
+          color: isOver ? "#fff" : "#1976d2",
+          background: isOver ? "#1976d2" : "#e3f2fd",
+          border: "2px solid #1976d2",
+          borderRadius: 6,
+          transition: "all 0.2s",
+          position: "relative",
+          overflow: "visible",
+        }}
         onClick={() => {
           if (justSelectedByBox) return;
           setSelectedIds([]);
