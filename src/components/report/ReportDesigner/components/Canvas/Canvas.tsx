@@ -1,6 +1,6 @@
 let justSelectedByBox = false;
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { getAlignUpdates, getDistributeUpdates } from "../../utils";
 import {
   useCanvasStore,
@@ -11,6 +11,7 @@ import {
 import BatchToolbar from "./BatchToolbar";
 import CanvasContent from "./CanvasContent";
 import Grid from "./Grid";
+import type { ReportComponent } from "@report/ReportDesigner/types/component";
 import Ruler from "./Ruler";
 import { useBatchActions } from "../../hooks/useBatchActions";
 import { useCanvasDnd } from "../../hooks/useCanvasDnd";
@@ -39,6 +40,8 @@ export default function Canvas() {
   const removeComponent = useComponentsStore((s) => s.removeComponent);
   const copyComponent = useComponentsStore((s) => s.copyComponent);
   const moveComponentZIndex = useComponentsStore((s) => s.moveComponentZIndex);
+  const undo = useComponentsStore((s) => s.undo);
+  const redo = useComponentsStore((s) => s.redo);
 
   // 框选相关
   const { selectRect, isSelecting, handleMouseDown } = useSelectionBox(
@@ -94,6 +97,9 @@ export default function Canvas() {
       return comp && comp.rotatable;
     });
 
+  // 剪贴板，存储复制的组件数据
+  const clipboardRef = useRef<ReportComponent[] | null>(null);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
@@ -103,17 +109,73 @@ export default function Canvas() {
         (e.target as HTMLElement)?.isContentEditable
       )
         return;
+      // Ctrl+Z 撤销
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        undo();
+        return;
+      }
+      // Ctrl+Y 重做
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
+        e.preventDefault();
+        redo();
+        return;
+      }
+      // Delete/Backspace 删除
       if (
         (e.key === "Delete" || e.key === "Backspace") &&
         selectedIds.length > 0
       ) {
         e.preventDefault();
         batchRemoveComponent(selectedIds);
+        return;
+      }
+      // Ctrl+C 复制
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+        if (selectedIds.length > 0) {
+          e.preventDefault();
+          const copied = components.filter((c) => selectedIds.includes(c.id));
+          clipboardRef.current = JSON.parse(JSON.stringify(copied));
+        }
+        return;
+      }
+      // Ctrl+V 粘贴
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v") {
+        if (clipboardRef.current && clipboardRef.current.length > 0) {
+          e.preventDefault();
+          const pasted: ReportComponent[] = clipboardRef.current.map((comp) => {
+            // 生成新id，位置偏移
+            const newId = `${comp.id}_paste_${Date.now()}_${Math.floor(
+              Math.random() * 10000
+            )}`;
+            return {
+              ...comp,
+              id: newId,
+              x: (comp.x || 0) + 30,
+              y: (comp.y || 0) + 30,
+              name: undefined, // 让store自动生成name
+            };
+          });
+          pasted.forEach((comp) => addComponent(comp));
+          // 粘贴后选中新组件
+          setTimeout(() => {
+            setSelectedIds(pasted.map((c) => c.id));
+          }, 0);
+        }
+        return;
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedIds, batchRemoveComponent]);
+  }, [
+    components,
+    selectedIds,
+    batchRemoveComponent,
+    addComponent,
+    setSelectedIds,
+    undo,
+    redo,
+  ]);
 
   return (
     <>
