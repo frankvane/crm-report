@@ -9,7 +9,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), analyzer(), viteCompression()],
+  plugins: [
+    react(),
+    analyzer(),
+    viteCompression({
+      algorithm: "brotliCompress", // 使用 Brotli 压缩
+      ext: ".br", // 压缩文件后缀
+      threshold: 1024, // 文件大小超过 1KB 才压缩
+      deleteOriginFile: false, // 保留原始文件
+      compressionOptions: {
+        level: 11, // 压缩级别（1-11，11 为最高压缩率）
+      },
+    }),
+  ],
   // alias
   resolve: {
     alias: {
