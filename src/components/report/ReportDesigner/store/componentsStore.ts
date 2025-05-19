@@ -6,6 +6,13 @@ import { immer } from "zustand/middleware/immer";
 
 interface ComponentsState {
   components: ReportComponent[];
+  history: {
+    undoStack: ReportComponent[][];
+    redoStack: ReportComponent[][];
+  };
+  takeSnapshot: () => void;
+  undo: () => void;
+  redo: () => void;
   setComponents: (components: ReportComponent[]) => void;
   addComponent: (component: ReportComponent) => void;
   updateComponent: (id: string, data: Partial<ReportComponent>) => void;
@@ -24,12 +31,53 @@ interface ComponentsState {
 export const useComponentsStore = create<ComponentsState>()(
   persist(
     devtools(
-      immer<ComponentsState>((set) => ({
+      immer<ComponentsState>((set, get) => ({
         components: [],
-        setComponents: (components) => set({ components }),
-        addComponent: (component) =>
+        history: {
+          undoStack: [],
+          redoStack: [],
+        },
+        takeSnapshot: () => {
+          const { components } = get();
+          const snapshot = JSON.parse(JSON.stringify(components));
           set((state) => {
-            // 自动生成 name
+            state.history.undoStack.push(snapshot);
+            state.history.redoStack = [];
+          });
+        },
+        undo: () => {
+          const { history } = get();
+          if (history.undoStack.length === 0) return;
+          set((state) => {
+            const prev = state.history.undoStack.pop();
+            if (prev) {
+              state.history.redoStack.push(
+                JSON.parse(JSON.stringify(state.components))
+              );
+              state.components = prev;
+            }
+          });
+        },
+        redo: () => {
+          const { history } = get();
+          if (history.redoStack.length === 0) return;
+          set((state) => {
+            const next = state.history.redoStack.pop();
+            if (next) {
+              state.history.undoStack.push(
+                JSON.parse(JSON.stringify(state.components))
+              );
+              state.components = next;
+            }
+          });
+        },
+        setComponents: (components) => {
+          get().takeSnapshot();
+          set({ components });
+        },
+        addComponent: (component) => {
+          get().takeSnapshot();
+          set((state) => {
             if (!component.name) {
               const type = component.type || "Component";
               const sameType = state.components.filter((c) => c.type === type);
@@ -46,50 +94,66 @@ export const useComponentsStore = create<ComponentsState>()(
                 : 0;
             component.zindex = maxZ + 1;
             state.components.push(component);
-          }),
-        updateComponent: (id, data) =>
+          });
+        },
+        updateComponent: (id, data) => {
+          get().takeSnapshot();
           set((state) => {
             const idx = state.components.findIndex((c) => c.id === id);
             if (idx !== -1) {
               state.components[idx] = { ...state.components[idx], ...data };
             }
-          }),
-        removeComponent: (id) =>
+          });
+        },
+        removeComponent: (id) => {
+          get().takeSnapshot();
           set((state) => {
             state.components = state.components.filter((c) => c.id !== id);
-          }),
-        batchUpdateComponent: (ids, data) =>
+          });
+        },
+        batchUpdateComponent: (ids, data) => {
+          get().takeSnapshot();
           set((state) => {
             state.components.forEach((c) => {
               if (ids.includes(c.id)) Object.assign(c, data);
             });
-          }),
-        batchRemoveComponent: (ids) =>
+          });
+        },
+        batchRemoveComponent: (ids) => {
+          get().takeSnapshot();
           set((state) => {
             state.components = state.components.filter(
               (c) => !ids.includes(c.id)
             );
-          }),
-        batchLockComponent: (ids, locked) =>
+          });
+        },
+        batchLockComponent: (ids, locked) => {
+          get().takeSnapshot();
           set((state) => {
             state.components.forEach((c) => {
               if (ids.includes(c.id)) c.locked = locked;
             });
-          }),
-        batchVisibleComponent: (ids, visible) =>
+          });
+        },
+        batchVisibleComponent: (ids, visible) => {
+          get().takeSnapshot();
           set((state) => {
             state.components.forEach((c) => {
               if (ids.includes(c.id)) c.visible = visible;
             });
-          }),
-        copyComponent: (id) =>
+          });
+        },
+        copyComponent: (id) => {
+          get().takeSnapshot();
           set((state) => {
             const comp = state.components.find((c) => c.id === id);
             if (!comp) return;
             const newComp = { ...comp, id: `${comp.id}_copy_${Date.now()}` };
             state.components.push(newComp);
-          }),
-        moveComponentZIndex: (id, type) =>
+          });
+        },
+        moveComponentZIndex: (id, type) => {
+          get().takeSnapshot();
           set((state) => {
             const comps = state.components;
             const idx = comps.findIndex((c) => c.id === id);
@@ -132,7 +196,8 @@ export const useComponentsStore = create<ComponentsState>()(
                 .filter((c) => c.zindex === z)
                 .forEach((c) => (c.zindex = i + 1));
             });
-          }),
+          });
+        },
       }))
     ),
     {

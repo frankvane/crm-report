@@ -14,7 +14,9 @@ import {
   FolderOpenOutlined,
   PlusOutlined,
   PrinterOutlined,
+  RedoOutlined,
   SaveOutlined,
+  UndoOutlined,
 } from "@ant-design/icons";
 import React, { useRef, useState } from "react";
 import {
@@ -151,6 +153,9 @@ export default function Toolbar() {
     });
   };
 
+  const undo = useComponentsStore((s) => s.undo);
+  const redo = useComponentsStore((s) => s.redo);
+
   return (
     <>
       <div
@@ -222,6 +227,23 @@ export default function Toolbar() {
         />
 
         <div style={{ flex: 1 }} />
+        {/* 撤销/重做按钮 */}
+        <Button
+          icon={<UndoOutlined />}
+          onClick={undo}
+          style={{ marginRight: 8 }}
+          size="small"
+        >
+          撤销
+        </Button>
+        <Button
+          icon={<RedoOutlined />}
+          onClick={redo}
+          style={{ marginRight: 8 }}
+          size="small"
+        >
+          重做
+        </Button>
         {/* 新建按钮 */}
         <Button
           icon={<PlusOutlined />}
