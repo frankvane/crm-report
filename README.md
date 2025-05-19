@@ -45,9 +45,15 @@
 - 输入内容会自动尝试解析为 JSON，只有合法 JSON 才会生效
 
 ```bash
-
+```bash
+npx @agentdeskai/browser-tools-server@1.2.0
 ```
 
+```
 ```bash
 sloc ./config ./controllers ./middlewares ./models ./routes ./services ./utils/ app.js
 ```
+
+排序、分组、筛选、二维码(可以根据指定的内容生成)
+
+标签（不存在数据绑定）、图片、二维码、表格
