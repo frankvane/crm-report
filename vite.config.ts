@@ -49,6 +49,7 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
     target: "esnext",
+    // vite的打包是基于rollup的，所以需要配置rollupOptions
     rollupOptions: {
       output: {
         manualChunks: {
