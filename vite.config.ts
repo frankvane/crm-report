@@ -9,19 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    analyzer(),
-    viteCompression({
-      algorithm: "brotliCompress", // 使用 Brotli 压缩
-      ext: ".br", // 压缩文件后缀
-      threshold: 1024, // 文件大小超过 1KB 才压缩
-      deleteOriginFile: false, // 保留原始文件
-      compressionOptions: {
-        level: 11, // 压缩级别（1-11，11 为最高压缩率）
-      },
-    }),
-  ],
+  plugins: [react(), viteCompression(), analyzer({ openAnalyzer: true })],
   // alias
   resolve: {
     alias: {
@@ -49,17 +37,19 @@ export default defineConfig({
     outDir: "dist",
     assetsDir: "assets",
     target: "esnext",
+    minify: "terser", // 生产环境启用压缩
     // vite的打包是基于rollup的，所以需要配置rollupOptions
     rollupOptions: {
       output: {
         manualChunks: {
           react: ["react", "react-dom", "react-router-dom"],
           antd: ["antd", "@ant-design/icons"],
-          immer: ["immer"],
           zustand: ["zustand"],
-          lodash: ["lodash"],
-          dayjs: ["dayjs"],
+          utils: ["lodash", "dayjs", "immer"],
         },
+        chunkFileNames: "js/[name]-[hash].js",
+        entryFileNames: "js/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash].[ext]",
       },
     },
   },
